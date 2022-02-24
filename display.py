@@ -107,7 +107,6 @@ class Display(Tk):
         # Lines for existing children
         for node in nodes:
             for child_type, children in node.children.items():
-                color = self.line_colors[child_type]
                 for child in children:
                     self.draw_path(node, child, child_type)
 

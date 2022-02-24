@@ -1,1 +1,1 @@
-echo "i got node drawing working, probably should support deleting nodes and clean up ui interactions"
+echo "this project is on hold - make the designed node management library first (see geniaus), then implement using it"
