@@ -1,0 +1,74 @@
+#editor {
+  flex-direction: column;
+  display: none;
+  background: #f3f3f3;
+}
+
+
+/* NAME */
+
+#name-input {
+  display: none;
+  font-size: 24px;
+  font-weight: 700;
+  padding: 0px;
+  border-width: 0px;
+}
+
+/* CODE */
+
+#code-container {
+  position: relative;
+}
+#code-container, #code, #highlighting, #code-output {
+  height: 200px;
+  width: 450px;
+}
+#highlighting, #code, #code-output {
+  padding: 0px;
+  margin: 0px;
+}
+#code {
+  resize: none;
+  overflow: auto;
+  white-space: pre;
+}
+#code, #highlighting {
+  border: 0;
+}
+#code, #highlighting, #code-output {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#code, #highlighting, #highlighting * {
+  font-size: 14px;
+  font-family: monospace;
+  line-height: 20px;
+}
+#code {
+  z-index: 6;
+  color: transparent;
+  background: transparent;
+  caret-color: black;
+}
+#highlighting {
+  z-index: 5;
+}
+
+
+/* ACTIONS */
+
+#editor-actions {
+  display: flex;
+}
+#editor-actions * {
+  flex: 1;
+}
+
+
+/* RESULT */
+
+#total-result-container, #node-result-container {
+  display: none;
+}

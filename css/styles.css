@@ -1,0 +1,64 @@
+/* Dark/Light mode */
+.dark {
+  background: black;
+  color: white;
+}
+
+.light {
+  background: white;
+  color: black;
+}
+
+/* UTIL */
+.disable-select {
+  user-select: none; /* supported by Chrome and Opera */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+}
+.title {
+  font-size: 24px;
+  font-weight: 700;
+}
+.selected {
+  background: lightblue !important;
+  color: black;
+  border-color: white;
+}
+.hidden {
+  display: none;
+}
+.v-flex, .h-flex {
+  display: flex;
+}
+.h-flex {
+  flex-direction: row;
+}
+.v-flex {
+  flex-direction: column;
+}
+.v-flex *, .h-flex * {
+  flex: 1;
+}
+
+/* OVERLAY */
+#overlay {
+  position: absolute;
+  z-index: 10;
+  opacity: 0.85;
+}
+
+/* NODE VIEW */
+#nodel {
+  width: 100%;
+  height: 100%;
+}
+
+/* TEMPLATES */
+.basic {
+  border-style: solid;
+  padding: 10px;
+  background: lightpink;
+  color: black;
+}

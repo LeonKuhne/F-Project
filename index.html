@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="F Buddy as in function body. F as in 'F writing'. F as in... F you for not making this for me, and F me for having to.">
+    <meta name="author" content="leonkuhne.com">
+    <title>F Buddy</title>
+
+    <!-- syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+
+    <!-- use the lastest nodel code -->
+    <link rel='stylesheet' href='../nodel/nodel.css'>
+    <script src="../nodel/jsplumb.bundle.js"></script>
+    <script src='../nodel/nodel.js'></script>
+
+    <!-- CUSTOM STYLES -->
+    <link rel="stylesheet" href='css/modules.css'>
+    <link rel='stylesheet' href='css/editor.css'>
+    <link rel='stylesheet' href='css/styles.css'>
+
+    <!-- CUSTOM SCRIPTS -->
+    <!-- core -->
+    <script src='src/core/linter.js'></script>
+    <script src='src/core/code-runner.js'></script>
+    <script src='src/core/template.js'></script>
+    <script src='src/core/module.js'></script>
+    <script src='src/core/module-list.js'></script>
+    <!-- manager -->
+    <script src='src/ctrl/module-manager.js'></script>
+    <script src='src/ctrl/node-manager.js'></script>
+    <!-- ui -->
+    <script src='src/view/hideable.js'></script>
+    <script src='src/view/module-editor.js'></script>
+    <script src='src/view/node-editor.js'></script>
+    <!-- main -->
+    <script src='src/index.js'></script>
+  </head>
+  <body class="dark">
+
+    <!-- OVERLAY -->
+    <div id="overlay">
+
+      <!-- SAVED MODULES -->
+      <div id="module-container" class="light">
+        <div class="title dark">Modules</div>
+        
+        <!-- TEMPLATE FOR MODULES -->
+        <div id="static-module" class="template module">
+          <button onclick={selectModule}>{name}</button>
+        </div>
+        <div id="saved-module" class="template module">
+          <button onclick={selectModule}>{name}</button>
+          <button class="delete" onclick={deleteModule}>X</button>
+        </div>
+
+        <!-- MODULES -->
+        <div id="static-modules" class="modules">
+          <div class="title">Static</div>
+        </div>
+        <div id="saved-modules" class="modules">
+          <div class="title">Saved</div>
+        </div>
+      </div>
+
+      <!-- NODE EDITOR -->
+      <div id="editor" class="light hideable">
+        <div class="name-container">
+          <div id="name" class="title hideable">None</div>
+          <input id="name-input" class='hideable' />
+        </div>
+        <div id="code-container">
+          <textarea id="code" placeholder="code" spellcheck="false"></textarea>
+          <pre id="highlighting">
+            <code id="code-output" class="code language-js"></code>
+          </pre>
+        </div>
+        <div id="editor-actions">
+          <button id="collapse" off="collapse" on="expand"></button>
+          <button id="run">run</button>
+          <button id="save">save</button>
+        </div>
+        <div id="total-result-container" class='hideable'>
+          <div id="total-run-id" class='title'></div>
+          <div class='h-flex'>
+            <textarea id="total-result"></textarea>
+          </div>
+        </div>
+        <div id="node-result-container" class='hideable'>
+          <div id="node-run-id" class='title'></div>
+          <div class='h-flex'>
+            <div class='title'>input:</div>
+            <textarea id="node-input"></textarea>
+          </div>
+          <div class='h-flex'>
+            <div class='title'>output:</div>
+            <textarea id="node-result"></textarea>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- NODE VIEW -->
+    <div id='nodel'>
+
+      <!-- NODEL TEMPLATES -->
+      <div id='basic' class='basic disable-select'>{name}</div>
+
+    </div>
+
+</html>
