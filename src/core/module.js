@@ -26,18 +26,6 @@ class Module {
     // ensure parameters are configured properly
     this.validate()
   }
-  apply(node) {
-    // apply group template
-    if (this.isGroup()) {
-      // TODO
-      // apply node group as template
-      // create all of the child nodes
-      
-    // apply node template
-    } else {
-      node.data = this.data()
-    }
-  }
 
   data() {
     return {...this, id: null}

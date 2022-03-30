@@ -32,6 +32,15 @@ class NodeManager {
       return nm.addNode(module.base, x, y, module.data())
     }
   }
+  updateNode(module, node) {
+    if (module.isGroup()) {
+      // TODO
+      // do the same as above in create node, but use the node as the head node
+      console.error('TODO')
+    } else {
+      node.data = module.data()
+    }
+  }
   createFromMap(groupMap, x, y, group=null, connection=null) {
     const nm = this.state.nodel.manager
     const moduleManager = this.state.manager.module

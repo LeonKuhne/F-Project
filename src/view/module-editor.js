@@ -70,7 +70,7 @@ class ModuleEditor {
     // apply module to node
     if (selectedNode) {
       // update the editor
-      module.apply(selectedNode)
+      this.state.manager.node.updateNode(module, selectedNode)
       nodeEditor.selectNode(selectedNode)
     }
   }
