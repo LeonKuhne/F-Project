@@ -35,9 +35,8 @@ class NodeManager {
   createFromMap(groupMap, x, y, group=null, connection=null) {
     const nm = this.state.nodel.manager
     const moduleManager = this.state.manager.module
-    const node = nm.nodes[groupMap.id]
     // use the node name as the key for modules, otherwise fallback to the base template
-    const module = moduleManager.get(node.name) || moduleManager.get(node.base)
+    const module = moduleManager.get(groupMap.id) || moduleManager.getDefault()
     const nodeX = x + groupMap.offsetX
     const nodeY = y + groupMap.offsetY
 

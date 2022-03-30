@@ -53,16 +53,16 @@ class Module {
   validate() {
     let missingType = null
     // validate common
-    if (!this.id || !this.name || !this.base) {
+    if (!this.id || !this.name) {
       missingType = 'Default'
     }
     // validate node/group
-    if (!this.nodes && !this.code) {
+    if (!this.nodes && (!this.code || !this.base)) {
       missingType = 'Specific'
     }
     // throw
     if (missingType) {
-      throw `${missingType} params are missing from template ${this.toJSON()}`
+      throw `${missingType} params are missing from template ${JSON.stringify(this.data())}`
     }
   }
 

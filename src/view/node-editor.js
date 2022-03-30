@@ -170,9 +170,6 @@ class NodeEditor {
     const elems = this.state.elem
     selectedElem.classList.add('selected')
 
-    // update editor elements
-    elems.nameIndicator.innerHTML = node.data.name || node.id
-
     // render groups differently
     if (node.isGroup(true)) {
       elems.codeContainer.hidden = true
@@ -302,7 +299,9 @@ class NodeEditor {
   updateName(name=null) {
     // use the selected node by default
     const node = this.state.selected.node
-    name = name || node.data.name || node.id
+    if (!name) {
+      name = node.isGroup(true) ? node.group.name : node.data.name || node.id
+    }
     // get elements
     const nodeElem = document.getElementById(node.id)
     const label = this.state.elem.nameIndicator
