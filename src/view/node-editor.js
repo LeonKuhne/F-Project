@@ -258,7 +258,7 @@ class NodeEditor {
     const totalResultContainer = this.state.elem.totalResultContainer
     const totalRunIdLabel = this.state.elem.totalRunIdLabel
     const totalResultArea = this.state.elem.totalResultArea
-    totalRunIdLabel.innerText = 'program ' + runId
+    totalRunIdLabel.innerText = `program ${runId} output`
     totalResultArea.value = result
     totalResultContainer.show()
   }
@@ -269,8 +269,8 @@ class NodeEditor {
       elems.nodeResultContainer.hide()
     } else {
       elems.nodeRunIdLabel.innerText = 'deamon ' + node.data.runId
-      elems.nodeInputArea.value = '' + node.data.param
-      elems.nodeResultArea.value = '' + node.data.result 
+      elems.nodeInputArea.value = '' + JSON.stringify(node.data.param)
+      elems.nodeResultArea.value = '' + JSON.stringify(node.data.result)
       elems.nodeResultContainer.show()
     }
   }

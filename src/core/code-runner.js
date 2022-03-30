@@ -16,10 +16,15 @@ class CodeRunner {
     // NOTE: this is a XSS vulnerability
     const func = eval(node.data.code)
 
-    // add the result to the node
-    node.data.runId = id
+    // check if this is part of the previous run
+    // and add the result to the node
+    if (id === node.data.runId) {
+      node.data.result = func(x, node.data.result)
+    } else {
+      node.data.runId = id
+      node.data.result = func(x)
+    }
     node.data.param = x
-    node.data.result = func(x)
 
     // base case
     if (node.isLeaf()) {

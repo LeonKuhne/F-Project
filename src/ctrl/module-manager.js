@@ -126,7 +126,7 @@ class ModuleManager {
       // update
       console.warn(`Removing existing module to replace: ${module}`)
       module.update(options)
-      this.on.updateSavedModule(module)
+      this.on.updateSavedModule(null, module)
     } else {
       // create and track
       console.info(`Creating a new module from node: ${module}`)

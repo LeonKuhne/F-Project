@@ -35,6 +35,9 @@ class ModuleEditor {
   }
 
   elemId(module) {
+    if (!module) {
+      return null
+    }
     // TODO properly sanitize this to prevent XSS
     let id = module.id
     id = id.replaceAll(' ', '_')
