@@ -57,8 +57,12 @@
 
 /* TEMPLATES */
 .basic {
+  border-radius: 7px;
   border-style: solid;
   padding: 10px;
   background: lightpink;
   color: black;
+}
+.basic + .group {
+  border-style: double;
 }

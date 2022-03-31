@@ -7,7 +7,6 @@ at some point, you too will hit the "oh shit" moment
 
 ## Todo
 ### NODEL
-- feature: indicate groups with double border
 ### EDITOR
 - feature: delete node button
 - extra: code auto test field
