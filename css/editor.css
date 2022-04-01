@@ -41,6 +41,7 @@
 /* CODE */
 .hljs {
   background: transparent;
+  color: var(--code-color);
 }
 #code-container {
   position: relative;

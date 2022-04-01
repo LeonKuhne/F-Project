@@ -2,11 +2,12 @@
 @import url('http://fonts.cdnfonts.com/css/atari');
 
 :root {
-  --theme: #0056d9;
+  --theme: #00cfff;
+  --alternate: #0056d9;
   --active: #0f0;
-  --accent: #d98200;
+  --accent: #f90;
   --contrast: #000;
-  --highlight: #ad00d9;
+  --highlight: #ff008f;
   --lowlight: #3a0048;
   --alert: #f00;
   --shadow-size: 5px;
@@ -14,6 +15,7 @@
   --shadow-gap: 2px;
   --text-blur: 0.75px;
   --code-size: 22px;
+  --code-color: #ffea00;
   --button-padding: 0.5em;
   --gap: 0px;
   --font: 'Atari', monospace
