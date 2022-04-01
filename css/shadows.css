@@ -1,0 +1,83 @@
+.shadow-theme {
+  color: var(--theme);
+  box-shadow: var(--shadow-size) var(--shadow-size) var(--shadow-blur) var(--theme);
+  margin-bottom: var(--shadow-gap);
+  margin-right: var(--shadow-gap);
+}
+.shadow-alert {
+  color: var(--alert);
+  box-shadow: var(--shadow-size) var(--shadow-size) var(--shadow-blur) var(--alert);
+  margin-bottom: var(--shadow-gap);
+  margin-right: var(--shadow-gap);
+}
+.shadow-accent {
+  color: var(--accent);
+  box-shadow: var(--shadow-size) var(--shadow-size) var(--shadow-blur) var(--accent);
+  margin-bottom: var(--shadow-gap);
+  margin-right: var(--shadow-gap);
+}
+.selected .shadow-theme {
+  color: var(--contrast);
+}
+
+.selected .shadow-theme:hover, .selected.shadow-theme:hover {
+  color: var(--theme) !important;
+}
+.shadow-theme:hover {
+  color: var(--contrast);
+}
+.shadow-theme:hover:not(.selected *, .selected){
+  background: var(--theme);
+  animation-name: sharpen-theme;
+  animation-duration: 0.25s;
+  box-shadow: 0px 0px; 
+}
+.shadow-alert:hover {
+  color: black;
+  background: var(--alert) !important;
+  animation-name: sharpen-alert;
+  animation-duration: 0.25s;
+  box-shadow: 0px 0px; 
+}
+.shadow-accent:hover {
+  color: black;
+  background: var(--accent) !important;
+  animation-name: sharpen-accent;
+  animation-duration: 0.25s;
+  box-shadow: 0px 0px; 
+}
+
+.shadow-theme:active {
+  color: black;
+  background: var(--theme);
+}
+.shadow-alert:active {
+  color: var(--alert);
+  background: black;
+}
+.shadow-accent:active {
+  color: black;
+  background: var(--accent);
+}
+.shadow-theme:active, .shadow-alert:active, .shadow-accent:active {
+  background: var(--active);
+  margin: var(--shadow-size) calc(-1*var(--shadow-size)) calc(-1*var(--shadow-size)) var(--shadow-size);
+  box-shadow: 0px 0px; 
+}
+
+@keyframes sharpen-theme {
+  from { box-shadow: var(--shadow-size) var(--shadow-size) var(--shadow-blur) var(--theme); }
+  to { box-shadow: 0px 0px 0px var(--theme); }
+}
+@keyframes sharpen-alert {
+  from { box-shadow: var(--shadow-size) var(--shadow-size) var(--shadow-blur) var(--alert); }
+  to { box-shadow: 0px 0px 0px var(--alert); }
+}
+@keyframes sharpen-accent {
+  from { box-shadow: var(--shadow-size) var(--shadow-size) var(--shadow-blur) var(--accent); }
+  to { box-shadow: 0px 0px 0px var(--accent); }
+}
+@keyframes sharpen-highlight-active-side {
+  from { box-shadow: 0px 0px var(--shadow-blur) var(--active); }
+  to { box-shadow: var(--shadow-size) 0px var(--shadow-blur) var(--active); }
+}

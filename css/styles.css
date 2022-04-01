@@ -1,12 +1,53 @@
-/* Dark/Light mode */
-.dark {
-  background: black;
-  color: white;
+/* import font */
+@import url('http://fonts.cdnfonts.com/css/atari');
+
+:root {
+  --theme: #0056d9;
+  --active: #0f0;
+  --accent: #d98200;
+  --contrast: #000;
+  --highlight: #ad00d9;
+  --lowlight: #3a0048;
+  --alert: #f00;
+  --shadow-size: 5px;
+  --shadow-blur: 2.5px;
+  --shadow-gap: 2px;
+  --text-blur: 0.75px;
+  --code-size: 22px;
+  --button-padding: 0.5em;
+  --gap: 0px;
+  --font: 'Atari', monospace
 }
 
-.light {
-  background: white;
-  color: black;
+body {
+  background: black;
+  color: var(--theme);
+  font-family: var(--font);
+  font-smooth: never;
+}
+button:active {
+  cursor: pointer;
+}
+button {
+  padding-left: var(--button-padding);
+  padding-right: var(--button-padding);
+}
+button, input, textarea {
+  background: transparent;
+  color: var(--theme);
+  font-family: var(--font) !important;
+}
+input:focus, textarea:focus {
+  outline: none;
+  caret-color: var(--active) !important;
+}
+input, textarea {
+  border-width: 0px;
+  width: 100%;
+}
+textarea {
+  font-size: var(--code-size) !important;
+  min-height: var(--code-size);
 }
 
 /* UTIL */
@@ -17,14 +58,35 @@
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
 }
-.title {
-  font-size: 24px;
-  font-weight: 700;
+.header {
+  z-index: 11;
 }
-.selected {
-  background: lightblue !important;
-  color: black;
-  border-color: white;
+.header, .title, .label {
+  font-weight: 900;
+  filter: blur(var(--text-blur));
+  color: var(--highlight);
+  user-select: none;
+}
+.header, .title {
+  background: var(--lowlight);
+}
+.title {
+  text-align: center;
+  font-size: 1.75em;
+  box-shadow: 0px var(--shadow-size) 0px var(--highlight);
+  margin-bottom: var(--shadow-gap);
+}
+.header {
+  text-align: center;
+  writing-mode: sideways-lr;
+  font-size: 2em;
+  margin-right: var(--shadow-gap);
+  box-shadow: var(--shadow-size) 0px 0px var(--highlight);
+}
+.label {
+  font-size: 1.5em;
+  flex: 0 !important;
+  padding-right: 0.5em;
 }
 .hidden {
   display: none;
@@ -41,12 +103,32 @@
 .v-flex *, .h-flex * {
   flex: 1;
 }
+.noflex {
+  flex: 0;
+}
 
 /* OVERLAY */
 #overlay {
   position: absolute;
   z-index: 10;
-  opacity: 0.85;
+  resize: horizontal;
+  overflow: auto;
+  min-width: fit-content;
+  background: #000a;
+  margin-bottom: var(--shadow-gap);
+  margin-right: var(--shadow-gap);
+}
+.component {
+  margin-top: calc(-1 * var(--shadow-size));
+  margin-left: calc(-1 * var(--shadow-size));
+  margin-bottom: var(--shadow-size);
+  margin-right: var(--shadow-size);
+}
+.component:hover > .header {
+  color: var(--active);
+  animation-duration: 0.5s;
+  animation-name: sharpen-highlight-active-side;
+  box-shadow: var(--shadow-size) 0px var(--shadow-blur) var(--active);
 }
 
 /* NODE VIEW */
@@ -57,12 +139,15 @@
 
 /* TEMPLATES */
 .basic {
-  border-radius: 7px;
-  border-style: solid;
   padding: 10px;
-  background: lightpink;
-  color: black;
+  font-size: 1.5em;
+  color: var(--theme);
 }
 .basic + .group {
-  border-style: double;
+  box-shadow: var(--shadow-size) var(--shadow-size) 0px var(--accent);
+  color: var(--accent);
+}
+.basic + .selected {
+  background-color: var(--active);
+  color: var(--contrast);
 }

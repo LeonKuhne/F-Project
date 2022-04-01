@@ -7,7 +7,7 @@
     <title>F Buddy</title>
 
     <!-- syntax highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/base16/isotope.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
 
     <!-- use the lastest nodel code -->
@@ -19,6 +19,7 @@
     <link rel="stylesheet" href='css/modules.css'>
     <link rel='stylesheet' href='css/editor.css'>
     <link rel='stylesheet' href='css/styles.css'>
+    <link rel="stylesheet" href='css/shadows.css'>
 
     <!-- CUSTOM SCRIPTS -->
     <!-- core -->
@@ -37,76 +38,80 @@
     <!-- main -->
     <script src='src/index.js'></script>
   </head>
-  <body class="dark">
+  <body>
 
     <!-- OVERLAY -->
-    <div id="overlay">
+    <div id="overlay" class='v-flex'>
 
       <!-- SAVED MODULES -->
-      <div id="module-container" class="light">
-        <div class="title dark">Modules</div>
-        
-        <!-- TEMPLATE FOR MODULES -->
-        <div id="static-module" class="template module">
-          <button onclick={selectModule}>{name}</button>
-        </div>
-        <div id="saved-module" class="template module">
-          <button onclick={selectModule}>{name}</button>
-          <button class="delete" onclick={deleteModule}>X</button>
-        </div>
+      <div class='component h-flex'>
+        <div class="header noflex">Modules</div>
+        <div class='v-flex'>
 
-        <!-- MODULES -->
-        <div id="static-modules" class="modules">
-          <div class="title">Static</div>
-        </div>
-        <div id="saved-modules" class="modules">
-          <div class="title">Saved</div>
+          <!-- TEMPLATE FOR MODULES -->
+          <div id="static-module" class="template module">
+            <button onclick={selectModule} class="shadow-theme">{name}</button>
+          </div>
+          <div id="saved-module" class="template module">
+            <button onclick={selectModule} class="shadow-theme">{name}</button>
+            <button onclick={deleteModule} class="delete shadow-alert">X</button>
+          </div>
+
+          <!-- MODULES -->
+          <div id="static-modules" class="modules">
+            <div class="title">Static</div>
+          </div>
+          <div id="saved-modules" class="modules">
+            <div class="title">Saved</div>
+          </div>
         </div>
       </div>
 
       <!-- NODE EDITOR -->
-      <div id="editor" class="light hideable">
-        <div class="name-container">
-          <div id="name" class="title hideable">None</div>
-          <input id="name-input" class='hideable' />
-        </div>
-        <div id="code-container">
-          <textarea id="code" placeholder="code" spellcheck="false"></textarea>
-          <pre id="highlighting">
-            <code id="code-output" class="code language-js"></code>
-          </pre>
-        </div>
-        <div id="editor-actions">
-          <button id="collapse" off="collapse" on="expand"></button>
-          <button id="run">run</button>
-          <button id="save">save</button>
-        </div>
-        <div id="total-result-container" class='hideable'>
-          <div id="total-run-id" class='title'></div>
-          <div class='h-flex'>
-            <textarea id="total-result"></textarea>
+      <div id="editor" class="hideable h-flex component">
+        <div class="header noflex">Node</div>
+        <div>
+          <div class="name-container">
+            <div id="name" class="title hideable">None</div>
+            <input id="name-input" class='hideable' />
           </div>
-        </div>
-        <div id="node-result-container" class='hideable'>
-          <div id="node-run-id" class='title'></div>
-          <div class='h-flex'>
-            <div class='title'>input:</div>
-            <textarea id="node-input"></textarea>
+          <div id="code-container">
+            <textarea id="code" placeholder="code" spellcheck="false"></textarea>
+            <pre id="highlighting">
+              <code id="code-output" class="code language-js"></code>
+            </pre>
           </div>
-          <div class='h-flex'>
-            <div class='title'>output:</div>
-            <textarea id="node-result"></textarea>
+          <div id="editor-actions">
+            <button id="collapse" off="collapse" on="expand" class="shadow-accent"></button>
+            <button id="run" class="shadow-accent">run</button>
+            <button id="save" class="shadow-accent">save</button>
+          </div>
+          <div id="node-result-container" class='hideable'>
+            <div id="node-run-id" class='title'></div>
+            <div class='h-flex'>
+              <div class='label'>input:</div>
+              <textarea id="node-input"></textarea>
+            </div>
+            <div class='h-flex'>
+              <div class='label'>output:</div>
+              <textarea id="node-result"></textarea>
+            </div>
+          </div>
+          <div id="total-result-container" class='hideable'>
+            <div id="total-run-id" class='title'></div>
+            <div class='h-flex'>
+              <textarea id="total-result"></textarea>
+            </div>
           </div>
         </div>
       </div>
-
     </div>
 
     <!-- NODE VIEW -->
     <div id='nodel'>
 
       <!-- NODEL TEMPLATES -->
-      <div id='basic' class='basic disable-select'>{name}</div>
+      <div id='basic' class='basic disable-select shadow-theme'>{name}</div>
 
     </div>
 

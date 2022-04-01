@@ -1,28 +1,63 @@
 #editor {
-  flex-direction: column;
   display: none;
-  background: #f3f3f3;
 }
-
 
 /* NAME */
 
 #name-input {
   display: none;
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 2em;
+  font-weight: 900;
+  min-width: 100px;
   padding: 0px;
-  border-width: 0px;
+  box-shadow: 0px var(--shadow-size) 0px var(--active);
+  margin-bottom: var(--shadow-gap);
+}
+#name-input:active, #name-input:focus {
+  min-inline-size: 0px;
+  inline-size: 300px;
+}
+#name-input:focus {
+  background: var(--active);
+  color: var(--contrast);
+  caret-color: var(--contrast) !important;
+  box-shadow: 0px var(--shadow-size) 0px var(--highlight);
+}
+#name {
+  color: var(--active);
+  font-size: 2em;
+}
+#name, #name-input {
+  text-align: center;
+}
+#name:hover {
+  background: var(--theme);
+  filter: blur(0px);
+  cursor: text;
+  box-shadow: 0px var(--shadow-size) 0px var(--accent);
+  margin-bottom: var(--shadow-gap);
 }
 
 /* CODE */
-
+.hljs {
+  background: transparent;
+}
 #code-container {
   position: relative;
+  margin-left: var(--shadow-size);
+  margin-top: var(--shadow-size);
+  width: calc(100% - 2 * var(--shadow-size));
+  height: calc(100% - 2 * var(--shadow-size));
 }
 #code-container, #code, #highlighting, #code-output {
   height: 200px;
-  width: 450px;
+  width: 100%;
+}
+#code:hover:not(#code:focus) {
+  box-shadow: var(--shadow-size) var(--shadow-size) var(--shadow-blur) var(--theme);
+}
+#code:focus {
+  box-shadow: var(--shadow-size) var(--shadow-size) var(--shadow-blur) var(--active);
 }
 #highlighting, #code, #code-output {
   padding: 0px;
@@ -42,33 +77,43 @@
   left: 0;
 }
 #code, #highlighting, #highlighting * {
-  font-size: 14px;
-  font-family: monospace;
-  line-height: 20px;
+  font-size: var(--code-size) !important;
+  font-family: var(--font);
+  line-height: var(--code-size);
 }
 #code {
   z-index: 6;
   color: transparent;
   background: transparent;
-  caret-color: black;
+  caret-color: var(--active);
 }
 #highlighting {
   z-index: 5;
 }
 
-
 /* ACTIONS */
-
 #editor-actions {
   display: flex;
+  gap: var(--gap);
 }
 #editor-actions * {
   flex: 1;
+  border-width: 0px;
+  font-family: var(--font);
+  font-size: 1.5em;
 }
-
 
 /* RESULT */
 
 #total-result-container, #node-result-container {
   display: none;
+}
+#node-result-container .label {
+  margin-left: var(--shadow-size);
+}
+#node-result-container textarea {
+  height: var(--code-size);
+}
+#total-result-container textarea {
+  height: calc(3 * var(--code-size));
 }

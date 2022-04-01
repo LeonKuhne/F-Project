@@ -255,7 +255,7 @@ class NodeEditor {
     const totalResultContainer = this.state.elem.totalResultContainer
     const totalRunIdLabel = this.state.elem.totalRunIdLabel
     const totalResultArea = this.state.elem.totalResultArea
-    totalRunIdLabel.innerText = `program ${runId} output`
+    totalRunIdLabel.innerText = `program ${runId}`
     totalResultArea.value = result
     totalResultContainer.show()
   }
@@ -265,7 +265,7 @@ class NodeEditor {
     if (node.data.result === undefined) {
       elems.nodeResultContainer.hide()
     } else {
-      elems.nodeRunIdLabel.innerText = 'deamon ' + node.data.runId
+      elems.nodeRunIdLabel.innerText = `deamon ${node.data.runId}`
       elems.nodeInputArea.value = '' + JSON.stringify(node.data.param)
       elems.nodeResultArea.value = '' + JSON.stringify(node.data.result)
       elems.nodeResultContainer.show()
@@ -289,6 +289,10 @@ class NodeEditor {
       input.value = label.innerText
       input.show()
       label.hide()
+      // focus on the input
+      input.focus()
+      // move cursor to end of line
+      input.setSelectionRange(input.value.length, input.value.length)
     } else {
       const name = input.value
       input.hide()

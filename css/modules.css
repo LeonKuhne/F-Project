@@ -1,15 +1,9 @@
-#modules-container {
-  display: flex;
-  flex-direction: row;
-}
 .modules {
   flex: 1;
+  gap: var(--gap);
   display: flex;
   flex-direction: column;
-  padding: 10px;
-}
-.modules > .title {
-  font-size: 18px;
+  padding-bottom: var(--shadow-gap);
 }
 .modules * {
   flex: 1;
@@ -17,29 +11,26 @@
 }
 .module {
   flex: 1;
+  gap: var(--gap);
   display: flex;
   flex-direction: row;
-  font-size: 15px;
+}
+.module > * {
+  font-family: 'Atari', monospace;
+  font-weight: 100;
+  font-size: 1.5em;
+  text-align: left;
+  border-width: 0px;
 }
 .module > .delete {
-  background-color: pink;
-  color: white;
+  text-align: center;
   min-width: 32px;
   flex: 0;
   padding: 0px;
-  border-radius: 20px;
-}
-.module > .delete:hover {
-  background-color: red;
 }
 .module > * {
-  padding-top: 3px;
-  padding-bottom: 3px;
   background-color: #fff0
 }
-#static-modules {
-  background: lightsteelblue;
-}
-#saved-modules {
-  background: lightpink;
+.module.selected * {
+  background: var(--active) !important;
 }
