@@ -14,7 +14,6 @@ at some point, you too will hit the "oh shit" moment
 - extra: scroll to zoom
 - extra: offscreen node indicator (dot on edge)
 ### MODULES
-- fix: group modules to properly save node names
 ### PROJECT
 - feature: parse from javascript file
 - feature: export to javascript file

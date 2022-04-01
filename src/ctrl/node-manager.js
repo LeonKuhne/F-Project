@@ -17,7 +17,6 @@ class NodeManager {
 
   createNode(module, x, y) {
     if (module.isGroup()) {
-      // create group node
       return this.createGroup(module, x, y)
     } else {
       // create regular node
