@@ -20,6 +20,8 @@ at some point, you too will hit the "oh shit" moment
 ### PROJECT
 - feature: parse from javascript file
 - feature: export to javascript file
+### CSS
+- fix: group node element colors during interaction
 
 ## Architecture
 Arranged by levels of abstraction:
