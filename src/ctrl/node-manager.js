@@ -33,6 +33,9 @@ class NodeManager {
     nm.unpauseDraw()
     return groupNodeId
   }
+  removeNode(node) {
+    this.state.nodel.manager.deleteNode(node.id)
+  }
   updateNode(module, node) {
     if (module.isGroup()) {
       const nm = this.state.nodel.manager

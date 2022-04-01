@@ -8,8 +8,6 @@ at some point, you too will hit the "oh shit" moment
 ## Todo
 ### NODEL
 ### EDITOR
-- fix: I want to be able to clear out the name-input field completely before I start typing
-- feature: delete node button
 - extra: code auto test field
 - extra: code compile check & indicator
 - extra: pan node view

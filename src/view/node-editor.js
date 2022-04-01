@@ -27,6 +27,7 @@ class NodeEditor {
       collapseButton: document.getElementById('collapse'),
       runButton: document.getElementById('run'),
       saveButton: document.getElementById('save'),
+      deleteButton: document.getElementById('delete'),
     }
     let elem = this.state.elem
 
@@ -65,13 +66,22 @@ class NodeEditor {
 
     // save the code
     elem.saveButton.onclick = () => {
-      const node = this.state.selected.node
-      const moduleManager = this.state.manager.module
-
       // save the node and/or node group
-      moduleManager.save(node)
+      const node = this.state.selected.node
+      this.state.manager.module.save(node)
     }
     
+    // remove the node
+    elem.deleteButton.onclick = () => {
+      const node = this.state.selected.node
+      // reset the editor
+      this.deselectNode(node)
+      this.hide()
+      // delete the node
+      this.state.selected.node = null
+      this.state.manager.node.removeNode(node)
+    }
+
     //
     // INTERACTIONS
 
@@ -193,8 +203,10 @@ class NodeEditor {
   deselectNode(node) {
     // indicate deselected node
     const elem = document.getElementById(node.id)
-    elem.classList.remove('selected')
-    console.info(`Deselecting ${node.id}`)
+    if (elem) {
+      elem.classList.remove('selected')
+      console.info(`Deselecting ${node.id}`)
+    }
   }
 
   updateCollapsedButton(node) {
