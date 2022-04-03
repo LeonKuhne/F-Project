@@ -7,6 +7,7 @@ at some point, you too will hit the "oh shit" moment
 
 ## Todo
 ### NODEL
+- feature: support configuring connections to function params
 ### EDITOR
 - extra: code auto test field
 - extra: code compile check & indicator

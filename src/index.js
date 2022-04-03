@@ -34,6 +34,7 @@ function main() {
   }
 
   // load ui elements
+  state.editor.project = new ProjectEditor(state)
   state.editor.module = new ModuleEditor(state)
   state.editor.node = new NodeEditor(state)
 }

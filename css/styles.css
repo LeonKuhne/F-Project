@@ -30,14 +30,17 @@ body {
 button:active {
   cursor: pointer;
 }
-button {
+button, label {
   padding-left: var(--button-padding);
   padding-right: var(--button-padding);
+  cursor: pointer;
 }
-button, input, textarea {
+button, input, textarea, label {
   background: transparent;
   color: var(--theme);
   font-family: var(--font) !important;
+  border-width: 0px;
+  font-size: 1.5em;
 }
 input:focus, textarea:focus {
   outline: none;

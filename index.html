@@ -24,6 +24,7 @@
     <!-- CUSTOM SCRIPTS -->
     <!-- core -->
     <script src='src/core/linter.js'></script>
+    <script src='src/core/parse-js.js'></script>
     <script src='src/core/code-runner.js'></script>
     <script src='src/core/template.js'></script>
     <script src='src/core/module.js'></script>
@@ -33,6 +34,7 @@
     <script src='src/ctrl/node-manager.js'></script>
     <!-- ui -->
     <script src='src/view/hideable.js'></script>
+    <script src='src/view/project-editor.js'></script>
     <script src='src/view/module-editor.js'></script>
     <script src='src/view/node-editor.js'></script>
     <!-- main -->
@@ -40,8 +42,21 @@
   </head>
   <body>
 
+    <!-- HIDDEN -->
+    <div class='hidden'>
+      <input id="select-file" type='file' class="shadow-accent" accept='.js'/>
+    </div>
+
     <!-- OVERLAY -->
     <div id="overlay" class='v-flex'>
+      <!-- PROJECT -->
+      <div class='component v-flex'>
+        <div class="title noflex">Project</div>
+        <div class='h-flex'>
+          <label id="import-project" for='select-file' class="shadow-accent">import</label>
+          <button id="export-project" class="shadow-accent">export</button>
+        </div>
+      </div>
 
       <!-- SAVED MODULES -->
       <div class='component h-flex'>
