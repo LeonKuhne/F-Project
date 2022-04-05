@@ -1,6 +1,6 @@
 # f | v0.1
 a project to end all projects
-f u, f me, f every body
+f u, f me, f every `body`
 
 takes object oriented project,
 changes it to functional,
