@@ -9,6 +9,7 @@ at some point, you too will hit the "oh shit" moment
 ### NODEL
 - feature: support configuring connections to function params
 ### EDITOR
+- feature: tab inserts 2 spaces in the code editor
 - extra: code auto test field
 - extra: code compile check & indicator
 - extra: pan node view
