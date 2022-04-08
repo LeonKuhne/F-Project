@@ -16,6 +16,8 @@ at some point, you too will hit the "oh shit" moment
 - extra: scroll to zoom
 - extra: offscreen node indicator (dot on edge)
 ### MODULES
+### RUN
+- extra: optimize running nodes in parallel
 ### PROJECT
 - feature: parse from javascript file
 - feature: export to javascript file
