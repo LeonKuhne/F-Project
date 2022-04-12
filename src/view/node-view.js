@@ -57,7 +57,7 @@ class NodeView {
     nl.on('mouseup', e => {
       // support connecting nodes
       if (isDraggedOnDifferent(e.node)) {
-        nm.toggleConnect(dragging.node.id, e.node.id)
+        nm.toggleConnect(dragging.node.id, e.node.id, 0)
 
       // move node
       } else if (dragging && !e.node) {
@@ -73,5 +73,36 @@ class NodeView {
       nodelElem.style.cursor = 'default'
       dragging = null
     })
+
+    // setup connection colors
+    const COLOR_OFFSET = 11 // MESS WITH THIS TO CHANGE UP THE CONNECTION COLORS
+    const toHex = (num) => (num % 16).toString(16)
+    nr.setConnectionColors((paramIdx) => {
+      let color = '#'
+      for (let i=0; i<6; i++) {
+        color += toHex(paramIdx + COLOR_OFFSET*i)
+        console.log(color)
+      }
+      console.info(`Drawing with connection color ${color}`)
+      return color
+    })
+
+    // connection clicks
+    nl.on('click', (e) => {
+      const [source, target] = e.nodes
+      let maxConnections = target.data.params.length
+      let paramIdx = nm.getConnectionType(source.id, target.id)
+  
+      // cast to number
+      paramIdx = Number(paramIdx)
+      // increment the parameter index
+      paramIdx = paramIdx + 1
+      // cropped the range
+      paramIdx %= maxConnections
+
+      // update the connection
+      nm.setConnectionType(source.id, target.id, paramIdx)
+      console.info(`${target.id} moved parameter ${source.id} to slot ${paramIdx}`)
+    }, true)
   }
 }

@@ -1,15 +1,14 @@
 'use strict';
 
 class Linter {
-  constructor(state, inputElem, outputElem, onlint=(code)=>{}) {
+  constructor(inputElem, outputElem) {
     this.inputElem = inputElem
     this.outputElem = outputElem
 
     // listen for actions
-    this.inputElem.oninput = () => {
+    this.inputElem.addEventListener('input', e => {
       this.lint()
-      onlint(this.inputElem.value)
-    }
+    })
     this.inputElem.onscroll = this.syncScroll
   }
 

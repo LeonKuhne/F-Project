@@ -1,7 +1,10 @@
 'use strict';
 
 class Module {
-  constructor(options = {id: null, name: null, base: null, code: null, nodes: null}) {
+  constructor(options = {
+    id: null, name: null, base: null,
+    code: null, nodes: null, params: null
+  }) {
     // update parameters
     this.update(options)
   }
@@ -45,7 +48,7 @@ class Module {
       missingType = 'Default'
     }
     // validate node/group
-    if (!this.nodes && (!this.code || !this.base)) {
+    if (!this.nodes && (!this.code || !this.params || !this.base)) {
       missingType = 'Specific'
     }
     // throw

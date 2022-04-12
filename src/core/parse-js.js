@@ -73,4 +73,16 @@ class ParseJS {
   static beforeFunctionClose(fName, line) {
     return line.match(/^( *)}/i)
   }
+
+  // fCode: string representing an anonymous function compatible with f-modules
+  static parseParams(fCode) {
+    const matches = fCode.match(/^.*\((.*)\) *=>/i)
+    if (!matches) {
+      return null
+    }
+
+    let params = matches[1].split(',')
+    params = params.map(param => param.trim())
+    return params
+  }
 }

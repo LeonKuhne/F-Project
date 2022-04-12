@@ -57,7 +57,8 @@ class ModuleManager {
       const module = new Module({
         name: name,
         base: name,
-        code: 'x => x'
+        code: 'x => x',
+        params: ['x'],
       })
 
       // load module

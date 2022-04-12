@@ -29,15 +29,13 @@ class NodeEditor {
       saveButton: document.getElementById('save'),
       deleteButton: document.getElementById('delete'),
     }
-    let elem = this.state.elem
+    const elems = this.state.elem
 
     // create dependencies
     this.runner = new CodeRunner(this.state)
     this.state.util.linter = new Linter(
-      this.state,
-      elem.codeArea,
-      elem.codeOutput,
-      (code) => this.setCode(this.state.selected.node, code)
+      elems.codeArea,
+      elems.codeOutput,
     )
 
     // NOTE: I think anonymous callbacks are needed to use class state; ie 'this'
@@ -59,23 +57,23 @@ class NodeEditor {
     // ACTIONS
 
     // collapse the node group
-    elem.collapseButton.onclick = () => {
+    elems.collapseButton.onclick = () => {
       const node = this.state.selected.node
       this.state.nodel.manager.toggleGroup(node.id)
     }
 
     // run the code
-    elem.runButton.onclick = () => this.runCode(this.state.selected.node)
+    elems.runButton.onclick = () => this.runCode(this.state.selected.node)
 
     // save the code
-    elem.saveButton.onclick = () => {
+    elems.saveButton.onclick = () => {
       // save the node and/or node group
       const node = this.state.selected.node
       this.state.manager.module.save(node)
     }
     
     // remove the node
-    elem.deleteButton.onclick = () => {
+    elems.deleteButton.onclick = () => {
       const node = this.state.selected.node
       // reset the editor
       this.deselectNode(node)
@@ -89,18 +87,23 @@ class NodeEditor {
     // INTERACTIONS
 
     // edit node name
-    elem.nameIndicator.addEventListener("click", () => {
+    elems.nameIndicator.addEventListener("click", () => {
       this.editName(true)
     })
-    elem.nameInput.addEventListener("keyup", e => {
+    elems.nameInput.addEventListener("keyup", e => {
       this.saveName()
-      this.updateName(this.state.elem.nameInput.value)
+      this.updateName(this.state.elems.nameInput.value)
 
       if (e.key === 'Enter') {
         this.editName(false)
       }
     })
 
+    // update the selected nodes code whenever the area is updated
+    elems.codeArea.addEventListener('input', e => {
+      this.state.selected.node.data.code = e.target.value
+      this.state.selected.node.data.params = ParseJS.parseParams(e.target.value)
+    })
     
     // listen for changes
     this.state.nodel.manager.onDraw(() => {
@@ -134,6 +137,7 @@ class NodeEditor {
     if (node.isGroup(true)) {
       elems.codeContainer.hidden = true
     } else {
+      // load a node's code
       elems.codeContainer.hidden = false
       elems.codeArea.value = node.data.code
       this.state.util.linter.lint()
@@ -163,10 +167,6 @@ class NodeEditor {
 
   //
   // PROGRAM
-
-  setCode(node, code) {
-    node.data.code = code
-  }
 
   runCode(node) {
     if (!node) {

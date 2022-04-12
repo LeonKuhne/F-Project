@@ -9,7 +9,7 @@ function main() {
 
   nr = new NodelRender()
   nm = new NodelManager(nr)
-  nl = new NodelListener(nm)
+  nl = new NodelListener(nm, nr)
 
   // aggregate state
   state = {
