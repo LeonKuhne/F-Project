@@ -136,6 +136,10 @@ textarea {
   box-shadow: var(--shadow-size) 0px var(--shadow-blur) var(--active);
 }
 
+.selected {
+  box-shadow: 0px 0px 40px var(--active) !important;
+}
+
 /* NODE VIEW */
 #nodel {
   width: 100%;

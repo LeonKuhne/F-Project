@@ -9,7 +9,7 @@ function main() {
 
   nr = new NodelRender()
   nm = new NodelManager(nr)
-  nl = new NodelListener(nm)
+  nl = new NodelListener(nm, nr)
 
   // aggregate state
   state = {
@@ -29,14 +29,17 @@ function main() {
     },
 
     // views and controllers by custom key
+    view: {},
     editor: {},
     manager: {},
+    util: {},
   }
 
   // load ui elements
   state.editor.project = new ProjectEditor(state)
   state.editor.module = new ModuleEditor(state)
   state.editor.node = new NodeEditor(state)
+  state.view.node = new NodeView(state)
 }
 
 window.onload = main

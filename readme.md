@@ -6,8 +6,12 @@ f u, f me, f every body
 at some point, you too will hit the "oh shit" moment
 
 ## Todo
+### GENERAL
+- feature: add basic nodes described in notebook
+- fix: saving a group containing a node with joining parents duplicates the node
 ### NODEL
 - feature: support configuring connections to function params
+- extra: add labels on connections and show param names
 ### EDITOR
 - feature: tab inserts 2 spaces in the code editor
 - extra: code auto test field
@@ -16,6 +20,8 @@ at some point, you too will hit the "oh shit" moment
 - extra: scroll to zoom
 - extra: offscreen node indicator (dot on edge)
 ### MODULES
+### RUN
+- extra: optimize running nodes in parallel
 ### PROJECT
 - feature: parse from javascript file
 - feature: export to javascript file

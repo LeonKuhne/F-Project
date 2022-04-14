@@ -29,50 +29,51 @@ class NodeEditor {
       saveButton: document.getElementById('save'),
       deleteButton: document.getElementById('delete'),
     }
-    let elem = this.state.elem
+    const elems = this.state.elem
 
     // create dependencies
     this.runner = new CodeRunner(this.state)
-    this.linter = new Linter(
-      this.state,
-      elem.codeArea,
-      elem.codeOutput,
-      (code) => this.setCode(this.state.selected.node, code)
+    this.state.util.linter = new Linter(
+      elems.codeArea,
+      elems.codeOutput,
     )
-    // NOTE: anonymous callbacks are needed to use class state; ie 'this'
-    var manager = new NodeManager(this.state, {
+
+    // NOTE: I think anonymous callbacks are needed to use class state; ie 'this'
+    this.state.manager.node = new NodeManager(this.state, {
+      // TODO you could make the node manager emit events, 
+      // so that the parts could sub themselves.
+      // That said, youu should probably also be subbing to events
+      // in node manager instead of passing callbacks into the constructor.
       selectNode: (...args) => this.selectNode(...args),
       deselectNode: (...args) => this.deselectNode(...args),
       selectAnything: () => this.show(),
       selectNothing: () => this.hide(),
     })
-    this.state.manager.node = manager
 
     // class state
-    var dragging = null // nodel event containing a node
     this.editingName = false
 
     //
     // ACTIONS
 
     // collapse the node group
-    elem.collapseButton.onclick = () => {
+    elems.collapseButton.onclick = () => {
       const node = this.state.selected.node
       this.state.nodel.manager.toggleGroup(node.id)
     }
 
     // run the code
-    elem.runButton.onclick = () => this.runCode(this.state.selected.node)
+    elems.runButton.onclick = () => this.runCode(this.state.selected.node)
 
     // save the code
-    elem.saveButton.onclick = () => {
+    elems.saveButton.onclick = () => {
       // save the node and/or node group
       const node = this.state.selected.node
       this.state.manager.module.save(node)
     }
     
     // remove the node
-    elem.deleteButton.onclick = () => {
+    elems.deleteButton.onclick = () => {
       const node = this.state.selected.node
       // reset the editor
       this.deselectNode(node)
@@ -86,10 +87,10 @@ class NodeEditor {
     // INTERACTIONS
 
     // edit node name
-    elem.nameIndicator.addEventListener("click", () => {
+    elems.nameIndicator.addEventListener("click", () => {
       this.editName(true)
     })
-    elem.nameInput.addEventListener("keyup", e => {
+    elems.nameInput.addEventListener("keyup", e => {
       this.saveName()
       this.updateName(this.state.elem.nameInput.value)
 
@@ -98,77 +99,29 @@ class NodeEditor {
       }
     })
 
-    const nl = this.state.nodel.listener
-    // create node/group from selected module
-    nl.on('dblclick', e => {
-      const module = this.state.selected.module
-      if (!module) {
-        console.error(`No module is selected`)
-        return
-      } 
-
-      manager.createNode(module, e.x, e.y)
+    // update the selected nodes code whenever the area is updated
+    elems.codeArea.addEventListener('input', e => {
+      this.state.selected.node.data.code = e.target.value
+      this.state.selected.node.data.params = ParseJS.parseParams(e.target.value)
     })
-
-    // support dragging
-    const isDraggedOnDifferent = node => {
-      return dragging && node && dragging.node.id !== node?.id
-    }
-
-    // start dragging
-    nl.on('mousedown', e => {
-      if (e.node) {
-        dragging = e
-      }
-
-      // update name field when clicked off input
-      if (this.editingName) {
-        this.saveName()
-        this.updateName(this.state.elem.nameInput.value)
-        this.editName(false)
-      }
-    })
-
-    // indicate dragging using cursor
-    nl.on('mousemove', e => {
-      if (dragging) {
-        if (isDraggedOnDifferent(e.node)) {
-          elem.nodel.style.cursor = 'copy'
-        } else {
-          elem.nodel.style.cursor = 'move'
-        }
-      }
-    })
-
-    // drag release
-    nl.on('mouseup', e => {
-      // support connecting nodes
-      if (isDraggedOnDifferent(e.node)) {
-        nm.toggleConnect(dragging.node.id, e.node.id)
-
-      // move node
-      } else if (dragging && !e.node) {
-        console.info('moving node', e.x, e.y)
-        nm.moveNode(dragging.node.id, e.x, e.y)
-
-      // select/deselect node
-      } else {
-        manager.engage(e.node)
-      }
-
-      // reset
-      elem.nodel.style.cursor = 'default'
-      dragging = null
-    })
-
+    
     // listen for changes
-    nm.onDraw(() => {
+    this.state.nodel.manager.onDraw(() => {
       this.selectNode(this.state.selected.node)
     })
   }
 
   //
-  // NODE INTERACTIONS
+  // EDITOR INTERACTIONS
+
+  deselectNode(node) {
+    // indicate deselected node
+    const elem = document.getElementById(node.id)
+    if (elem) {
+      elem.classList.remove('selected')
+      console.info(`Deselecting ${node.id}`)
+    }
+  }
 
   selectNode(node) {
     if (!node) {
@@ -184,43 +137,18 @@ class NodeEditor {
     if (node.isGroup(true)) {
       elems.codeContainer.hidden = true
     } else {
+      // load a node's code
       elems.codeContainer.hidden = false
       elems.codeArea.value = node.data.code
-      this.linter.lint()
+      this.state.util.linter.lint()
     }
 
     this.updateName()
-
-    // update button text
     this.updateCollapsedButton(node)
-
-    // update the result
     this.updateNodeResult(node)
-
+    
     console.info(`Selecting ${node.id}`)
   }
-
-  deselectNode(node) {
-    // indicate deselected node
-    const elem = document.getElementById(node.id)
-    if (elem) {
-      elem.classList.remove('selected')
-      console.info(`Deselecting ${node.id}`)
-    }
-  }
-
-  updateCollapsedButton(node) {
-    let button = this.state.elem.collapseButton
-    if (node.group.collapsed) {
-      button.innerText = button.getAttribute('on')
-    } else {
-      button.innerText = button.getAttribute('off')
-    }
-  }
-
-
-  //
-  // EDITOR INTERACTIONS
 
   show() {
     // show the editor
@@ -234,15 +162,11 @@ class NodeEditor {
     elem.editor.hide()
     elem.codeArea.value = ''
     elem.nameIndicator.innerHTML = ''
-    this.linter.lint('')
+    this.state.util.linter.lint('')
   }
 
   //
   // PROGRAM
-
-  setCode(node, code) {
-    node.data.code = code
-  }
 
   runCode(node) {
     if (!node) {
@@ -252,6 +176,7 @@ class NodeEditor {
 
     // collect state
     const totalResultArea = this.state.elem.totalResultArea
+    this.runner.reset()
     const responses = this.runner.run(node)
 
     // render 
@@ -278,7 +203,7 @@ class NodeEditor {
       elems.nodeResultContainer.hide()
     } else {
       elems.nodeRunIdLabel.innerText = `deamon ${node.data.runId}`
-      elems.nodeInputArea.value = '' + JSON.stringify(node.data.param)
+      elems.nodeInputArea.value = '' + JSON.stringify(node.data.input)
       elems.nodeResultArea.value = '' + JSON.stringify(node.data.result)
       elems.nodeResultContainer.show()
     }
@@ -312,6 +237,15 @@ class NodeEditor {
     }
   }
 
+  resetEditName() {
+    // update name field when clicked off input
+    if (this.editingName) {
+      this.saveName()
+      this.updateName(this.state.elem.nameInput.value)
+      this.editName(false)
+    }
+  }
+
   updateName(name=null) {
     // use the selected node by default
     const node = this.state.selected.node
@@ -334,11 +268,24 @@ class NodeEditor {
 
     if (node.group.collapsed) {
       // name the group
+      // TODO lol check this, it don't look right
       this.state.nodel.manager.createGroup(node.id, name)
 
     } else {
       // name the node
       node.data.name = name 
+    }
+  }
+
+  //
+  // SORRY, YOU'RE IN YOUR OWN CATEGORY BUD
+
+  updateCollapsedButton(node) {
+    let button = this.state.elem.collapseButton
+    if (node.group.collapsed) {
+      button.innerText = button.getAttribute('on')
+    } else {
+      button.innerText = button.getAttribute('off')
     }
   }
 }

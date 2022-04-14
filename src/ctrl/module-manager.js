@@ -51,13 +51,18 @@ class ModuleManager {
   loadStatic() {
     // get sorted static template names
     const templateNames = this.state.nodel.render.templates.sort()
+    const code = `\
+(x) => {
+  return x
+}`
 
     // loop through HTML templates
     for (const name of templateNames) {
       const module = new Module({
         name: name,
         base: name,
-        code: 'x => x'
+        code: code,
+        params: ParseJS.parseParams(code),
       })
 
       // load module
