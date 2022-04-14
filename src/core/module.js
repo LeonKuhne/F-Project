@@ -3,10 +3,12 @@
 class Module {
   constructor(options = {
     id: null, name: null, base: null,
-    code: null, nodes: null, params: null
+    code: null, nodes: null, params: null,
   }) {
     // update parameters
     this.update(options)
+
+    this.getParams = () => ParseJS.parseParams(this.code)
   }
   isGroup() {
     return !!this.nodes
@@ -48,7 +50,7 @@ class Module {
       missingType = 'Default'
     }
     // validate node/group
-    if (!this.nodes && (!this.code || !this.params || !this.base)) {
+    if (!this.nodes && (!this.code || !this.base || !this.params)) {
       missingType = 'Specific'
     }
     // throw

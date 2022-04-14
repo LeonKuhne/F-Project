@@ -81,7 +81,6 @@ class NodeView {
       let color = '#'
       for (let i=0; i<6; i++) {
         color += toHex(paramIdx + COLOR_OFFSET*i)
-        console.log(color)
       }
       console.info(`Drawing with connection color ${color}`)
       return color
@@ -90,11 +89,11 @@ class NodeView {
     // connection clicks
     nl.on('click', (e) => {
       const [source, target] = e.nodes
-      let maxConnections = target.data.params.length
+      let maxConnections = Math.max(target.data.params.length - 1, 1)
       let paramIdx = nm.getConnectionType(source.id, target.id)
   
       // cast to number
-      paramIdx = Number(paramIdx)
+      paramIdx = isNaN(Number(paramIdx)) ? 0 : Number(paramIdx) 
       // increment the parameter index
       paramIdx = paramIdx + 1
       // cropped the range

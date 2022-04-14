@@ -92,7 +92,7 @@ class NodeEditor {
     })
     elems.nameInput.addEventListener("keyup", e => {
       this.saveName()
-      this.updateName(this.state.elems.nameInput.value)
+      this.updateName(this.state.elem.nameInput.value)
 
       if (e.key === 'Enter') {
         this.editName(false)
@@ -176,6 +176,7 @@ class NodeEditor {
 
     // collect state
     const totalResultArea = this.state.elem.totalResultArea
+    this.runner.reset()
     const responses = this.runner.run(node)
 
     // render 
@@ -202,7 +203,7 @@ class NodeEditor {
       elems.nodeResultContainer.hide()
     } else {
       elems.nodeRunIdLabel.innerText = `deamon ${node.data.runId}`
-      elems.nodeInputArea.value = '' + JSON.stringify(node.data.param)
+      elems.nodeInputArea.value = '' + JSON.stringify(node.data.input)
       elems.nodeResultArea.value = '' + JSON.stringify(node.data.result)
       elems.nodeResultContainer.show()
     }
