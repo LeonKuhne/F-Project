@@ -3,11 +3,10 @@ a project to end all projects
 f u, f me, f every body
 
 #### v0.0
-at some point, you too will hit the "oh shit" moment
+hit the "oh shit" moment and be like, woah
 
 ## Todo
 ### GENERAL
-- feature: add basic nodes described in notebook
 - fix: saving a group containing a node with joining parents duplicates the node
 ### NODEL
 - extra: add labels on connections and show param names

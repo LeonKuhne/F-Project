@@ -61,7 +61,6 @@ class NodeView {
 
       // move node
       } else if (dragging && !e.node) {
-        console.info('moving node', e.x, e.y)
         nm.moveNode(dragging.node.id, e.x, e.y)
 
       // select/deselect node
@@ -89,7 +88,9 @@ class NodeView {
     // connection clicks
     nl.on('click', (e) => {
       const [source, target] = e.nodes
-      let maxConnections = Math.max(target.data.params.length - 1, 1)
+      const params = target.data.params
+      let totalParams = params.required.length + params.optional.length
+      let maxConnections = Math.max(totalParams - 1, 1)
       let paramIdx = nm.getConnectionType(source.id, target.id)
   
       // cast to number

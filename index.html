@@ -128,8 +128,31 @@
     <div id='nodel'>
 
       <!-- NODEL TEMPLATES -->
-      <div id='basic' class='basic disable-select shadow-theme'>{name}</div>
+      <div id='empty' class='basic disable-select shadow-theme' select
+        code="(x) => {
+  return null
+}">{name}</div>
 
+      <div id='leaf' class='basic disable-select shadow-theme' 
+        code="(x) => {
+  // do something
+}">{name}</div>
+
+      <div id='memory' class='basic disable-select shadow-theme' 
+        code="(x, y) => {
+  if (y) {
+    x.attr = y
+    return undefined
+  } else {
+    return x.attr
+  }
+}">{name}</div>
+
+      <div id='attach' class='basic disable-select shadow-theme' 
+        code="(x, y) => ({...y, todo: null})">{name}</div>
+
+      <div id='node' class='basic disable-select shadow-theme' 
+        code="(x) => ({...x})">{name}</div>
     </div>
 
 </html>

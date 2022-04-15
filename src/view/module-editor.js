@@ -102,7 +102,7 @@ class ModuleEditor {
     }
 
     // add the element
-    // TODO insert alphabetically
+    // TODO insert alphabetically, or just re-sort the whole list
     parentElem.appendChild(elem)
   }
 

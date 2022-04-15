@@ -1,21 +1,5 @@
 'use strict';
 
-/* TODO: remove or use
-function incrementVersion(val) {
-  const versionArr = val.match(/ v[0-9]$/) // ex: null or [' v2']
-  if (!versionArr) {
-    // first duplicate
-    val += ' v2'
-  } else {
-    // consecutive duplicates
-    const versionStr = versionArr[0] // ex: ' v2'
-    const version = versionStr.split('v')[1]
-    val = val.replace(versionArr[0], ` v${Number(version)+1}`)
-  }
-  return val
-}
-*/
-
 class ModuleManager {
   constructor(state, callbacks = {
     addStaticModule: (template, setSelected) => {},
@@ -29,19 +13,13 @@ class ModuleManager {
     this.savedModules = new ModuleList()
 
     // load all
+    this.defaultModule = null
     this.loadStatic()
     this.loadSaved() 
   }
 
-  /* TODO remove or use
-  uniqueName(name) {
-    const duplicate = this.getTemplateByName(name)
-    return duplicate ? this.uniqueName(incrementVersion(name)) : name
-  }
-  */
-
   getDefault() {
-    return this.staticModules.first()
+    return this.staticModules.find(this.defaultModule) || this.staticModules.first()
   }
 
   get(id) {
@@ -51,13 +29,20 @@ class ModuleManager {
   loadStatic() {
     // get sorted static template names
     const templateNames = this.state.nodel.render.templates.sort()
-    const code = `\
-(x) => {
-  return x
-}`
+    const defaultCode = `(x) => null`
 
     // loop through HTML templates
     for (const name of templateNames) {
+      const elem = document.getElementById(name)
+      const code = elem.getAttribute('code') || defaultCode
+
+      // save default
+      if (elem.getAttribute('select') !== null) {
+        this.defaultModule = name
+        console.log('setting default attribute to', name)
+      }
+
+      // create module
       const module = new Module({
         name: name,
         base: name,

@@ -30,7 +30,6 @@ class ParseJS {
     reader.addEventListener('load', () => {
       callback(reader.result)
     }, false)
-
   }
 
   static parseFunctionMatch(line, match) {
@@ -83,6 +82,8 @@ class ParseJS {
 
     let params = matches[1].split(',')
     params = params.map(param => param.trim())
-    return params
+    const required = params.filter(param => !param.includes('='))
+    const optional = params.filter(param => param.includes('='))
+    return {required, optional}
   }
 }

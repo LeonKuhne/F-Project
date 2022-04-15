@@ -7,8 +7,6 @@ class Module {
   }) {
     // update parameters
     this.update(options)
-
-    this.getParams = () => ParseJS.parseParams(this.code)
   }
   isGroup() {
     return !!this.nodes

@@ -10,6 +10,18 @@ class CodeRunner {
     this.params = {}
   }
 
+  hasRequiredParams(params, requiredParamCount) {
+    // find any missing params
+    let missingParamIdx = []
+    for (let idx=0; idx<requiredParamCount; idx++) {
+      if (params[idx] === null) {
+        return false
+      }
+    }
+
+    return true
+  }
+
   // TODO: dispatch each node as its own thread (ie. promise)
   run(node, paramIdx=null, param=null, runId=null) {
     // update and save the run id
@@ -19,11 +31,13 @@ class CodeRunner {
     node.data.runId = runId
 
     // setup parameters
+    const requiredParamCount = node.data.params.required.length
     if (!(node.id in this.params)) {
       this.params[node.id] = {}
 
       // start with node data, fill with nulls
-      for (let idx=0; idx<node.data.params.length; idx++) {
+      const totalParamCount = requiredParamCount + node.data.params.optional.length
+      for (let idx=0; idx<totalParamCount; idx++) {
         let val = null
         switch(idx) {
           case 0:
@@ -34,16 +48,16 @@ class CodeRunner {
       }
     }
 
-    // add the given parameter
+    // add the provided parameter
     if (paramIdx && param) {
       this.params[node.id][paramIdx] = param
     }
 
     // mask the node's body
-    node.data.input = Object.values({ ...this.params[node.id], 0: null })
+    node.data.input = Object.values({ ...this.params[node.id], 0: 'x' })
 
-    // ensure there are sufficient parameters
-    if (Object.values(this.params[node.id]).includes(null)) {
+    // ensure required parameters exist
+    if (!this.hasRequiredParams(this.params[node.id], requiredParamCount)) {
       return []
     }
 
@@ -52,9 +66,9 @@ class CodeRunner {
     const func = eval(node.data.code)
     node.data.result = func(...Object.values(this.params[node.id]))
 
-    // check for end
-    if (node.isLeaf()) {
-      return [node.data.result]
+    // check for end, or undefined returned
+    if (node.isLeaf() || node.data.result === undefined) {
+      return node.data.result === undefined ? [] : [node.data.result]
     }
 
     // recursively run through children
