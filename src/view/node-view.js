@@ -76,13 +76,30 @@ class NodeView {
     // setup connection colors
     const COLOR_OFFSET = 11 // MESS WITH THIS TO CHANGE UP THE CONNECTION COLORS
     const toHex = (num) => (num % 16).toString(16)
-    nr.setConnectionColors((paramIdx) => {
+    nr.on('connection-color', (paramIdx) => {
       let color = '#'
       for (let i=0; i<6; i++) {
         color += toHex(paramIdx + COLOR_OFFSET*i)
       }
       console.info(`Drawing with connection color ${color}`)
       return color
+    })
+
+    // setup connection labels
+    nr.on('connection-label', (source, target, paramIdx) => {
+      const requiredParams = target.data.params.required
+
+      // cast to number
+      paramIdx = isNaN(Number(paramIdx)) ? 0 : Number(paramIdx)
+
+      // correct the index offset
+      paramIdx += 1
+
+      if (paramIdx < requiredParams.length) {
+        return requiredParams[paramIdx]
+      } else {
+        return target.data.params.optional[paramIdx - requiredParams.length]
+      }
     })
 
     // connection clicks

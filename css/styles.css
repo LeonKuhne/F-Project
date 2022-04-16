@@ -146,6 +146,11 @@ textarea {
   height: 100%;
 }
 
+.line-label {
+  color: white;
+  text-shadow: 1px 1px 2px black;
+}
+
 /* TEMPLATES */
 .basic {
   padding: 10px;
@@ -160,3 +165,4 @@ textarea {
   background-color: var(--active);
   color: var(--contrast);
 }
+

@@ -102,7 +102,13 @@ class NodeEditor {
     // update the selected nodes code whenever the area is updated
     elems.codeArea.addEventListener('input', e => {
       this.state.selected.node.data.code = e.target.value
-      this.state.selected.node.data.params = ParseJS.parseParams(e.target.value)
+      const newParams = ParseJS.parseParams(e.target.value)
+      const oldParams = this.state.selected.node.data.params
+      if (oldParams !== newParams) {
+        this.state.selected.node.data.params = newParams
+        this.state.nodel.manager.redraw()
+        console.log('Updated node parameters')
+      }
     })
     
     // listen for changes

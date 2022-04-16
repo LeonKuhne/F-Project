@@ -39,7 +39,7 @@ class NodeManager {
     if (module.isGroup()) {
       const nm = this.state.nodel.manager
       nm.pauseDraw()
-      // TODO
+
       // delete the previous groups children if collapsed
       if (node.isGroup(true)) {
         nm.eachChild(node, child => {
@@ -50,7 +50,6 @@ class NodeManager {
 
       // upgrade any node to a group node
       this.createGroup(module, 0, 0, node)
-      console.error('TODO')
     } else {
       node.data = module.data()
     }

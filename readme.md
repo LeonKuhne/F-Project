@@ -3,13 +3,12 @@ a project to end all projects
 f u, f me, f every body
 
 #### v0.0
-hit the "oh shit" moment and be like, woah
+"oh shit" - me
 
 ## Todo
 ### GENERAL
 - fix: saving a group containing a node with joining parents duplicates the node
 ### NODEL
-- extra: add labels on connections and show param names
 ### EDITOR
 - feature: tab inserts 2 spaces in the code editor
 - extra: code auto test field
