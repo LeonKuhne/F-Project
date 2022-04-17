@@ -101,20 +101,39 @@ class NodeEditor {
 
     // update the selected nodes code whenever the area is updated
     elems.codeArea.addEventListener('input', e => {
-      this.state.selected.node.data.code = e.target.value
-      const newParams = ParseJS.parseParams(e.target.value)
-      const oldParams = this.state.selected.node.data.params
-      if (oldParams !== newParams) {
-        this.state.selected.node.data.params = newParams
-        this.state.nodel.manager.redraw()
-        console.log('Updated node parameters')
-      }
+      this.updateCode(e.target.value)
     })
+
+    // catch tab characters
+    elems.codeArea.onkeydown = (e) => {
+      if (e.key === 'Tab') {
+        e.target.value += '  '
+        this.updateCode(e.target.value)
+        return false
+      }
+    }
     
     // listen for changes
     this.state.nodel.manager.onDraw(() => {
       this.selectNode(this.state.selected.node)
     })
+  }
+
+  //
+  // HELPERS
+  updateCode(code) {
+    const node = this.state.selected.node
+    // update the node's code
+    node.data.code = code
+
+    // update the node's params
+    const newParams = ParseJS.parseParams(code)
+    const oldParams = node.data.params
+    if (oldParams !== newParams) {
+      node.data.params = newParams
+      this.state.nodel.manager.redraw()
+      console.info('Node parameters updated')
+    }
   }
 
   //

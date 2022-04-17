@@ -77,7 +77,7 @@ class ParseJS {
   static parseParams(fCode) {
     const matches = fCode.match(/^.*\((.*)\) *=>/i)
     if (!matches) {
-      return null
+      return {required: {}, optional: []}
     }
 
     let params = matches[1].split(',')

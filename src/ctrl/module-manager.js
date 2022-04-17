@@ -29,12 +29,11 @@ class ModuleManager {
   loadStatic() {
     // get sorted static template names
     const templateNames = this.state.nodel.render.templates.sort()
-    const defaultCode = `(x) => null`
 
     // loop through HTML templates
     for (const name of templateNames) {
       const elem = document.getElementById(name)
-      const code = elem.getAttribute('code') || defaultCode
+      const code = elem.getAttribute('code') || ''
 
       // save default
       if (elem.getAttribute('select') !== null) {

@@ -34,6 +34,7 @@ button, label {
   padding-left: var(--button-padding);
   padding-right: var(--button-padding);
   cursor: pointer;
+  text-align: center;
 }
 button, input, textarea, label {
   background: transparent;

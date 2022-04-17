@@ -9,21 +9,21 @@ f u, f me, f every body
 ### GENERAL
 - fix: saving a group containing a node with joining parents duplicates the node
 ### NODEL
+- fix: currently applying a group to a node doesn't change the root node, don't think thats intended
+### PROJECT
+- feature: parse from javascript file
+- feature: export to javascript file
 ### EDITOR
-- feature: tab inserts 2 spaces in the code editor
 - extra: code auto test field
 - extra: code compile check & indicator
 - extra: pan node view
 - extra: scroll to zoom
 - extra: offscreen node indicator (dot on edge)
-### MODULES
 ### RUN
 - extra: optimize running nodes in parallel
-### PROJECT
-- feature: parse from javascript file
-- feature: export to javascript file
 ### CSS
 - extra: fix group node element colors during interaction
+### MODULES
 
 ## Architecture
 Arranged by levels of abstraction:

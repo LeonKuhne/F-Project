@@ -48,7 +48,7 @@ class Module {
       missingType = 'Default'
     }
     // validate node/group
-    if (!this.nodes && (!this.code || !this.base || !this.params)) {
+    if (!this.nodes && (this.code === null || !this.base || !this.params)) {
       missingType = 'Specific'
     }
     // throw
