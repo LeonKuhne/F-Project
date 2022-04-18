@@ -14,19 +14,44 @@ class ModuleManager {
 
     // load all
     this.defaultModule = null
-    this.loadStatic()
-    this.loadSaved() 
+    this.loadHTMLModules()
+    this.loadSavedModules() 
   }
+
+  // GETTERS
+  // 
 
   getDefault() {
     return this.staticModules.find(this.defaultModule) || this.staticModules.first()
   }
-
   get(id) {
     return this.savedModules.find(id) || this.staticModules.find(id)
   }
 
-  loadStatic() {
+  // LOAD MODULES
+  //
+
+  loadStatic(module) {
+    // track modules
+    this.staticModules.add(module)
+    // update UI component
+    this.on.addStaticModule(module)
+    console.debug('Loaded static module', module)
+  }
+  loadSaved(module) {
+    const oldModule = this.savedModules.find(module.name)
+    // track modules
+    this.savedModules.add(module)
+
+    // update UI component
+    if (oldModule) {
+      this.on.updateSavedModule(oldModule, module)
+    } else {
+      this.on.addSavedModule(module)
+    }
+    console.debug('Loaded saved module', module)
+  }
+  loadHTMLModules() {
     // get sorted static template names
     const templateNames = this.state.nodel.render.templates.sort()
 
@@ -49,14 +74,11 @@ class ModuleManager {
         params: ParseJS.parseParams(code),
       })
 
-      // load module
-      this.staticModules.add(module)
-
-      // update UI component
-      this.on.addStaticModule(module)
+      // add module
+      this.loadStatic(module)
     }
   }
-  loadSaved() {
+  loadSavedModules() {
     // load templates
     let templates = Object.values(localStorage)
     // uncompress templates
@@ -66,17 +88,7 @@ class ModuleManager {
     // sort by name
     modules = modules.sort((a, b) => a.name > b.name)
     // update state
-    modules.map(module => {
-      const oldModule = this.savedModules.find(module.name)
-      // track modules
-      this.savedModules.add(module)
-      // update UI component
-      if (oldModule) {
-        this.on.updateSavedModule(oldModule, module)
-      } else {
-        this.on.addSavedModule(module)
-      }
-    })
+    modules.map(module => this.loadSaved(module))
   }
   save(node) {
     if (node.group.collapsed) {

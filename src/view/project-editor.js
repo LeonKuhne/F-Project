@@ -15,14 +15,23 @@ class ProjectEditor {
     // setup ui actions
     const elems = this.state.elem
     elems.importProject.innerText = 'import'
-    // trigger file importing
-    // trigger file exporting
-    // select a file
+
+    // import file
     elems.selectFile.addEventListener('change', e => {
       const [file] = e.target.files
-      const modules = ParseJS.loadModules(file, module => {
-        console.info(`Found module: ${module}`)
+      const modules = ParseJS.loadFunctions(file, options => {
+        // determine which base template to use
+        options.base = this.state.manager.module.getDefault().base
+
+        // create the module
+        const module = new Module(options)
+
+        // load the modules
+        this.state.manager.module.loadStatic(module)
       })
     })
+
+    // export file
+    // TODO
   }
 }
