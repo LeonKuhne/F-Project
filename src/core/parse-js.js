@@ -157,15 +157,32 @@ class ParseJS {
 
   // fCode: string representing an anonymous function compatible with f-modules
   static parseParams(fCode) {
-    const matches = fCode.match(/^.*\((.*)\) *=>/i)
-    if (!matches) {
-      return {required: {}, optional: []}
-    }
+    let paramStr = fCode
+    let parts = null
 
-    let params = matches[1].split(',')
+    // remove everything before the opening parethesis
+    parts = paramStr.split('(')
+    parts = parts.splice(1, parts.length)
+    paramStr = parts.join('(')
+
+    // remove everything after the closing parethesis
+    parts = paramStr.split(')')
+    parts = parts.splice(0, parts.length-1)
+    paramStr = parts.join(')')
+
+    // find params
+    let params = paramStr.split(',')
     params = params.map(param => param.trim())
+    params = params.filter(param => param)
+
+    // parse params into categories
     const required = params.filter(param => !param.includes('='))
-    const optional = params.filter(param => param.includes('='))
+    let optional = params.filter(param => param.includes('='))
+
+    // parse out default values
+    optional = optional.map(param => param.split('=')[0])
+
+
     return {required, optional}
   }
 }
