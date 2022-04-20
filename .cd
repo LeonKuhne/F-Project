@@ -1,9 +1,7 @@
 echo "TODO: test parsing other files into modules, including non functions. then fix issues discovered"
 
 in order to properly parse classes
-- support drawing to your own node
 - swap out the 'this' keyword with x
-- pass underscores as the first parameter
 - pass the class object as the second parameter
 - only execute functions when all required parameters exist
 
@@ -16,3 +14,5 @@ ideas
   - constructors where you create an object called y, replace 'this' with y and return y
   - class functions where you take in the class object as the first parameter (like self in python) 
 
+later
+- pass underscores as the first parameter

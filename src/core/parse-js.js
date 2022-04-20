@@ -23,6 +23,15 @@ class ParseJS {
             // close the function
             state.f.code += '}'
 
+            // special case for classes
+            if (state.c) {
+              // swap 'this' with the instance name
+              console.log('replacing this with instance name')
+              console.log('code before', code)
+              state.f.code = state.f.code.replace(/(?<![a-zA-Z])this(?=.)/gi, state.c.name)
+              console.log('code after', code)
+            }
+
             // callback
             onLoad(state.f)
 
@@ -75,16 +84,23 @@ class ParseJS {
     // parse and setup code from match
     const startIndex = match[1].length
     let code = line.substring(startIndex, line.length)
-    let params = match[3] ? `x, ${match[3]}` : 'x'
-    code = `(${params}) => {${code}\n`
 
-    // parse function name to regular text and add class name
-    let name = ParseJS.toNormalCase(match[2])
-    name = `${state.c.name} ${name}`
+    // add existing parameters
+    let params = match[3] ?? null
+
+    if (state.c) {
+      // add class parameters
+      params = [`_, ${state.c.name}`, params].filter(p=>p).join(', ')
+    }
+
+
+    // add node parameters
+    params = [`x`, params].filter(p=>p).join(', ')
+    code = `(${params}) => {${code}\n`
 
     // format the match as module options 
     return {
-      name,
+      name: ParseJS.toNormalCase(`${state.c.name} ${match[2]}`),
       params: ParseJS.parseParams(code),
       code: code,
     }
@@ -120,13 +136,17 @@ class ParseJS {
     return null
   }
   static getClass(line) {
-    // check if class is delcared
+    // get the class name
     const match = line.match(new RegExp('^ *class *([a-zA-Z]+) *{', 'i'))
+    if (!match) return null
 
-    return match ? {
-      // parse the class name to normal case
-      name: ParseJS.toNormalCase(match[1])
-    } : null
+    // get the class name and change cassing to lower camelCase
+    let name = match[1]
+    name = name.charAt(0).toLowerCase() + name.slice(1)
+
+    return {
+      name: name
+    }
   }
 
   static isEndCurly(line, indent) {
