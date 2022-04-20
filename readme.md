@@ -24,7 +24,7 @@ this could be used when you want to...
 - Can you have a bunch o nodes share the same data?
 > yes, by using a second parameter passes in the shared data 
 - Can you have a node that has optional destinations?
-> unknown
+> you can only have "optional destinations" in collapsed node groups
 
 #### Managing Nodes
 - Double click to create node
