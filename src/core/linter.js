@@ -14,7 +14,7 @@ class Linter {
 
   lint() {
     // Update code output text
-    this.outputElem.innerHTML = this.inputElem.value;
+    this.outputElem.textContent = this.inputElem.value;
 
     // Sync the scroll bars
     this.syncScroll()

@@ -3,7 +3,7 @@ echo "TODO: test parsing other files into modules, including non functions. then
 in order to properly parse classes
 - support drawing to your own node
 - swap out the 'this' keyword with x
-- pass underscores as first parameters for function calls
+- pass underscores as first parameters
 - only execute functions when all required parameters exist
 
 ideas
@@ -12,7 +12,6 @@ ideas
   - class functions where you take in the class object as the first parameter (like self in python) 
 > fix:
   - functions with empty parameters end up looking like: (x, )
-  - core/code-runner.js/hasRequiredParams is showing up dark, parse sepcial characters to html entities for the linter (eg. & => &amp;)
 > feature:
   - split functions into parts by function calls and create fuctions as groups
   - parse anonymous functions
