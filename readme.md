@@ -11,10 +11,43 @@ changes it to functional,
 and then optimizes for cuncurrency
 
 this could be used when you want to...
-...if you have a prototype and want to improve performance
+...have a prototype improve performance
 ...start a new project from a previous one
 ...use functionality from another project
 ...use other peoples code without their permission
+
+
+
+### Manual
+
+#### Q/A
+- Can you have a bunch o nodes share the same data?
+> yes, by using a second parameter passes in the shared data 
+- Can you have a node that has optional destinations?
+> unknown
+
+#### Managing Nodes
+- Double click to create node
+- Drag to move node
+- Drag from one node to another to connect nodes
+- Click on a node to view the node editor
+- Click on a module to either apply it to the selected node, use it as a base when creating new nodes 
+
+#### Project
+- Click 'import' to load modules from an existing javascript file/project
+- Click 'export' to save the current project as a javascript file
+
+#### Node Editor
+- Click 'run' to execute the currently selected node as the root node 
+- Click 'save' to save the currently selected node in local storage
+- Click 'collapse'/'expand' to toggle the visibility of a group of nodes children, if no group exists its ends are the leaves
+
+#### Parsing Classes
+- class references to 'this' are replaced with an class object instance
+- constructors create an object instance, update its attributes, and return the instance
+- class functions take in the class object as the second parameter
+
+
 
 ## Todo v1.0
 ### EDITOR

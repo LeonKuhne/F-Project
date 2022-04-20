@@ -19,18 +19,22 @@ class ParseJS {
             // remove the extra indent
             const codePart = ParseJS.beforeFunctionClose(state.f.name, line)
             state.f.code += this.withoutIndent(codePart, state.indent)
-            
-            // close the function
-            state.f.code += '}'
 
             // special case for classes
             if (state.c) {
               // swap 'this' with the instance name
-              console.log('replacing this with instance name')
-              console.log('code before', code)
               state.f.code = state.f.code.replace(/(?<![a-zA-Z])this(?=.)/gi, state.c.name)
-              console.log('code after', code)
+
+              // special case for constructors
+              if (state.f.constructor) {
+                delete state.f.constructor
+                // return the instance (name)
+                state.f.code = `${state.f.code}  return ${state.c.name}\n`
+              }
             }
+            
+            // close the function
+            state.f.code += '}'
 
             // callback
             onLoad(state.f)
@@ -81,28 +85,44 @@ class ParseJS {
   // match 2 is the function name
   // match 3 is a list of function parameters
   static parseFunctionMatch(line, state, match) {
-    // parse and setup code from match
+    // parse and setup code 
     const startIndex = match[1].length
     let code = line.substring(startIndex, line.length)
 
-    // add existing parameters
-    let params = match[3] ?? null
+    // get the function name
+    const functionName = match[2]
+    const isConstructor = functionName === "constructor"
+
+    // construct parameters
+    let params = ['x']
 
     if (state.c) {
-      // add class parameters
-      params = [`_, ${state.c.name}`, params].filter(p=>p).join(', ')
+
+      // add a special case for constructors
+      if (isConstructor) {
+        // create an object with the instance name in the code
+        code = `${code}\n  const ${state.c.name} = {}`
+
+      } else {
+        // add class parameters
+        params.push('_')
+        params.push(state.c.name)
+      }
     }
 
+    // add existing parameters
+    params.push(match[3] ?? null)
 
-    // add node parameters
-    params = [`x`, params].filter(p=>p).join(', ')
-    code = `(${params}) => {${code}\n`
+    // construct parameter string
+    const paramStr = params.filter(p=>p).join(', ')
+    code = `(${paramStr}) => {${code}\n`
 
     // format the match as module options 
     return {
-      name: ParseJS.toNormalCase(`${state.c.name} ${match[2]}`),
+      name: ParseJS.toNormalCase(`${state.c.name} ${functionName}`),
       params: ParseJS.parseParams(code),
       code: code,
+      constructor: isConstructor ? true : undefined,
     }
   }
 

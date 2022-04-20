@@ -1,18 +1,7 @@
-echo "TODO: test parsing other files into modules, including non functions. then fix issues discovered"
-
-in order to properly parse classes
-- swap out the 'this' keyword with x
-- pass the class object as the second parameter
-- only execute functions when all required parameters exist
+echo "TODO: this"
 
 ideas
 > feature:
   - split functions into parts by function calls and create fuctions as groups
   - parse anonymous functions
   - test parsing regular functions
-> have a special case for:
-  - constructors where you create an object called y, replace 'this' with y and return y
-  - class functions where you take in the class object as the first parameter (like self in python) 
-
-later
-- pass underscores as the first parameter
