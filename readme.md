@@ -5,22 +5,34 @@ f u, f me, f every body
 #### v0.1
 "oh shit" - me
 
+## v1.0 Project Parser
+this takes an object oriented project,
+changes it to functional,
+and then optimizes for cuncurrency
+
+this could be used when you want to...
+...if you have a prototype and want to improve performance
+...start a new project from a previous one
+...use functionality from another project
+...use other peoples code without their permission
 
 ## Todo v1.0
+### EDITOR
+- fix: scrolling down in a full textarea should work properly
+- extra: what if you made the node & module editors togglable by clicking on the header
 ### PROJECT
 - feature: parse from javascript file
 - feature: export to javascript file
 ### NODEL
 - fix: currently applying a group to a node doesn't change the root node
+- fix: have the parse params from code area only parse the first line
 ### GENERAL
 - fix: saving a group containing a node with joining parents duplicates that node
-### EDITOR
-- fix: scrolling down in a full textarea should work properly
+### CODE
+- fix: adding result to the nodes data prevents it from being returnable (circular dependancy). suggestion: add a .clone function to nodes data that deepcopies without result (and other filtered out things)
 
 
 ## Todo v2.0
-### GENERAL
-- extra: what if you made the node & module editors togglable by clicking on the header
 ### EDITOR
 - extra: code auto test field
 - extra: code compile check & indicator

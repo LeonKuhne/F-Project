@@ -44,9 +44,10 @@ class ParseJS {
             // track the indent
             state.indent = ParseJS.getIndent(line)
 
-          // check if this is the start of a class
-          } else if (ParseJS.isClassStart(line)) {
-            state.c = {}
+          } else if (!state.c) {
+            // check if this is the start of a class
+            state.c = ParseJS.getClass(line)
+            console.log('class:', state.c)
           }
 
           // check for end of class
@@ -70,18 +71,15 @@ class ParseJS {
   // match 1 is everything before the function start curly
   // match 2 is the function name
   // match 3 is a list of function parameters
-  static parseFunctionMatch(line, match) {
-    // get the remainder of the line as code
+  static parseFunctionMatch(line, state, match) {
+    // parse and setup code from match
     const startIndex = match[1].length
     let code = line.substring(startIndex, line.length)
+    code = `(x, ${match[3]}) => {${code}\n`
 
-    // get the params
-    const name = match[2]
-    const params = match[3]
-    code = `(x, ${params}) => {${code}\n`
-
-    // setup the function header with parameters
-    
+    // parse function name to regular text and add class name
+    let name = ParseJS.toNormalCase(match[2])
+    name = `${state.c.name} ${name}`
 
     // format the match as module options 
     return {
@@ -100,14 +98,14 @@ class ParseJS {
       let regex = '(.* +([a-zA-Z]+) *\\(([a-zA-Z]*[, *[a-zA-Z]*(\=.*)?]*)\\) *{)'
       let match = line.match(new RegExp(regex, 'i'))
       if (match) {
-        return ParseJS.parseFunctionMatch(line, match)
+        return ParseJS.parseFunctionMatch(line, state, match)
       }
     }
 
     // regular TODO test
     let match = line.match(new RegExp('^.function *[a-zA-Z]* *([a-zA-Z]+) *\\(([a-zA-Z]*[, *[a-zA-Z]*]*)\\) *{', 'i'))
     if (match) {
-      return ParseJS.parseFunctionMatch(line, match)
+      return ParseJS.parseFunctionMatch(line, state, match)
     }
 
     /* 
@@ -120,14 +118,19 @@ class ParseJS {
 
     return null
   }
+  static getClass(line) {
+    // check if class is delcared
+    const match = line.match(new RegExp('^ *class *([a-zA-Z]+) *{', 'i'))
+
+    return match ? {
+      // parse the class name to normal case
+      name: ParseJS.toNormalCase(match[1])
+    } : null
+  }
 
   static isEndCurly(line, indent) {
     // check if a curly exists with the same indent as the start declaration
     return !!line.match(new RegExp('^ {'+indent+'}}', 'gi'))
-  }
-  static isClassStart(line) {
-    // check if class is delcared
-    return !!line.match(new RegExp('^ *class *[a-zA-Z]+ *{', 'gi'))
   }
   static getIndent(line) {
     // count the number of spaces from the start
@@ -153,6 +156,10 @@ class ParseJS {
   static beforeFunctionClose(fName, line) {
     const before = line.match(/^(.*)}/i)[1]
     return before
+  }
+
+  static toNormalCase(str) {
+    return str.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase()
   }
 
   // fCode: string representing an anonymous function compatible with f-modules

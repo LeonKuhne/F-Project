@@ -84,7 +84,7 @@ textarea {
 }
 .header {
   text-align: center;
-  writing-mode: sideways-lr;
+  writing-mode: vertical-lr;
   font-size: 2em;
   margin-right: var(--shadow-gap);
   box-shadow: var(--shadow-size) 0px 0px var(--highlight);
