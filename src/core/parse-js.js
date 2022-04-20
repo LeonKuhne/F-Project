@@ -75,7 +75,8 @@ class ParseJS {
     // parse and setup code from match
     const startIndex = match[1].length
     let code = line.substring(startIndex, line.length)
-    code = `(x, ${match[3]}) => {${code}\n`
+    let params = match[3] ? `x, ${match[3]}` : 'x'
+    code = `(${params}) => {${code}\n`
 
     // parse function name to regular text and add class name
     let name = ParseJS.toNormalCase(match[2])
