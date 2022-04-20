@@ -7,6 +7,7 @@ class NodeView {
 
     // class state
     let dragging = false
+    let draggedOff = false
     this.listeners = []
 
     //
@@ -30,6 +31,7 @@ class NodeView {
     nl.on('mousedown', e => {
       if (e.node) {
         dragging = e
+        draggedOff = false 
       }
 
       // update name field when clicked off input
@@ -38,14 +40,32 @@ class NodeView {
     })
 
     // support dragging
-    const isDraggedOnDifferent = node => {
-      return dragging && node && dragging.node.id !== node?.id
+    const isDraggedOn = (e) => {
+      // base case
+      if (!dragging || !e || !e.node) {
+        return false
+      }
+
+      // dragged to different node
+      if (dragging.node.id !== e.node.id) {
+        return true
+
+      // dragged to same node, make sure user dragged off first
+      } else if (draggedOff) {
+        return true
+      }
+
+      return false
     }
 
     // indicate dragging using cursor
     nl.on('mousemove', e => {
       if (dragging) {
-        if (isDraggedOnDifferent(e.node)) {
+        if (!e.node && !draggedOff) {
+          draggedOff = true
+        }
+
+        if (isDraggedOn(e)) {
           nodelElem.style.cursor = 'copy'
         } else {
           nodelElem.style.cursor = 'move'
@@ -56,7 +76,7 @@ class NodeView {
     // drag release
     nl.on('mouseup', e => {
       // support connecting nodes
-      if (isDraggedOnDifferent(e.node)) {
+      if (isDraggedOn(e)) {
         nm.toggleConnect(dragging.node.id, e.node.id, 0)
 
       // move node

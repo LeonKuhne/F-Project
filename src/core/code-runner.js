@@ -14,7 +14,7 @@ class CodeRunner {
     // find any missing params
     let missingParamIdx = []
     for (let idx=0; idx<requiredParamCount; idx++) {
-      if (params[idx] === null) {
+      if (!(idx in params)) {
         return false
       }
     }
@@ -24,32 +24,17 @@ class CodeRunner {
 
   // TODO: dispatch each node as its own thread (ie. promise)
   run(node, paramIdx=null, param=null, runId=null) {
-    // update and save the run id
-    if (!runId) {
-      runId = uniqueId()
-    }
-    node.data.runId = runId
-
     // setup parameters
     const requiredParamCount = node.data.params.required.length
     if (!(node.id in this.params)) {
-      this.params[node.id] = {}
-
-      // start with node data, fill with nulls
-      const totalParamCount = requiredParamCount + node.data.params.optional.length
-      for (let idx=0; idx<totalParamCount; idx++) {
-        let val = null
-        switch(idx) {
-          case 0:
-            val = node.data
-            break
-        }
-        this.params[node.id][idx] = val
+      // add the node data as the first param
+      this.params[node.id] = {
+        0: node.data,
       }
     }
 
     // add the provided parameter
-    if (paramIdx && param) {
+    if (paramIdx && param !== undefined) {
       this.params[node.id][paramIdx] = param
     }
 
@@ -58,6 +43,7 @@ class CodeRunner {
 
     // ensure required parameters exist
     if (!this.hasRequiredParams(this.params[node.id], requiredParamCount)) {
+      console.debug(`Skipping node '${node.data.name}', missing params`)
       return []
     }
 
@@ -70,6 +56,13 @@ class CodeRunner {
     if (node.isLeaf() || node.data.result === undefined) {
       return node.data.result === undefined ? [] : [node.data.result]
     }
+
+    // update and save the run id
+    if (!runId) {
+      runId = uniqueId()
+    }
+    node.data.runId = runId
+
 
     // recursively run through children
     let responses = []
