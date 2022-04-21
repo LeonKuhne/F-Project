@@ -1,11 +1,12 @@
-# f
+# f | v0.1
 a project to end all projects
 f u, f me, f every body
 
-#### v0.1
 "oh shit" - me
 
-## v1.0 Project Parser
+## Todo
+
+# Project Parser | v1.0
 this takes an object oriented project,
 changes it to functional,
 and then optimizes for cuncurrency
@@ -15,6 +16,19 @@ this could be used when you want to...
 ...start a new project from a previous one
 ...use functionality from another project
 ...use other peoples code without their permission
+
+
+### NODEL
+- fix: currently applying a group to a node doesn't change the root node
+### PROJECT
+- feature: parse from javascript file
+- feature: export to javascript file
+### GENERAL
+- fix: saving a group containing a node with joining parents duplicates that node
+### CODE
+- fix: adding result to the nodes data prevents it from being returnable (circular dependancy). suggestion: add a .clone function to nodes data that deepcopies without result (and other filtered out things)
+### EDITOR
+- extra: what if you made the node & module editors togglable by clicking on the header
 
 
 
@@ -48,21 +62,8 @@ this could be used when you want to...
 - class functions take in the class object as the second parameter
 
 
-## Todo v1.0
-### NODEL
-- fix: currently applying a group to a node doesn't change the root node
-### PROJECT
-- feature: parse from javascript file
-- feature: export to javascript file
-### GENERAL
-- fix: saving a group containing a node with joining parents duplicates that node
-### CODE
-- fix: adding result to the nodes data prevents it from being returnable (circular dependancy). suggestion: add a .clone function to nodes data that deepcopies without result (and other filtered out things)
-### EDITOR
-- extra: what if you made the node & module editors togglable by clicking on the header
 
-
-## Todo v2.0
+## Todo | v2.0
 ### EDITOR
 - extra: code auto test field
 - extra: code compile check & indicator
