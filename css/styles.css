@@ -26,6 +26,7 @@ body {
   color: var(--theme);
   font-family: var(--font);
   font-smooth: never;
+  user-select: none;
 }
 button:active {
   cursor: pointer;
@@ -57,13 +58,6 @@ textarea {
 }
 
 /* UTIL */
-.disable-select {
-  user-select: none; /* supported by Chrome and Opera */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-}
 .header {
   z-index: 11;
 }
@@ -71,7 +65,6 @@ textarea {
   font-weight: 900;
   filter: blur(var(--text-blur));
   color: var(--highlight);
-  user-select: none;
 }
 .header, .title {
   background: var(--lowlight);

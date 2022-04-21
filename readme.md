@@ -64,7 +64,6 @@ this could be used when you want to...
 ### CODE
 - fix: adding result to the nodes data prevents it from being returnable (circular dependancy). suggestion: add a .clone function to nodes data that deepcopies without result (and other filtered out things)
 
-
 ## Todo v2.0
 ### EDITOR
 - extra: code auto test field
