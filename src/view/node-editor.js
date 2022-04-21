@@ -156,10 +156,27 @@ class NodeEditor {
     if (node.isGroup(true)) {
       elems.codeContainer.hidden = true
     } else {
+      const moduleManager = this.state.manager.module
+      const nodelManager = this.state.nodel.manager
+
       // load a node's code
       elems.codeContainer.hidden = false
-      elems.codeArea.value = node.data.code
-      this.state.util.linter.lint()
+
+      // fix the references
+      const referenceOptions = ParseJS.replaceReferences(
+        node.data.code, (moduleId) => {
+          return moduleManager.get(moduleId)?.params
+        })
+      switch (referenceOptions.length) {
+        case 1:
+          elems.codeArea.value = node.data.code 
+          this.state.util.linter.lint()
+          break;
+        default:
+          // create a node group from the node
+
+          break;
+      }
     }
 
     this.updateName()
@@ -167,6 +184,69 @@ class NodeEditor {
     this.updateNodeResult(node)
     
     console.info(`Selecting ${node.id}`)
+  }
+
+  refactorNode(node) {
+    // y offset of nodes to be added
+    const yOffset = 200
+    const rootNodeId = node.id
+    let nextNodeId = rootNodeId
+    let count = 1
+
+    // pause drawing
+    nodelManager.pauseDraw()
+
+    // create a node for each code part
+    for (const ref of referenceOptions) {
+      // set the next nodes code 
+      const nextNode = nodelManager.nodes[nextNodeId]
+      nextNode.data.code = ref.code
+
+      // use the same params as the original node
+      nextNode.data.params = node.data.params
+
+      // add the references module
+      if (ref.name) {
+        const module = moduleManager.get(ref.name)
+
+        // create the reference node
+        const refNodeId = nodelManager.addNode(
+          module.base, node.x, node.y + yOffset * count - yOffset/2, module.data())
+
+        // pass params from this node to its reference, ignoring the first param 'x'
+        const totalParams = module.params.required.length + module.params.optional.length
+        for (let paramIdx=1; paramIdx<totalParams; paramIdx++) {
+          nodelManager.toggleConnect(nextNodeId, refNodeId, paramIdx-1)
+        }
+
+        if (ref.code.trim()) {
+          // create the next node
+          const prevNodeId = nextNodeId
+          nextNodeId = nodelManager.addNode(
+            node.template, node.x, node.y + yOffset * count, {
+            name: `${node.data.name} #${count++}`,
+          })
+
+          // connect the previous and next nodes
+          nodelManager.toggleConnect(prevNodeId, nextNodeId)
+
+          // connect the reference to the next node
+          nodelManager.toggleConnect(refNodeId, nextNodeId)
+        }
+      }
+    }
+    
+    console.error('TODO')
+    
+    // collapse the node in to a group
+    //nodelManager.toggleGroup(node.id)
+    
+    // continue drawing
+    nodelManager.unpauseDraw()
+
+    // reselect the group
+    //this.selectNode(node)
+    
   }
 
   show() {

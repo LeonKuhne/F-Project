@@ -27,6 +27,9 @@ class ModuleManager {
   get(id) {
     return this.savedModules.find(id) || this.staticModules.find(id)
   }
+  getAllNames() {
+    return this.staticModules.ids().concat(this.savedModules.ids())
+  }
 
   // LOAD MODULES
   //

@@ -36,10 +36,8 @@ class ParseJS {
             // close the function
             state.f.code += '}'
 
-            // callback
+            // load, reset and continue
             onLoad(state.f)
-
-            // reset and continue
             state.f  = null
 
           } else {
@@ -128,6 +126,13 @@ class ParseJS {
   // ReGeX Ops (Top Secret)
   //
   
+  static getFunctionCall(line) {
+    const match = line.match(/([a-zA-Z.]+)\((.*)\)/i)
+    return match ? {
+      name: ParseJS.toNormalCase(match[1]),
+      params: match[2],
+    } : null
+  }
   static getFunction(line, state) {
     // class function
     if (state.c && !state.f) {
@@ -199,7 +204,11 @@ class ParseJS {
   }
 
   static toNormalCase(str) {
-    return str.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase()
+    // change from 'thisCasing' to 'this casing'
+    str = str.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase()
+    // change from 'this.casing' to 'this casing'
+    str = str.replace(/\./g, ' ').toLowerCase()
+    return str
   }
 
   // fCode: string representing an anonymous function compatible with f-modules
@@ -231,5 +240,44 @@ class ParseJS {
 
 
     return {required, optional}
+  }
+
+  static splitByCalls(code, getParams) {
+    const parts = [{ code: '' }]
+    let idx = 0
+    const lines = code.split('\n')
+    const codeHeader = `${lines[0]}\n`
+
+    // loop through the lines, adding code into part buckets
+    for (const line of code.split('\n')) {
+      // start a new bucket
+      if (idx === parts.length) {
+        parts.push({code: codeHeader})
+      }
+
+      // split by function calls
+      const ref = ParseJS.getFunctionCall(line)
+      const params = ref ? getParams(ref.name) : null
+      if (params) {
+        // finalize the bucket
+        parts[idx].name = ref.name
+        // return the references params
+        if (params.required?.length > 1) {
+          parts[idx].code += `  return ${params.required[2]}\n`
+        }
+        parts[idx].code += `}`
+        // move to next bucket
+        idx++
+      } else {
+        // add to bucket
+        parts[idx].code += `${line}\n`
+      }
+    }
+
+    return parts
+  }
+
+  static replaceReferences(code, getParams) {
+    return ParseJS.splitByCalls(code, getParams)
   }
 }

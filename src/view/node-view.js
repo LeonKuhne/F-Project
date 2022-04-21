@@ -97,6 +97,9 @@ class NodeView {
     const COLOR_OFFSET = 11 // MESS WITH THIS TO CHANGE UP THE CONNECTION COLORS
     const toHex = (num) => (num % 16).toString(16)
     nr.on('connection-color', (paramIdx) => {
+      if (isNaN(Number(paramIdx))) {
+        paramIdx = 0
+      }
       let color = '#'
       for (let i=0; i<6; i++) {
         color += toHex(paramIdx + COLOR_OFFSET*i)

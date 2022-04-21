@@ -21,4 +21,7 @@ class ModuleList {
     const sortedModules = Object.values(this.modules).sort((a, b) => a.name > b.name)
     return sortedModules.length ? sortedModules[0] : null
   }
+  ids() {
+    return Object.keys(this.modules)
+  }
 }

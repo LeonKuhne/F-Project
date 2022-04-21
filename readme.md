@@ -4,7 +4,6 @@ f u, f me, f every body
 
 "oh shit" - me
 
-## Todo
 
 # Project Parser | v1.0
 this takes an object oriented project,
@@ -17,12 +16,12 @@ this could be used when you want to...
 ...use functionality from another project
 ...use other peoples code without their permission
 
-
-### NODEL
-- fix: currently applying a group to a node doesn't change the root node
+## Todo
 ### PROJECT
 - feature: parse from javascript file
 - feature: export to javascript file
+### NODEL
+- fix: currently applying a group to a node doesn't change the root node
 ### GENERAL
 - fix: saving a group containing a node with joining parents duplicates that node
 ### CODE

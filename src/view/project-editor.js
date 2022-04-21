@@ -19,7 +19,7 @@ class ProjectEditor {
     // import file
     elems.selectFile.addEventListener('change', e => {
       const [file] = e.target.files
-      const modules = ParseJS.loadFunctions(file, options => {
+      ParseJS.loadFunctions(file, options => {
         // determine which base template to use
         options.base = this.state.manager.module.getDefault().base
 
