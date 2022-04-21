@@ -60,7 +60,6 @@ class ParseJS {
           } else if (!state.c) {
             // check if this is the start of a class
             state.c = ParseJS.getClass(line)
-            console.log('class:', state.c)
           }
 
           // check for end of class

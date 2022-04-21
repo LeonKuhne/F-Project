@@ -48,10 +48,8 @@ this could be used when you want to...
 - class functions take in the class object as the second parameter
 
 
-
 ## Todo v1.0
 ### EDITOR
-- fix: scrolling down in a full textarea should work properly
 - extra: what if you made the node & module editors togglable by clicking on the header
 ### PROJECT
 - feature: parse from javascript file
@@ -63,6 +61,7 @@ this could be used when you want to...
 - fix: saving a group containing a node with joining parents duplicates that node
 ### CODE
 - fix: adding result to the nodes data prevents it from being returnable (circular dependancy). suggestion: add a .clone function to nodes data that deepcopies without result (and other filtered out things)
+
 
 ## Todo v2.0
 ### EDITOR

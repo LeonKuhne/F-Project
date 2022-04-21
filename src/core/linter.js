@@ -9,7 +9,9 @@ class Linter {
     this.inputElem.addEventListener('input', e => {
       this.lint()
     })
-    this.inputElem.onscroll = this.syncScroll
+    this.inputElem.onscroll = e => {
+      this.syncScroll()
+    }
   }
 
   lint() {
