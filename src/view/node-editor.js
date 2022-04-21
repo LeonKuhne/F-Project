@@ -123,17 +123,11 @@ class NodeEditor {
   // HELPERS
   updateCode(code) {
     const node = this.state.selected.node
-    // update the node's code
+    // update the node's code and params
     node.data.code = code
-
-    // update the node's params
-    const newParams = ParseJS.parseParams(code)
-    const oldParams = node.data.params
-    if (oldParams !== newParams) {
-      node.data.params = newParams
-      this.state.nodel.manager.redraw()
-      console.info('Node parameters updated')
-    }
+    node.data.params = ParseJS.parseParams(code)
+    // redraw
+    this.state.nodel.manager.redraw()
   }
 
   //
@@ -195,7 +189,7 @@ class NodeEditor {
 
   runCode(node) {
     if (!node) {
-      console.log("no start node selected")
+      console.error("No start node selected")
       return
     }
 

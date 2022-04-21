@@ -48,10 +48,12 @@ class NodeManager {
         node.children = []
       }
 
-      // upgrade any node to a group node
+      // upgrade node to group 
       this.createGroup(module, 0, 0, node)
     } else {
+      // update the node
       node.data = module.data()
+      nm.redraw()
     }
   }
   createFromMap(groupMap, x, y, head=null, group=null, connection=null) {
