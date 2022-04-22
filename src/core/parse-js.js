@@ -34,7 +34,7 @@ class ParseJS {
             }
             
             // close the function
-            state.f.code += '}'
+            state.f.code = ParseJS.closeFunction(state.f.code)
 
             // load, reset and continue
             onLoad(state.f)
@@ -98,7 +98,7 @@ class ParseJS {
       // add a special case for constructors
       if (isConstructor) {
         // create an object with the instance name in the code
-        code = `${code}\n  const ${state.c.name} = {}`
+        code = `${code}  const ${state.c.name} = {}\n`
 
       } else {
         // add class parameters
@@ -111,8 +111,7 @@ class ParseJS {
     params.push(match[3] ?? null)
 
     // construct parameter string
-    const paramStr = params.filter(p=>p).join(', ')
-    code = `(${paramStr}) => {${code}\n`
+    code = ParseJS.addHeader(code, params)
 
     // format the match as module options 
     return {
@@ -231,7 +230,7 @@ class ParseJS {
     params = params.map(param => param.trim())
     params = params.filter(param => param)
 
-    // parse params into categories
+    // parheaderParamsse params into categories
     const required = params.filter(param => !param.includes('='))
     let optional = params.filter(param => param.includes('='))
 
@@ -243,41 +242,93 @@ class ParseJS {
   }
 
   static splitByCalls(code, getParams) {
-    const parts = [{ code: '' }]
-    let idx = 0
+    const parts = []
     const lines = code.split('\n')
-    const codeHeader = `${lines[0]}\n`
+    const returnParam = ParseJS.getReturn(code)
+
+    // leave if nothing to parse
+    if (lines.length === 0) {
+      return null
+    } else if (lines.length === 1) {
+      return [{ code: code }]
+    }
+
+    // remove header line
+    let headerParams = []
+    const params = ParseJS.parseParams(lines.shift())
+    headerParams = params.required.concat(params.optional)
+
 
     // loop through the lines, adding code into part buckets
-    for (const line of code.split('\n')) {
-      // start a new bucket
+    let idx = 0
+    for (const line of lines) {
+      // start a new code part bucket
       if (idx === parts.length) {
-        parts.push({code: codeHeader})
+        parts.push({ code: '' })
       }
+      let part = parts[idx]
 
-      // split by function calls
+      // check if line is a call to reference
       const ref = ParseJS.getFunctionCall(line)
-      const params = ref ? getParams(ref.name) : null
-      if (params) {
-        // finalize the bucket
-        parts[idx].name = ref.name
-        // return the references params
-        if (params.required?.length > 1) {
-          parts[idx].code += `  return ${params.required[2]}\n`
+      if (ref && getParams(ref.name)) {
+
+        // finalize the code
+        let inputParams = headerParams 
+        if (idx !== 0 && !returnParam) {
+          inputParams = inputParams.concat(returnParam)
         }
-        parts[idx].code += `}`
-        // move to next bucket
+        part.code = ParseJS.finalizeCode(part.code, inputParams)
+
+        // update the reference params
+        if (returnParam) {
+          part.code = ParseJS.addReturn(part.code, returnParam)
+        }
+
+        // move to next code part bucket
+        part.name = ref.name
         idx++
-      } else {
-        // add to bucket
-        parts[idx].code += `${line}\n`
+      } else if (line.trim()) {
+        // add to code part bucket
+        part.code += `${line}\n`
       }
     }
 
+    // finalize the remaining code
+    const lastPart = parts[parts.length - 1]
+    const inputParams = idx === 0 || !returnParam ? headerParams : headerParams.concat(returnParam)
+    lastPart.code = ParseJS.addHeader(lastPart.code, inputParams)
     return parts
   }
 
-  static replaceReferences(code, getParams) {
-    return ParseJS.splitByCalls(code, getParams)
+  // Modify Code, with code
+
+  static finalizeCode(code, paramList) {
+    code = ParseJS.addHeader(code, paramList)
+    code = ParseJS.closeFunction(code)
+    return code
+  }
+
+  static closeFunction(code) {
+    return code + `}`
+  }
+
+  static addHeader(code, params) {
+    const paramStr = params.filter(p=>p).join(', ')
+    return `(${paramStr}) => {\n${code}`
+  }
+
+  static getReturn(code) {
+    const match = code.match(/return (.*)/)
+    return match ? match[1] : null
+  }
+
+  static addReturn(code, returnParam) {
+    const returnCode = `  return ${returnParam}`
+
+    const lines = code.split('\n')
+    if (lines.length > 0) {
+      lines.splice(lines.length-1, 0, returnCode)
+    }
+    return lines.join('\n')
   }
 }

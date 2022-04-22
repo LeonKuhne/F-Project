@@ -1,7 +1,4 @@
-echo "TODO: this"
-
-ideas
-> feature:
+TODO:
   - split functions into parts by function calls and create fuctions as groups
   - parse anonymous functions
   - test parsing regular functions

@@ -156,25 +156,29 @@ class NodeEditor {
     if (node.isGroup(true)) {
       elems.codeContainer.hidden = true
     } else {
-      const moduleManager = this.state.manager.module
-      const nodelManager = this.state.nodel.manager
-
       // load a node's code
       elems.codeContainer.hidden = false
 
       // fix the references
-      const referenceOptions = ParseJS.replaceReferences(
+      const refs = ParseJS.splitByCalls(
         node.data.code, (moduleId) => {
-          return moduleManager.get(moduleId)?.params
+          return this.state.manager.module.get(moduleId)?.params
         })
-      switch (referenceOptions.length) {
+      switch (refs.length) {
         case 1:
           elems.codeArea.value = node.data.code 
           this.state.util.linter.lint()
           break;
         default:
-          // create a node group from the node
+          // split the node by its code references to other nodes
+          this.refactorNode(node, refs)
+          console.error('TODO')
+    
+          // collapse the node in to a group
+          //this.state.nodel.manager.toggleGroup(node.id)
 
+          // reselect the group
+          //this.selectNode(node)
           break;
       }
     }
@@ -186,67 +190,66 @@ class NodeEditor {
     console.info(`Selecting ${node.id}`)
   }
 
-  refactorNode(node) {
-    // y offset of nodes to be added
-    const yOffset = 200
-    const rootNodeId = node.id
-    let nextNodeId = rootNodeId
-    let count = 1
+  refactorNode(node, refs) {
+    const nodelManager = this.state.nodel.manager
 
     // pause drawing
     nodelManager.pauseDraw()
 
+    // y offset of nodes to be added
+    const yOffset = 300
+    const rootNodeId = node.id
+
+    // init the next node
+    let nextNode = node
+    nextNode.data.code = refs[0].code
+
     // create a node for each code part
-    for (const ref of referenceOptions) {
-      // set the next nodes code 
-      const nextNode = nodelManager.nodes[nextNodeId]
-      nextNode.data.code = ref.code
-
-      // use the same params as the original node
-      nextNode.data.params = node.data.params
-
+    for (const [refIdx, ref] of Object.entries(refs)) {
+      let count = Number(refIdx) + 1
       // add the references module
       if (ref.name) {
-        const module = moduleManager.get(ref.name)
+        const module = this.state.manager.module.get(ref.name)
 
         // create the reference node
         const refNodeId = nodelManager.addNode(
           module.base, node.x, node.y + yOffset * count - yOffset/2, module.data())
 
-        // pass params from this node to its reference, ignoring the first param 'x'
-        const totalParams = module.params.required.length + module.params.optional.length
-        for (let paramIdx=1; paramIdx<totalParams; paramIdx++) {
-          nodelManager.toggleConnect(nextNodeId, refNodeId, paramIdx-1)
-        }
+        // connect the node to the reference node
+        this.connectAll(nextNode.id, refNodeId, module.params)
 
         if (ref.code.trim()) {
           // create the next node
-          const prevNodeId = nextNodeId
-          nextNodeId = nodelManager.addNode(
+          const nextCode = refs[count].code
+          const prevNodeId = nextNode.id 
+          const nextNodeId = nodelManager.addNode(
             node.template, node.x, node.y + yOffset * count, {
             name: `${node.data.name} #${count++}`,
+            code: nextCode,
+            params: ParseJS.parseParams(nextCode)
           })
 
+          // update the next node
+          nextNode = nodelManager.nodes[nextNodeId]
+
           // connect the previous and next nodes
-          nodelManager.toggleConnect(prevNodeId, nextNodeId)
+          this.connectAll(prevNodeId, nextNode.id, nextNode.data.params)
 
           // connect the reference to the next node
-          nodelManager.toggleConnect(refNodeId, nextNodeId)
+          nodelManager.toggleConnect(refNodeId, nextNode.id)
         }
       }
     }
     
-    console.error('TODO')
-    
-    // collapse the node in to a group
-    //nodelManager.toggleGroup(node.id)
-    
     // continue drawing
     nodelManager.unpauseDraw()
+  }
 
-    // reselect the group
-    //this.selectNode(node)
-    
+  connectAll(fromId, toId, params) {
+    const totalParams = params.required.length + params.optional.length
+    for (let paramIdx=1; paramIdx<totalParams; paramIdx++) {
+      this.state.nodel.manager.toggleConnect(fromId, toId, paramIdx-1)
+    }
   }
 
   show() {
@@ -281,7 +284,9 @@ class NodeEditor {
     // render 
     let responseText = ""
     for (const res of responses) {
-      responseText += JSON.stringify(res) + "\n"
+      // prevent circular reference
+      responseText += JSON.stringify(res,
+        Helper.replaceCircularReference()) + "\n"
     }
     this.updateTotalResult(node.data.runId, responseText)
     this.updateNodeResult(node)
@@ -302,8 +307,10 @@ class NodeEditor {
       elems.nodeResultContainer.hide()
     } else {
       elems.nodeRunIdLabel.innerText = `deamon ${node.data.runId}`
-      elems.nodeInputArea.value = '' + JSON.stringify(node.data.input)
-      elems.nodeResultArea.value = '' + JSON.stringify(node.data.result)
+      elems.nodeInputArea.value = '' + JSON.stringify(
+        node.data.input, Helper.replaceCircularReference())
+      elems.nodeResultArea.value = '' + JSON.stringify(
+        node.data.result, Helper.replaceCircularReference())
       elems.nodeResultContainer.show()
     }
   }
