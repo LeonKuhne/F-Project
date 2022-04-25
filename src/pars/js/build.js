@@ -16,8 +16,8 @@ class BuildJS {
   }
 
   static finalizeCode(code, paramList) {
-    code = ParseJS.addHeader(code, paramList)
-    code = ParseJS.closeFunction(code)
+    code = BuildJS.addHeader(code, paramList)
+    code = BuildJS.closeFunction(code)
     return code
   }
 
@@ -25,6 +25,18 @@ class BuildJS {
   static addHeader(code, params) {
     const paramStr = params.filter(p=>p).join(', ')
     return `(${paramStr}) => {\n${code}`
+  }
+
+  static initObject(code, name, type='const') {
+    const lines = code.split('\n')
+    if (lines.length > 0) {
+      // add code at index
+      const initCode = `  const ${name} = {}`
+      lines.splice(lines.length-1, 0, initCode)
+      return lines.join('\n')
+    } else {
+      console.error('Unimplemented')
+    }
   }
 
 
@@ -44,6 +56,13 @@ class BuildJS {
     return line.replace(' '.repeat(indent), '')
   }
 
+  static swapVar(text, name, replacement) {
+    return text.replace(new RegExp(`(?<![a-zA-Z])${name}(?=.)`, 'gi'), replacement)
+
+  }
+
+  // adds a return to the second to last line
+  // assumes a closing curly exists
   static addReturn(code, returnParam) {
     const returnCode = `  return ${returnParam}`
 

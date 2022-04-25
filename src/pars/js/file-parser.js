@@ -1,11 +1,10 @@
-
 /**
  * Parse a file into functions.
  *
  * Any parse function can return true to stop parsing.
 **/
 
-class ParseFileJS extends LineParser {
+class ParseJSFileToFunctions extends LineParser {
 
   constructor(code) {
     super(code)
@@ -16,18 +15,24 @@ class ParseFileJS extends LineParser {
   }
 
   parseLine(line) {
-    console.warn(line)
     if (!line || !line.trim()) return // ignore whitespace
     if (this.parseFunction(line)) return
     if (this.parseClass(line)) return
   }
 
-  getOptions() {
+  getResult() {
     return this.functions
   }
 
   // HELPERS
   //
+
+  addFunction() {
+    this.functions.push({
+      f: this.f,
+      className: this.c?.name,
+    })
+  }
 
   resetFunction() {
     this.f = null
@@ -57,7 +62,7 @@ class ParseFileJS extends LineParser {
   parseClassStart(line) {
     this.c = InspectJS.getClass(line)
     if (this.c) {
-      console.debug(`Reached start of class`)
+      this.debug(`Reached start of class: ${this.c.name}`)
       this.classIndent = InspectJS.getIndent(line)
       return true
     }
@@ -65,7 +70,8 @@ class ParseFileJS extends LineParser {
 
   parseClassEnd(line) {
     if (InspectJS.isEndCurly(line, this.classIndent)) {
-      console.debug(`Reached end of class`)
+      this.debug(`Reached end of class`)
+
       this.resetClass()
       return true
     }
@@ -76,6 +82,7 @@ class ParseFileJS extends LineParser {
     
   parseFunction(line) {
     if (this.f) {
+
       // end of function 
       if (this.parseFunctionEnd(line)) return true
 
@@ -93,29 +100,29 @@ class ParseFileJS extends LineParser {
   parseFunctionStart(line) {
     this.f = InspectJS.getAnyFunction(line, this.c?.name)
     if (this.f) {
-      this.functions.push({
-        code: this.f.code,
-        inClass: !!this.c,
-      })
+      this.addFunction()
       this.functionIndent = InspectJS.getIndent(line)
-      console.debug(`Parsed function start`)
+      this.debug(`Parsed function start`)
       return true
     }
   }
 
-  parseFunctionLine(line) {
-    // remove the indent
-    line = BuildJS.withoutIndent(line, this.functionIndent)
+  addCode(code) {
+    this.functions[this.functions.length-1].f.code += code 
+  }
 
-    // add line to function
-    this.functions[this.functions.length-1].code += `${line}\n`
+  parseFunctionLine(line) {
+    line = BuildJS.withoutIndent(line, this.functionIndent)
+    this.addCode(`${line}\n`)
   }
 
   parseFunctionEnd(line) {
     if (InspectJS.isEndCurly(line, this.functionIndent)) {
-      this.functions[this.functions.length-1].code += `}`
+      let code = InspectJS.beforeFunctionClose(line)
+      code = BuildJS.withoutIndent(code)
+      this.addCode(`${code}}`)
       this.resetFunction()
-      console.debug(`Parsed function end`)
+      this.debug(`Parsed function end`)
       return true
     }
   }

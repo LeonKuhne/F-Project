@@ -8,7 +8,7 @@
 **/
 
 
-class Parser {
+class ParserUtil {
 
   // parse an uploaded file to a text string
   static readFile(file, callback) {

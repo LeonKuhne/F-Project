@@ -22,7 +22,7 @@
 }
 
 body {
-  background: black;
+  background: var(--contrast);
   color: var(--theme);
   font-family: var(--font);
   font-smooth: never;

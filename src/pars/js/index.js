@@ -17,20 +17,18 @@ class ParseJS {
    */
   static loadFunctions(file, onLoad=()=>{}) {
     // find the functions
-    Parser.readFile(file, text => {
+    ParserUtil.readFile(file, text => {
       // parse file into functions
-      const fileParser = new ParseFileJS(text)
-      fileParser.parseAll()
-      const functions = fileParser.getOptions()
-      console.log(functions)
+      const functions = (new ParseJSFileToFunctions(text)).run()
+
+      console.debug(`Found functions in ${file.name}`, functions)
 
       // parse functions into module options
       for (const options of functions) {
-        const parser = new ParseFunctionJS(options.code, options.inClass)
-        parser.parseAll()
+        const moduleOptions = (new ParseJSFunctionToModule(options.f, options.className)).run()
 
         // callback with module options
-        onLoad(parser.moduleOptions())
+        onLoad(moduleOptions)
       }
     })
   }
@@ -44,9 +42,12 @@ class ParseJS {
    *    otherwise null
    */
   static splitByCalls(code, getParams) {
+    // TODO enable
+    return [{code: code}]
+
     const parts = []
     const lines = code.split('\n')
-    const returnParam = ParseJS.getReturn(code)
+    const returnParam = InspectJS.getReturn(code)
 
     // leave if nothing to parse
     if (lines.length === 0) {
@@ -57,7 +58,7 @@ class ParseJS {
 
     // remove header line
     let headerParams = []
-    const params = ParseJS.parseParams(lines.shift())
+    const params = InspectJS.parseParams(lines.shift())
     headerParams = params.required.concat(params.optional)
 
 
@@ -71,7 +72,7 @@ class ParseJS {
       let part = parts[idx]
 
       // check if line is a call to reference
-      const ref = ParseJS.getFunctionCall(line)
+      const ref = InspectJS.getFunctionCall(line)
       if (ref && getParams(ref.name)) {
 
         // finalize the code
@@ -79,11 +80,11 @@ class ParseJS {
         if (idx !== 0 && !returnParam) {
           inputParams = inputParams.concat(returnParam)
         }
-        part.code = ParseJS.finalizeCode(part.code, inputParams)
+        part.code = BuildJS.finalizeCode(part.code, inputParams)
 
         // update the reference params
         if (returnParam) {
-          part.code = ParseJS.addReturn(part.code, returnParam)
+          part.code = BuildJS.addReturn(part.code, returnParam)
         }
 
         // move to next code part bucket
@@ -98,7 +99,7 @@ class ParseJS {
     // finalize the remaining code
     const lastPart = parts[parts.length - 1]
     const inputParams = idx === 0 || !returnParam ? headerParams : headerParams.concat(returnParam)
-    lastPart.code = ParseJS.addHeader(lastPart.code, inputParams)
+    lastPart.code = BuildJS.addHeader(lastPart.code, inputParams)
 
     return parts
   }

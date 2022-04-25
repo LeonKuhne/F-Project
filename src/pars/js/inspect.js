@@ -44,17 +44,17 @@ class InspectJS {
   static getClassFunction(line) {
     let regex = '(.* +([a-zA-Z]+) *\\(([a-zA-Z]*[, *[a-zA-Z]*(\=.*)?]*)\\) *{)'
     let match = line.match(new RegExp(regex, 'i'))
-    return match ? UtilJS.parseFunctionMatch(line, match, true) : null
+    return match ? UtilJS.parseFunctionMatch(line, match) : null
   }
 
   // TODO test
-  static getFunction(line, state) {
+  static getFunction(line) {
     let match = line.match(new RegExp('^.function *[a-zA-Z]* *([a-zA-Z]+) *\\(([a-zA-Z]*[, *[a-zA-Z]*]*)\\) *{', 'i'))
-    return match ? UtilJS.parseFunctionMatch(line, state, match) : null
+    return match ? UtilJS.parseFunctionMatch(line, match) : null
   }
 
   // TODO test
-  static getAnonFunction(line, state) {
+  static getAnonFunction(line) {
     match = line.match(new RegExp('^.*[a-zA-Z]* *([a-zA-Z]+) *= *\\(([a-zA-Z]*[, *[a-zA-Z]*]*)\\) *=> *{', 'gi'))
     return match ? UtilJS.parseFunctionMatch(line, match) : null
   }
@@ -98,7 +98,7 @@ class InspectJS {
   static getFunctionCall(line) {
     const match = line.match(/([a-zA-Z.]+)\((.*)\)/i)
     return match ? {
-      name: ParseJS.toNormalCase(match[1]),
+      name: BuildJS.toNormalCase(match[1]),
       params: match[2],
     } : null
   }
