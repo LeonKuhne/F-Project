@@ -1,5 +1,6 @@
 TODO:
-  - finish refactoring the js parser
-  - split functions into parts by function calls and create fuctions as groups
+  - fix function spliting by references (currently disabled)
+  - test everything with the js parser
+  - finish up and close the refactoring branch
   - parse anonymous functions
   - test parsing regular functions
