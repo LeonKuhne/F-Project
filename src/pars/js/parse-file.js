@@ -1,6 +1,8 @@
 
 /**
  * Parse a file into functions.
+ *
+ * Any parse function can return true to stop parsing.
 **/
 
 class ParseFileJS extends LineParser {
@@ -8,69 +10,113 @@ class ParseFileJS extends LineParser {
   constructor(code) {
     super(code)
     this.functions = []
-    this.c = null
-    this.f = null
-    this.indent = 0
+    // set state
+    this.resetClass()
+    this.resetFunction()
   }
 
   parseLine(line) {
-    // function line
-    if (this.f) {
-      this.parseFunctionLine()
-      return
-    }
+    console.warn(line)
+    if (!line || !line.trim()) return // ignore whitespace
+    if (this.parseFunction(line)) return
+    if (this.parseClass(line)) return
+  }
 
-    // start of function
-    this.f = this.parseFunctionHeader(line)
-    if (this.f) {
-      return
+  getOptions() {
+    return this.functions
+  }
+
+  // HELPERS
+  //
+
+  resetFunction() {
+    this.f = null
+    this.functionIndent = 0
+  }
+
+  resetClass() {
+    this.c = null
+    this.classIndent = 0
+  }
+
+  // CLASS PARSERS
+  //
+    
+  parseClass(line) {
+    // end of class
+    if (this.c) {
+      if (this.parseClassEnd(line)) return true
     }
 
     // start of class
-    if (!this.c) {
-      this.c = InspectJS.getClass(line)
-      return
-    }
-
-    // end of class
-    if (InspectJS.isEndCurly(line, this.indent)) {
-      this.c = null
+    else {
+      if (this.parseClassStart(line)) return true
     }
   }
 
-  parseFunctionHeader(line) {
-    // order multiple header function parsers
-    const getters = [
-      this.c ? InspectJS.getClassFunction : null,
-      InspectJS.getFunction,
-      // TODO 
-      // InspectJS.getAnonFunction,
-    ]
-
-    // find and return the first header found
-    for (const getFunction of getters) {
-      if (getFunction) {
-        const header = getFunction(line)
-        if (header) {
-          return header
-        }
-      }
+  parseClassStart(line) {
+    this.c = InspectJS.getClass(line)
+    if (this.c) {
+      console.debug(`Reached start of class`)
+      this.classIndent = InspectJS.getIndent(line)
+      return true
     }
   }
 
-  parseFunctionLine() {
+  parseClassEnd(line) {
+    if (InspectJS.isEndCurly(line, this.classIndent)) {
+      console.debug(`Reached end of class`)
+      this.resetClass()
+      return true
+    }
+  }
+
+  // FUNCTION PARSERS
+  //
+    
+  parseFunction(line) {
+    if (this.f) {
+      // end of function 
+      if (this.parseFunctionEnd(line)) return true
+
+      // function line
+      this.parseFunctionLine(line)
+      return true
+    }
+
+    // start of function
+    else {
+      if (this.parseFunctionStart(line)) return true
+    }
+  }
+
+  parseFunctionStart(line) {
+    this.f = InspectJS.getAnyFunction(line, this.c?.name)
+    if (this.f) {
+      this.functions.push({
+        code: this.f.code,
+        inClass: !!this.c,
+      })
+      this.functionIndent = InspectJS.getIndent(line)
+      console.debug(`Parsed function start`)
+      return true
+    }
+  }
+
+  parseFunctionLine(line) {
     // remove the indent
-    line = BuildJS.withoutIndent(line, this.indent)
+    line = BuildJS.withoutIndent(line, this.functionIndent)
 
     // add line to function
-    functions[fIdx] += line
+    this.functions[this.functions.length-1].code += `${line}\n`
+  }
 
-    // check if the function ends here
-    if (InspectJS.isEndCurly(line)) {
-      this.functions.push({
-        code: "",
-        inClass: this.inClass,
-      })
+  parseFunctionEnd(line) {
+    if (InspectJS.isEndCurly(line, this.functionIndent)) {
+      this.functions[this.functions.length-1].code += `}`
+      this.resetFunction()
+      console.debug(`Parsed function end`)
+      return true
     }
   }
 }

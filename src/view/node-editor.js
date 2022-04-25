@@ -125,7 +125,7 @@ class NodeEditor {
     const node = this.state.selected.node
     // update the node's code and params
     node.data.code = code
-    node.data.params = ParseJS.parseParams(code)
+    node.data.params = InspectJS.parseParams(code)
     // redraw
     this.state.nodel.manager.redraw()
   }
@@ -226,7 +226,7 @@ class NodeEditor {
             node.template, node.x, node.y + yOffset * count, {
             name: `${node.data.name} #${count++}`,
             code: nextCode,
-            params: ParseJS.parseParams(nextCode)
+            params: InspectJS.parseParams(nextCode)
           })
 
           // update the next node

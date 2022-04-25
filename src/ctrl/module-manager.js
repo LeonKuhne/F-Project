@@ -74,7 +74,7 @@ class ModuleManager {
         name: name,
         base: name,
         code: code,
-        params: ParseJS.parseParams(code),
+        params: InspectJS.parseParams(code),
       })
 
       // add module

@@ -21,7 +21,7 @@ class LineParser {
 
   nextLine() {
     this.idx += 1
-    const line = lines[idx]
+    const line = this.lines[this.idx]
   
     // parse the line
     this.parseLine(line, state)

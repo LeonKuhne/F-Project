@@ -22,6 +22,7 @@ class ParseJS {
       const fileParser = new ParseFileJS(text)
       fileParser.parseAll()
       const functions = fileParser.getOptions()
+      console.log(functions)
 
       // parse functions into module options
       for (const options of functions) {

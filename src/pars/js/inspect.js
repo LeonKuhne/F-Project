@@ -7,32 +7,6 @@
 
 class InspectJS {
 
-  static getFunctionCall(line) {
-    const match = line.match(/([a-zA-Z.]+)\((.*)\)/i)
-    return match ? {
-      name: ParseJS.toNormalCase(match[1]),
-      params: match[2],
-    } : null
-  }
-
-  static getClassFunction(line) {
-    let regex = '(.* +([a-zA-Z]+) *\\(([a-zA-Z]*[, *[a-zA-Z]*(\=.*)?]*)\\) *{)'
-    let match = line.match(new RegExp(regex, 'i'))
-    return match ? UtilJS.parseFunctionMatch(line, state, match) : null
-  }
-
-  // TODO test
-  static getFunction(line, state) {
-    let match = line.match(new RegExp('^.function *[a-zA-Z]* *([a-zA-Z]+) *\\(([a-zA-Z]*[, *[a-zA-Z]*]*)\\) *{', 'i'))
-    return match ? UtilJS.parseFunctionMatch(line, state, match) : null
-  }
-
-  // TODO test
-  static getAnonFunction(line, state) {
-    match = line.match(new RegExp('^.*[a-zA-Z]* *([a-zA-Z]+) *= *\\(([a-zA-Z]*[, *[a-zA-Z]*]*)\\) *=> *{', 'gi'))
-    return match ? UtilJS.parseFunctionMatch(line, match) : null
-  }
-
   static getClass(line) {
     // get the class name
     const match = line.match(new RegExp('^ *class *([a-zA-Z]+) *{', 'i'))
@@ -45,6 +19,44 @@ class InspectJS {
     return {
       name: name
     }
+  }
+
+  static getAnyFunction(line, className=null) {
+    // multiple ordered header functions to try
+    const getters = [ 
+      className ? InspectJS.getClassFunction : null,
+      // TODO 
+      //InspectJS.getFunction,
+      // InspectJS.getAnonFunction,
+    ]   
+
+    // find and return the first header found
+    for (const getFunction of getters) {
+      if (getFunction) {
+        const header = getFunction(line, className)
+        if (header) {
+          return header
+        }   
+      }   
+    }   
+  }
+
+  static getClassFunction(line) {
+    let regex = '(.* +([a-zA-Z]+) *\\(([a-zA-Z]*[, *[a-zA-Z]*(\=.*)?]*)\\) *{)'
+    let match = line.match(new RegExp(regex, 'i'))
+    return match ? UtilJS.parseFunctionMatch(line, match, true) : null
+  }
+
+  // TODO test
+  static getFunction(line, state) {
+    let match = line.match(new RegExp('^.function *[a-zA-Z]* *([a-zA-Z]+) *\\(([a-zA-Z]*[, *[a-zA-Z]*]*)\\) *{', 'i'))
+    return match ? UtilJS.parseFunctionMatch(line, state, match) : null
+  }
+
+  // TODO test
+  static getAnonFunction(line, state) {
+    match = line.match(new RegExp('^.*[a-zA-Z]* *([a-zA-Z]+) *= *\\(([a-zA-Z]*[, *[a-zA-Z]*]*)\\) *=> *{', 'gi'))
+    return match ? UtilJS.parseFunctionMatch(line, match) : null
   }
 
   // fCode: string representing an anonymous function compatible with f-modules
@@ -83,15 +95,24 @@ class InspectJS {
     return line.match(/^ */gi)[0].length
   }
 
+  static getFunctionCall(line) {
+    const match = line.match(/([a-zA-Z.]+)\((.*)\)/i)
+    return match ? {
+      name: ParseJS.toNormalCase(match[1]),
+      params: match[2],
+    } : null
+  }
+
+
   static getReturn(code) {
     const match = code.match(/return (.*)/)
     return match ? match[1] : null
   }
 
   // get everything in the line before the closing curly 
-  static beforeFunctionClose(fName, line) {
-    const before = line.match(/^(.*)}/i)[1]
-    return before
+  static beforeFunctionClose(line) {
+    const match = line.match(/^(.*)}/i)
+    return match ? match[1] : null
   }
 
   // check if a curly exists with the same indent as the start declaration
