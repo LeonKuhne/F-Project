@@ -8,6 +8,11 @@
     - fix the parsed groups initial collapsed state
     - test spliting by references
 
+  param node
+    - in parsejs, set the head node's code to collects all of the params from the node to be split and returns an object with the variable names as keys
+    - from parsejs, add 'x' as a param and prefix to all of the other nodes in the group
+    - pass in the nodes state using 'this' instead of 'x' and get rid of 'x' as a first param
+
   loops
     - detect loops while parsing that contain references
     - create loop nodes that yield

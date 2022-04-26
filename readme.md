@@ -20,7 +20,7 @@ this could be used when you want to...
 ### PROJECT
 - feature: parse from javascript file
 - feature: export to javascript file
-### NODEL
+### NODE
 - fix: currently applying a group to a node doesn't change the root node
 ### GENERAL
 - fix: saving a group containing a node with joining parents duplicates that node
@@ -63,12 +63,14 @@ this could be used when you want to...
 
 
 ## Todo | v2.0
-### EDITOR
-- extra: code auto test field
-- extra: code compile check & indicator
+### NODE
 - extra: pan node view
 - extra: scroll to zoom
 - extra: offscreen node indicator (dot on edge)
+### CODE
+- extra: code auto test field
+- extra: code compile check & indicator
+- extra: allow the spread operator for input params
 ### RUN
 - extra: optimize running nodes in parallel
 ### CSS
