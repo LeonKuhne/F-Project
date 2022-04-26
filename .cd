@@ -1,8 +1,25 @@
-TODO:
-  - fix view/node-editor.js referencesToMap function to properly order refs 
-  - fix the parsed groups initial collapsed state
-  - test spliting by references
-  - test everything with the js parser
-  - finish up and close the refactoring branch
-  - parse anonymous functions
-  - test parsing regular functions
+-------------------------------------------------------------
+
+  [  TODO  ]
+
+
+  refactor
+    - fix view/node-editor.js referencesToMap function to properly order refs 
+    - fix the parsed groups initial collapsed state
+    - test spliting by references
+
+  loops
+    - detect loops while parsing that contain references
+    - create loop nodes that yield
+    - test parsing loops
+    
+  investigate
+    - test everything with the js parser
+
+  finish
+    - finish up and close the refactoring branch
+    - parse anonymous functions
+    - test parsing regular functions
+
+
+--------------------------------------------------------------
