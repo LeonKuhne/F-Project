@@ -158,29 +158,28 @@ class NodeEditor {
     } else {
       // load a node's code
       elems.codeContainer.hidden = false
+      const code = node.data.code
 
-      // fix the references
-      const refs = ParseJS.splitByCalls(
-        node.data.code, (moduleId) => {
-          return this.state.manager.module.get(moduleId)?.params
-        })
-      switch (refs.length) {
-        case 1:
-          elems.codeArea.value = node.data.code 
-          this.state.util.linter.lint()
-          break;
-        default:
-          // split the node by its code references to other nodes
-          this.refactorNode(node, refs)
-          console.error('TODO')
-    
-          // collapse the node in to a group
-          //this.state.nodel.manager.toggleGroup(node.id)
-
-          // reselect the group
-          //this.selectNode(node)
-          break;
+      // find references
+      const moduleNames = this.state.manager.module.getAllNames()
+      const chunkOptions = (new ParseJSModuleToChunks(code, moduleNames)).run()
+      console.log(chunkOptions)
+      
+      // parse references
+      if (chunkOptions.references.length) {
+        // split the node by its code references to other nodes
+        node = this.refactorNode(
+          node, 
+          chunkOptions.references, 
+          chunkOptions.codeChunks
+        )
+        this.state.selected.node = node
+        return
       }
+
+      // parse normal
+      elems.codeArea.value = code 
+      this.state.util.linter.lint()
     }
 
     this.updateName()
@@ -190,7 +189,113 @@ class NodeEditor {
     console.info(`Selecting ${node.id}`)
   }
 
-  refactorNode(node, refs) {
+  referencesToMap(refs) {
+    // TODO this needs to be fixed to return in the right order
+    
+    const head = {
+      id: refs[0].name,
+      parents: [],
+      children: {},
+      offsetX: 0,
+      offsetY: 0,
+    }
+    let last = head
+
+    for (const [idx, ref] of Object.entries(refs)) {
+      const map = {
+        id: `${ref.name} #${idx}`,
+        parents: [last.id],
+        children: {},
+        offsetX: 0,
+        offsetY: 100,
+      }
+
+      // TODO you will need to change this
+      const paramIdx = 2
+      // TODO using the param idx here doesn't make any sense
+      last.children[paramIdx] = [map]
+      last = map
+    }
+
+    return head
+  }
+
+  // convert code blocks to modules
+  blocksToModules(name, blocks, defaultOptions={}) {
+    const modules = []
+
+    // next
+    for (const [idx, code] of Object.entries(blocks)) {
+      modules.push(new Module({
+        ...defaultOptions,
+        name: `${name} #${idx}`,
+        code: code,
+      }))
+    }
+
+    return modules
+  }
+  
+  refactorNode(node, refs, chunks) {
+    const nm = this.state.nodel.manager
+    const nodeManager = this.state.manager.node
+    const moduleManager = this.state.manager.module
+    const name = node.data.name
+
+    // pause drawing 
+    nm.pauseDraw()
+
+    // parse the chunks into properly formatted code blocks
+    const blocks = (new ParseJSChunksToCode(chunks)).run()
+
+    // parse code blocks to new modules
+    const modules = this.blocksToModules(name, blocks, {
+      base: node.template,
+      params: node.data.params,
+    })
+    
+    for (const module of modules) {
+      // load in the modules
+      moduleManager.loadStatic(module)
+
+      // TODO the refs need to be added in a different order (alteranting)
+      // add new modules as references 
+      refs.push({
+        name: module.name,
+        params: module.params.required.concat(module.params.optional),
+      })
+    }
+
+    // replace the old node with this one
+    //node = this.state.nodel.manager.nodes[node.id] 
+    //nodeManager.removeNode(node)
+    //this.state.selected.node = node
+    
+    // update the nodes code by applying the head module as a template
+    //this.state.manager.node.updateNode(modules[0], node)
+
+
+    // create a group module
+    const groupModule = new Module({
+      name: name,
+      nodes: this.referencesToMap(refs)
+    })
+
+    console.debug('Found references', groupModule.nodes)
+
+    // reset the nodes code
+    node.code = ''
+
+    // apply the group module to the node
+    this.state.manager.node.updateNode(groupModule, node)
+
+    // unpause drawing 
+    nm.unpauseDraw()
+
+    return node
+
+    // TODO remove
+
     const nodelManager = this.state.nodel.manager
 
     // pause drawing

@@ -1,25 +1,26 @@
 /**
- * Base class for line parsers.
+ * Base class for item parsers.
 **/
 
-class LineParser extends Parser {
+class ItemParser extends Parser {
 
-  constructor(code) {
+  constructor(items) {
     super()
-    this.lines = code.split('\n')
+    this.items = items
+    this.idx = null
 
-    // TODO set this to false by default
     // TODO add a setter so it can be toggled during runtime
-    this.debugging = true
+    this.debugging = false 
   }
 
   parse() {
-    for (const [idx, line] of Object.entries(this.lines)) {
+    for (const [idx, item] of Object.entries(this.items)) {
+      this.idx = Number(idx)
       // parse the line
-      this.parseLine(line)
+      this.parseItem(item)
 
       // display info
-      this.debug(line, true)
+      this.debug(item, true)
     }
   }
 
@@ -42,7 +43,7 @@ class LineParser extends Parser {
   // Methods to implement
   //
 
-  parseLine(line) {
+  parseItem(item) {
     throw new Error("Unimplemented")
   }
 }

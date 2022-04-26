@@ -50,12 +50,14 @@ class NodeManager {
 
       // upgrade node to group 
       this.createGroup(module, 0, 0, node)
+      nm.unpauseDraw()
     } else {
       // update the node
       node.data = module.data()
       nm.redraw()
     }
   }
+  // TODO include this as part of nodel instead
   createFromMap(groupMap, x, y, head=null, group=null, connection=null) {
     const nm = this.state.nodel.manager
     const moduleManager = this.state.manager.module

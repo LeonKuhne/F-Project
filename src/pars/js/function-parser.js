@@ -11,12 +11,22 @@ class ParseJSFunctionToModule extends TextParser {
   }
 
   parseText(code) {
-    this.parseConstructor(code)
-    this.parseClassFunction(code)
+    if (!code || !code.trim()) return
+    code = this.parseConstructor(code)
+    code = this.parseClassFunction(code)
+    this.setCode(code)
   }
 
   getResult() {
     return this.f
+  }
+
+
+  // HELPERS
+  //
+
+  setCode(code) {
+    this.f.code = code
   }
 
   // PARSERS
@@ -27,8 +37,9 @@ class ParseJSFunctionToModule extends TextParser {
       // prepend the class name
       this.f.name = BuildJS.toNormalCase(`${this.className} ${this.f.name}`)
       // replace 'this' references with a class instance variable
-      BuildJS.swapVar('this', this.className)
+      code = BuildJS.swapVar(code, 'this', this.className)
     }
+    return code
   }
 
   /*
@@ -45,5 +56,6 @@ class ParseJSFunctionToModule extends TextParser {
       // add return
       code = BuildJS.addReturn(code, this.className)
     }
+    return code
   }
 }

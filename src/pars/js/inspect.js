@@ -59,10 +59,12 @@ class InspectJS {
     return match ? UtilJS.parseFunctionMatch(line, match) : null
   }
 
-  // fCode: string representing an anonymous function compatible with f-modules
-  static parseParams(fCode) {
-    let paramStr = fCode
+  // code: string representing an anonymous function compatible with f-modules
+  static parseParams(code) {
+    // only parse the first line
+    let paramStr = code.split('\n')[0]
     let parts = null
+    
 
     // remove everything before the opening parethesis
     parts = paramStr.split('(')

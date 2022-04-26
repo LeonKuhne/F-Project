@@ -30,20 +30,30 @@ class ModuleManager {
   getAllNames() {
     return this.staticModules.ids().concat(this.savedModules.ids())
   }
+  exists(name) {
+    return this.getAllNames().includes(name)
+  }
 
   // LOAD MODULES
   //
 
   loadStatic(module) {
-    // track modules
-    this.staticModules.add(module)
+    // remove previous
+    if (this.exists(module.name)) {
+      this.staticModules.remove(module)
+
     // update UI component
-    this.on.addStaticModule(module)
+    } else {
+      this.on.addStaticModule(module)
+    }
+
+    // track module
+    this.staticModules.add(module)
     console.debug('Loaded static module', module)
   }
   loadSaved(module) {
     const oldModule = this.savedModules.find(module.name)
-    // track modules
+    // track module
     this.savedModules.add(module)
 
     // update UI component

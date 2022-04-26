@@ -1,5 +1,7 @@
 TODO:
-  - fix function spliting by references (currently disabled)
+  - fix view/node-editor.js referencesToMap function to properly order refs 
+  - fix the parsed groups initial collapsed state
+  - test spliting by references
   - test everything with the js parser
   - finish up and close the refactoring branch
   - parse anonymous functions

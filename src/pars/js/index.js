@@ -41,9 +41,8 @@ class ParseJS {
    * getParams: takes in a method name and returns its parameters if it exists, 
    *    otherwise null
    */
-  static splitByCalls(code, getParams) {
-    // TODO enable
-    return [{code: code}]
+  static splitByCalls(code, modules) {
+    // TODO remove this function completely
 
     const parts = []
     const lines = code.split('\n')

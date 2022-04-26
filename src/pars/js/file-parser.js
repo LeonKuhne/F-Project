@@ -4,17 +4,17 @@
  * Any parse function can return true to stop parsing.
 **/
 
-class ParseJSFileToFunctions extends LineParser {
+class ParseJSFileToFunctions extends ItemParser {
 
   constructor(code) {
-    super(code)
+    super(code.split('\n'))
     this.functions = []
     // set state
     this.resetClass()
     this.resetFunction()
   }
 
-  parseLine(line) {
+  parseItem(line) {
     if (!line || !line.trim()) return // ignore whitespace
     if (this.parseFunction(line)) return
     if (this.parseClass(line)) return
