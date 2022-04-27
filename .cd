@@ -4,8 +4,6 @@
 
 
   refactor
-    - fix view/node-editor.js referencesToMap function to properly order refs 
-    - fix the parsed groups initial collapsed state
     - test spliting by references
 
   param node

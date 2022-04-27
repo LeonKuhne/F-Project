@@ -162,16 +162,15 @@ class NodeEditor {
 
       // find references
       const moduleNames = this.state.manager.module.getAllNames()
-      const chunkOptions = (new ParseJSModuleToChunks(code, moduleNames)).run()
-      console.log(chunkOptions)
+      const chunksWithRefs = (new ParseJSModuleToChunks(code, moduleNames)).run()
+      console.debug('Found chunksWithRefs', chunksWithRefs)
       
       // parse references
-      if (chunkOptions.references.length) {
+      if (chunksWithRefs.length > 1) {
         // split the node by its code references to other nodes
         node = this.refactorNode(
           node, 
-          chunkOptions.references, 
-          chunkOptions.codeChunks
+          chunksWithRefs, 
         )
         this.state.selected.node = node
         return
@@ -189,11 +188,9 @@ class NodeEditor {
     console.info(`Selecting ${node.id}`)
   }
 
-  referencesToMap(refs) {
-    // TODO this needs to be fixed to return in the right order
-    
+  modulesToMap(groupName, modules) {
     const head = {
-      id: refs[0].name,
+      id: groupName,
       parents: [],
       children: {},
       offsetX: 0,
@@ -201,9 +198,9 @@ class NodeEditor {
     }
     let last = head
 
-    for (const [idx, ref] of Object.entries(refs)) {
+    for (const module of modules) {
       const map = {
-        id: `${ref.name} #${idx}`,
+        id: module.id,
         parents: [last.id],
         children: {},
         offsetX: 0,
@@ -212,7 +209,6 @@ class NodeEditor {
 
       // TODO you will need to change this
       const paramIdx = 2
-      // TODO using the param idx here doesn't make any sense
       last.children[paramIdx] = [map]
       last = map
     }
@@ -220,23 +216,57 @@ class NodeEditor {
     return head
   }
 
-  // convert code blocks to modules
-  blocksToModules(name, blocks, defaultOptions={}) {
-    const modules = []
+  upgradeChunksToBlocks(node, chunksWithRefs) {
+    // swap chunks with code blocks
+    const blocksWithRefs = []
+    const params = InspectJS.parseParams(chunksWithRefs[0])
+    const allParams = params.required.concat(params.optional)
+    for (let [idx, item] of Object.entries(chunksWithRefs)) {
+      if (typeof item === 'string') {
+        // convert to code block
+        item = (new ParseJSChunkToCode(item, allParams, idx === 0)).run()
+      }
+      blocksWithRefs.push(item)
+    }
+    return blocksWithRefs
+  }
 
-    // next
-    for (const [idx, code] of Object.entries(blocks)) {
-      modules.push(new Module({
-        ...defaultOptions,
-        name: `${name} #${idx}`,
-        code: code,
-      }))
+  blocksWithRefsToModules(baseName, blocksWithRefs, defaultModule = {}) {
+    const moduleManager = this.state.manager.module
+    // convert blocks and references to a list of modules
+    const modules = []
+    let blockIdx = 0
+    for (const item of blocksWithRefs) {
+      let module = null
+
+      if (typeof item === 'string') {
+        // create a module from the block
+        module = new Module({
+          ...defaultModule,
+          name: `${baseName} #${blockIdx}`,
+          code: item,
+        })
+        blockIdx += 1
+
+        // load in the module
+        moduleManager.loadStatic(module)
+
+      } else {
+        // find the module from the reference
+        module = moduleManager.get(item.name)
+        console.log('found module for reference', item.name, module)
+        // TODO note: refs also have an unused .params property
+      }
+      
+      if (!module) console.error(`Couldn't find module`, module)
+
+      modules.push(module)
     }
 
     return modules
   }
-  
-  refactorNode(node, refs, chunks) {
+
+  refactorNode(node, chunksWithRefs) {
     const nm = this.state.nodel.manager
     const nodeManager = this.state.manager.node
     const moduleManager = this.state.manager.module
@@ -245,26 +275,30 @@ class NodeEditor {
     // pause drawing 
     nm.pauseDraw()
 
-    // parse the chunks into properly formatted code blocks
-    const blocks = (new ParseJSChunksToCode(chunks)).run()
+    const blocksWithRefs = this.upgradeChunksToBlocks(node, chunksWithRefs)
+    console.debug('chunks now look like', blocksWithRefs)
 
-    // parse code blocks to new modules
-    const modules = this.blocksToModules(name, blocks, {
+    const defaultModule = {
       base: node.template,
       params: node.data.params,
-    })
-    
-    for (const module of modules) {
-      // load in the modules
-      moduleManager.loadStatic(module)
-
-      // TODO the refs need to be added in a different order (alteranting)
-      // add new modules as references 
-      refs.push({
-        name: module.name,
-        params: module.params.required.concat(module.params.optional),
-      })
     }
+
+    // reset the modules code
+    node.code = ''
+
+    // create an ordered list of existing modules
+    const modules = this.blocksWithRefsToModules(name, blocksWithRefs, defaultModule)
+
+    // stitch together modules to form a group
+    const groupModule = new Module({
+      name: name,
+      nodes: this.modulesToMap(name, modules)
+    })
+    moduleManager.loadStatic(groupModule)
+
+    // select this module instead
+    this.state.selected.module = groupModule
+    node.data.code = ''
 
     // replace the old node with this one
     //node = this.state.nodel.manager.nodes[node.id] 
@@ -274,17 +308,7 @@ class NodeEditor {
     // update the nodes code by applying the head module as a template
     //this.state.manager.node.updateNode(modules[0], node)
 
-
-    // create a group module
-    const groupModule = new Module({
-      name: name,
-      nodes: this.referencesToMap(refs)
-    })
-
     console.debug('Found references', groupModule.nodes)
-
-    // reset the nodes code
-    node.code = ''
 
     // apply the group module to the node
     this.state.manager.node.updateNode(groupModule, node)

@@ -2,36 +2,38 @@ class ParseJSModuleToChunks extends ItemParser {
 
   constructor(code, existingReferences=[]) {
     super(code.split('\n'))
-    this.references = []
-    this.codeChunks = ['']
+    this.chunksWithRefs = ['']
     this.exists = (ref) => existingReferences.includes(ref)
   }
 
   parseItem(line) {
     const ref = this.parseReference(line)
-    this.parseCodeBlock(line, ref)
+
+    if (ref) {
+      this.addReference(ref)
+      this.nextChunk()
+    } else {
+      this.addCode(`${line}\n`)
+    }
   }
 
   getResult() {
-    return {
-      references: this.references,
-      codeChunks: this.codeChunks,
-    }
+    return this.chunksWithRefs
   }
 
   // HELPERS
   //
 
   addReference(ref) {
-    this.references.push(ref)
+    this.chunksWithRefs.push(ref)
   }
 
   nextChunk() {
-    this.codeChunks.push('')
+    this.chunksWithRefs.push('')
   }
 
   addCode(line) {
-    this.codeChunks[this.codeChunks.length-1] += line
+    this.chunksWithRefs[this.chunksWithRefs.length-1] += line
   }
 
 
@@ -41,16 +43,7 @@ class ParseJSModuleToChunks extends ItemParser {
   parseReference(line) {
     const ref = InspectJS.getFunctionCall(line)
     if (ref && this.exists(ref.name)) {
-      this.addReference(ref)
       return ref
-    }
-  }
-
-  parseCodeBlock(line, ref) {
-    if (ref) {
-      this.nextChunk()
-    } else {
-      this.addCode(`${line}\n`)
     }
   }
 }

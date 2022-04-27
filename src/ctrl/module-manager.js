@@ -30,17 +30,15 @@ class ModuleManager {
   getAllNames() {
     return this.staticModules.ids().concat(this.savedModules.ids())
   }
-  exists(name) {
-    return this.getAllNames().includes(name)
-  }
 
   // LOAD MODULES
   //
 
   loadStatic(module) {
     // remove previous
-    if (this.exists(module.name)) {
-      this.staticModules.remove(module)
+    const oldModule = this.get(module.id)
+    if (oldModule) {
+      this.staticModules.remove(oldModule)
 
     // update UI component
     } else {

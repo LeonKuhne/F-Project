@@ -24,6 +24,7 @@ this could be used when you want to...
 - fix: currently applying a group to a node doesn't change the root node
 ### GENERAL
 - fix: saving a group containing a node with joining parents duplicates that node
+- fix: buttons don't always click when clicked on, due to the gap, fix this to reduce missed clicks
 ### CODE
 - fix: adding result to the nodes data prevents it from being returnable (circular dependancy). suggestion: add a .clone function to nodes data that deepcopies without result (and other filtered out things)
 ### EDITOR

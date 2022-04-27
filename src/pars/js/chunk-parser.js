@@ -1,24 +1,22 @@
-class ParseJSChunksToCode extends ItemParser {
+class ParseJSChunkToCode extends TextParser {
 
-  constructor(chunks) {
-    super(chunks)
-    this.codeBlocks = []
-
-    // parse params
-    const params = InspectJS.parseParams(chunks[0])
-    this.allParams = params.required.concat(params.optional)
+  constructor(code, allParams, isFirst=false) {
+    super(code)
+    this.code = ''
+    this.allParams = allParams
+    this.isFirst = isFirst
   }
 
-  parseItem(code) {
+  parseText(code) {
     if (!code || !code.trim()) return
     code = this.parseAddHeader(code)
     code = this.parseCloseFunction(code)
 
-    this.codeBlocks.push(code)
+    this.code = code
   }
 
   getResult() {
-    return this.codeBlocks
+    return this.code
   }
 
   // PARSERS
