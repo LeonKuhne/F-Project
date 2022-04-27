@@ -21,42 +21,22 @@ class InspectJS {
     }
   }
 
-  static getAnyFunction(line, className=null) {
-    // multiple ordered header functions to try
-    const getters = [ 
-      className ? InspectJS.getClassFunction : null,
-      // TODO 
-      //InspectJS.getFunction,
-      // InspectJS.getAnonFunction,
-    ]   
-
-    // find and return the first header found
-    for (const getFunction of getters) {
-      if (getFunction) {
-        const header = getFunction(line, className)
-        if (header) {
-          return header
-        }   
-      }   
-    }   
-  }
-
   static getClassFunction(line) {
     let regex = '(.* +([a-zA-Z]+) *\\(([a-zA-Z]*[, *[a-zA-Z]*(\=.*)?]*)\\) *{)'
     let match = line.match(new RegExp(regex, 'i'))
-    return match ? UtilJS.parseFunctionMatch(line, match) : null
+    return match ?? null
   }
 
   // TODO test
   static getFunction(line) {
     let match = line.match(new RegExp('^.function *[a-zA-Z]* *([a-zA-Z]+) *\\(([a-zA-Z]*[, *[a-zA-Z]*]*)\\) *{', 'i'))
-    return match ? UtilJS.parseFunctionMatch(line, match) : null
+    return match ?? null
   }
 
   // TODO test
   static getAnonFunction(line) {
     match = line.match(new RegExp('^.*[a-zA-Z]* *([a-zA-Z]+) *= *\\(([a-zA-Z]*[, *[a-zA-Z]*]*)\\) *=> *{', 'gi'))
-    return match ? UtilJS.parseFunctionMatch(line, match) : null
+    return match ?? null
   }
 
   // code: string representing an anonymous function compatible with f-modules

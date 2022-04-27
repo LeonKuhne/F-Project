@@ -1,5 +1,25 @@
 class UtilJS {
 
+  static getAnyFunction(line, className=null) {
+    // multiple ordered header functions to try
+    const getters = [
+      className ? InspectJS.getClassFunction : null,
+      // TODO
+      //InspectJS.getFunction,
+      //InspectJS.getAnonFunction,
+    ]
+
+    // find and return the first header found
+    for (const getFunction of getters) {
+      if (getFunction) {
+        const match = getFunction(line, className)
+        if (match) {
+          return UtilJS.parseFunctionMatch(line, match)
+        }
+      }
+    }
+  }
+
   // match 1 is everything before the function start curly
   // match 2 is the function name
   // match 3 is a list of function parameters

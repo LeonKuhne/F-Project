@@ -23,14 +23,14 @@ class ParseJSChunkToCode extends TextParser {
   //
   
   parseAddHeader(code) {
-    if (this.idx) { // not the first chunk
+    if (!this.isFirst) {
       code = BuildJS.addHeader(code, this.allParams)
     }
     return code
   }
 
   parseCloseFunction(code) {
-    if (!this.idx) { // the first chunk
+    if (this.isFirst) {
       code = BuildJS.closeFunction(code)
     }
     return code

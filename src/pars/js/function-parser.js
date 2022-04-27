@@ -11,7 +11,6 @@ class ParseJSFunctionToModule extends TextParser {
   }
 
   parseText(code) {
-    if (!code || !code.trim()) return
     code = this.parseConstructor(code)
     code = this.parseClassFunction(code)
     this.setCode(code)

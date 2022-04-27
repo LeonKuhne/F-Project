@@ -224,7 +224,7 @@ class NodeEditor {
     for (let [idx, item] of Object.entries(chunksWithRefs)) {
       if (typeof item === 'string') {
         // convert to code block
-        item = (new ParseJSChunkToCode(item, allParams, idx === 0)).run()
+        item = (new ParseJSChunkToCode(item, allParams, Number(idx) === 0)).run()
       }
       blocksWithRefs.push(item)
     }
@@ -275,19 +275,14 @@ class NodeEditor {
     // pause drawing 
     nm.pauseDraw()
 
+    // convert code chunks to runnable code blocks
     const blocksWithRefs = this.upgradeChunksToBlocks(node, chunksWithRefs)
-    console.debug('chunks now look like', blocksWithRefs)
 
-    const defaultModule = {
+    // create modules from chunks
+    const modules = this.blocksWithRefsToModules(name, blocksWithRefs, {
       base: node.template,
       params: node.data.params,
-    }
-
-    // reset the modules code
-    node.code = ''
-
-    // create an ordered list of existing modules
-    const modules = this.blocksWithRefsToModules(name, blocksWithRefs, defaultModule)
+    })
 
     // stitch together modules to form a group
     const groupModule = new Module({
@@ -296,82 +291,17 @@ class NodeEditor {
     })
     moduleManager.loadStatic(groupModule)
 
-    // select this module instead
-    this.state.selected.module = groupModule
+    // update the nodes code
     node.data.code = ''
 
-    // replace the old node with this one
-    //node = this.state.nodel.manager.nodes[node.id] 
-    //nodeManager.removeNode(node)
-    //this.state.selected.node = node
-    
-    // update the nodes code by applying the head module as a template
-    //this.state.manager.node.updateNode(modules[0], node)
-
-    console.debug('Found references', groupModule.nodes)
-
-    // apply the group module to the node
+    // select and apply the new group module
+    this.state.selected.module = groupModule
     this.state.manager.node.updateNode(groupModule, node)
 
     // unpause drawing 
     nm.unpauseDraw()
 
     return node
-
-    // TODO remove
-
-    const nodelManager = this.state.nodel.manager
-
-    // pause drawing
-    nodelManager.pauseDraw()
-
-    // y offset of nodes to be added
-    const yOffset = 300
-    const rootNodeId = node.id
-
-    // init the next node
-    let nextNode = node
-    nextNode.data.code = refs[0].code
-
-    // create a node for each code part
-    for (const [refIdx, ref] of Object.entries(refs)) {
-      let count = Number(refIdx) + 1
-      // add the references module
-      if (ref.name) {
-        const module = this.state.manager.module.get(ref.name)
-
-        // create the reference node
-        const refNodeId = nodelManager.addNode(
-          module.base, node.x, node.y + yOffset * count - yOffset/2, module.data())
-
-        // connect the node to the reference node
-        this.connectAll(nextNode.id, refNodeId, module.params)
-
-        if (ref.code.trim()) {
-          // create the next node
-          const nextCode = refs[count].code
-          const prevNodeId = nextNode.id 
-          const nextNodeId = nodelManager.addNode(
-            node.template, node.x, node.y + yOffset * count, {
-            name: `${node.data.name} #${count++}`,
-            code: nextCode,
-            params: InspectJS.parseParams(nextCode)
-          })
-
-          // update the next node
-          nextNode = nodelManager.nodes[nextNodeId]
-
-          // connect the previous and next nodes
-          this.connectAll(prevNodeId, nextNode.id, nextNode.data.params)
-
-          // connect the reference to the next node
-          nodelManager.toggleConnect(refNodeId, nextNode.id)
-        }
-      }
-    }
-    
-    // continue drawing
-    nodelManager.unpauseDraw()
   }
 
   connectAll(fromId, toId, params) {

@@ -8,14 +8,14 @@ class ParseJSFileToFunctions extends ItemParser {
 
   constructor(code) {
     super(code.split('\n'))
+
     this.functions = []
-    // set state
     this.resetClass()
     this.resetFunction()
   }
 
   parseItem(line) {
-    if (!line || !line.trim()) return // ignore whitespace
+    if (!line || !line.trim()) return // TODO remove this line
     if (this.parseFunction(line)) return
     if (this.parseClass(line)) return
   }
@@ -27,7 +27,11 @@ class ParseJSFileToFunctions extends ItemParser {
   // HELPERS
   //
 
-  addFunction() {
+  addCode(code) {
+    this.functions[this.functions.length-1].f.code += code 
+  }
+
+  startFunction() {
     this.functions.push({
       f: this.f,
       className: this.c?.name,
@@ -71,7 +75,6 @@ class ParseJSFileToFunctions extends ItemParser {
   parseClassEnd(line) {
     if (InspectJS.isEndCurly(line, this.classIndent)) {
       this.debug(`Reached end of class`)
-
       this.resetClass()
       return true
     }
@@ -98,22 +101,19 @@ class ParseJSFileToFunctions extends ItemParser {
   }
 
   parseFunctionStart(line) {
-    this.f = InspectJS.getAnyFunction(line, this.c?.name)
+    this.f = UtilJS.getAnyFunction(line, this.c?.name)
     if (this.f) {
-      this.addFunction()
+      this.startFunction()
       this.functionIndent = InspectJS.getIndent(line)
       this.debug(`Parsed function start`)
       return true
     }
   }
 
-  addCode(code) {
-    this.functions[this.functions.length-1].f.code += code 
-  }
-
   parseFunctionLine(line) {
     line = BuildJS.withoutIndent(line, this.functionIndent)
-    this.addCode(`${line}\n`)
+    // NOTE: the line still contains its newline character
+    this.addCode(line)
   }
 
   parseFunctionEnd(line) {
