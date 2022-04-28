@@ -32,7 +32,7 @@ class BuildJS {
     if (lines.length > 0) {
       // add code at index
       const initCode = `  const ${name} = {}`
-      lines.splice(lines.length-1, 0, initCode)
+      lines.splice(1, 0, initCode)
       return lines.join('\n')
     } else {
       console.error('Unimplemented')

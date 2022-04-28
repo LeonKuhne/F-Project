@@ -17,7 +17,7 @@ class ParseJS {
    */
   static loadFunctions(file, onLoad=()=>{}) {
     // find the functions
-    ParserUtil.readFile(file, text => {
+    ParseUtil.readFile(file, text => {
       // parse file into functions
       const functions = (new ParseJSFileToFunctions(text)).run()
 

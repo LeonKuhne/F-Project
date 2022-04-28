@@ -4,9 +4,12 @@
 
 
   param node
-    - in parsejs, set the head node's code to collects all of the params from the node to be split and returns an object with the variable names as keys
-    - from parsejs, add 'x' as a param and prefix to all of the other nodes in the group
+    - map the param node to the second param of all other constructor nodes
+    - for parse chunk to code, add an optional returns param; have the returns param added to the code refactoring
+    - change code refactoring to happen upon module selection instead
+    - remove param attribute from any references being created
     - pass in the nodes state using 'this' instead of 'x' and get rid of 'x' as a first param
+    - make sure optional params work as expected, if not probably need to fix chunk to code to take in the proper/raw params list
 
   loops
     - detect loops while parsing that contain references

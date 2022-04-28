@@ -150,4 +150,27 @@ class ModuleManager {
     // save the module
     module.save()
   }
+
+  createParamModule(node) {
+    // remove prepended class parameters; function-parser/parseConstructor
+    const params = {
+      required: node.data.params.required.splice(2),
+      optional: node.data.params.optional,
+    }
+
+    // create param module
+    const code = ParseUtil.mapParamsCode(params)
+
+    // create a head module that collects params
+    const module = new Module({
+      name: `${node.data.name} params`,
+      base: node.template,
+      params: params,
+      code: code,
+    })  
+
+    this.loadStatic(module)
+
+    return module.id
+  }
 }

@@ -31,12 +31,11 @@ class UtilJS {
     // get the function name
     let name = match[2]
 
-    // construct parameters
-    let params = ['x']
-
-    // add existing parameters
-    params.push(match[3] ?? null)
-
+    // construct parameters, start with x
+    let params = ['x'].concat(match[3].split(','))
+    params = params.map(param => param.trim())
+    params = params.filter(param => param)
+    
     // construct parameter string
     code = BuildJS.addHeader(code, params)
 

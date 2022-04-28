@@ -134,6 +134,10 @@ class NodeManager {
   }
 
   parseRefactor(node) {
+    // no code
+    if (!node.data.code) return
+
+    // split by references
     const existingModules = this.state.manager.module.getAllNames()
     const chunksWithRefs = (new ParseJSModuleToChunks(node.data.code, existingModules)).run()
 
@@ -148,7 +152,14 @@ class NodeManager {
     nm.pauseDraw()
 
     // convert code chunks to runnable code blocks
-    const blocksWithRefs = ParseUtil.upgradeChunksToBlocks(node, chunksWithRefs)
+    const blocksWithRefs = ParseUtil.upgradeChunksToBlocks(chunksWithRefs)
+
+    // create param module
+    const paramModuleId = moduleManager.createParamModule(node)
+    blocksWithRefs.unshift({ name: paramModuleId })
+
+    // add module as reference
+
 
     // create/find module names for blocks and refs
     const moduleNames = (new ParseJSBlocksWithReferencesToModules(
@@ -174,11 +185,11 @@ class NodeManager {
     moduleManager.loadStatic(groupModule)
 
     // update the nodes code
-    node.data.code = ''
+    node.data.code = null
 
     // select and apply the new group module
     this.state.selected.module = groupModule
-    this.state.manager.node.updateNode(groupModule, node)
+    this.updateNode(groupModule, node)
 
     // unpause drawing
     nm.unpauseDraw()
