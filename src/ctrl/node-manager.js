@@ -133,7 +133,9 @@ class NodeManager {
     this.lastSelected = node
   }
 
+  // careful, order maters
   parseRefactor(node) {
+
     // no code
     if (!node.data.code) return
 
@@ -154,15 +156,8 @@ class NodeManager {
     // convert code chunks to runnable code blocks
     const blocksWithRefs = ParseUtil.upgradeChunksToBlocks(chunksWithRefs)
 
-    // create param module
-    const paramModuleId = moduleManager.createParamModule(node)
-    blocksWithRefs.unshift({ name: paramModuleId })
-
-    // add module as reference
-
-
     // create/find module names for blocks and refs
-    const moduleNames = (new ParseJSBlocksWithReferencesToModules(
+    let moduleNames = (new ParseJSBlocksWithReferencesToModules(
       name, blocksWithRefs, (moduleOptions) => {
         const module = new Module({
           base: node.template,
@@ -174,13 +169,31 @@ class NodeManager {
       }
     )).run()
 
+
+    // find the modules created from the code blocks
+    // NOTE: assumes that the new modules start with the old module name
+    // NOTE: must be done before you add the params
+    const newModules = moduleNames.filter(moduleName => moduleName .startsWith(name))
+
+    // create a param module and track it as a reference
+    const paramModuleId = moduleManager.createParamModule(node)
+    moduleNames.unshift(paramModuleId)
+
     // find modules
     const modules = moduleNames.map(name => moduleManager.get(name))
+
+    // connect the param node to all of the other references
+    const map = ParseUtil.modulesToMap(name, modules, {
+      [paramModuleId]: newModules,
+    })
+
+    console.debug('GENERATED GROUP MAP')
+    console.warn(map)
 
     // stitch modules together to form group
     const groupModule = new Module({
       name: name,
-      nodes: ParseUtil.modulesToMap(name, modules)
+      nodes: map,
     })
     moduleManager.loadStatic(groupModule)
 

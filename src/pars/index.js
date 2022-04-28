@@ -34,7 +34,7 @@ class ParseUtil {
     return blocksWithRefs
   }
 
-  static modulesToMap(groupName, modules) {
+  static modulesToMap(groupName, modules, connections = {}) {
     const head = {
       id: groupName,
       parents: [],
@@ -42,21 +42,44 @@ class ParseUtil {
       offsetX: 0,
       offsetY: 0,
     }
-    let last = head
 
+    // create maps for each module
+    let maps = {}
     for (const module of modules) {
-      const map = {
+      maps[module.id] = {
         id: module.id,
-        parents: [last.id],
+        parents: [],
         children: {},
         offsetX: 0,
         offsetY: 100,
       }
+    }
 
-      // TODO you will need to change this
-      const paramIdx = 2
-      last.children[paramIdx] = [map]
+    // link trigger connections
+    let last = head
+    const triggerIdx = 0
+    for (const map of Object.values(maps)) {
+      map.parents = [last.id]
+      last.children[triggerIdx] = [map]
       last = map
+    }
+
+    // link additional parameter connections
+    const paramIdx = 1
+    for (const [source, targets] of Object.entries(connections)) {
+      // initialize the children
+      const sourceChildren = maps[source].children
+      sourceChildren[paramIdx] = []
+
+      for (const target of targets) {
+        const targetMap = maps[target]
+
+        // link the sources child to the target
+        sourceChildren[paramIdx].push(targetMap)
+        
+        // link the target parent to the child
+        targetMap.parents.push(source)
+      }
     }
 
     return head
