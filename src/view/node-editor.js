@@ -158,26 +158,16 @@ class NodeEditor {
     } else {
       // load a node's code
       elems.codeContainer.hidden = false
-      const code = node.data.code
 
-      // find references
-      const moduleNames = this.state.manager.module.getAllNames()
-      const chunksWithRefs = (new ParseJSModuleToChunks(code, moduleNames)).run()
-      console.debug('Found chunksWithRefs', chunksWithRefs)
-      
-      // parse references
-      if (chunksWithRefs.length > 1) {
-        // split the node by its code references to other nodes
-        node = this.refactorNode(
-          node, 
-          chunksWithRefs, 
-        )
-        this.state.selected.node = node
+      // split the node by its code references to other nodes
+      const refactoredNode = this.state.manager.node.parseRefactor(node)
+      if (refactoredNode) {
+        this.state.selected.node = refactoredNode 
         return
       }
 
       // parse normal
-      elems.codeArea.value = code 
+      elems.codeArea.value = node.data.code
       this.state.util.linter.lint()
     }
 
@@ -186,122 +176,6 @@ class NodeEditor {
     this.updateNodeResult(node)
     
     console.info(`Selecting ${node.id}`)
-  }
-
-  modulesToMap(groupName, modules) {
-    const head = {
-      id: groupName,
-      parents: [],
-      children: {},
-      offsetX: 0,
-      offsetY: 0,
-    }
-    let last = head
-
-    for (const module of modules) {
-      const map = {
-        id: module.id,
-        parents: [last.id],
-        children: {},
-        offsetX: 0,
-        offsetY: 100,
-      }
-
-      // TODO you will need to change this
-      const paramIdx = 2
-      last.children[paramIdx] = [map]
-      last = map
-    }
-
-    return head
-  }
-
-  upgradeChunksToBlocks(node, chunksWithRefs) {
-    // swap chunks with code blocks
-    const blocksWithRefs = []
-    const params = InspectJS.parseParams(chunksWithRefs[0])
-    const allParams = params.required.concat(params.optional)
-    for (let [idx, item] of Object.entries(chunksWithRefs)) {
-      if (typeof item === 'string') {
-        // convert to code block
-        item = (new ParseJSChunkToCode(item, allParams, Number(idx) === 0)).run()
-      }
-      blocksWithRefs.push(item)
-    }
-    return blocksWithRefs
-  }
-
-  blocksWithRefsToModules(baseName, blocksWithRefs, defaultModule = {}) {
-    const moduleManager = this.state.manager.module
-    // convert blocks and references to a list of modules
-    const modules = []
-    let blockIdx = 0
-    for (const item of blocksWithRefs) {
-      let module = null
-
-      if (typeof item === 'string') {
-        // create a module from the block
-        module = new Module({
-          ...defaultModule,
-          name: `${baseName} #${blockIdx}`,
-          code: item,
-        })
-        blockIdx += 1
-
-        // load in the module
-        moduleManager.loadStatic(module)
-
-      } else {
-        // find the module from the reference
-        module = moduleManager.get(item.name)
-        console.log('found module for reference', item.name, module)
-        // TODO note: refs also have an unused .params property
-      }
-      
-      if (!module) console.error(`Couldn't find module`, module)
-
-      modules.push(module)
-    }
-
-    return modules
-  }
-
-  refactorNode(node, chunksWithRefs) {
-    const nm = this.state.nodel.manager
-    const nodeManager = this.state.manager.node
-    const moduleManager = this.state.manager.module
-    const name = node.data.name
-
-    // pause drawing 
-    nm.pauseDraw()
-
-    // convert code chunks to runnable code blocks
-    const blocksWithRefs = this.upgradeChunksToBlocks(node, chunksWithRefs)
-
-    // create modules from chunks
-    const modules = this.blocksWithRefsToModules(name, blocksWithRefs, {
-      base: node.template,
-      params: node.data.params,
-    })
-
-    // stitch together modules to form a group
-    const groupModule = new Module({
-      name: name,
-      nodes: this.modulesToMap(name, modules)
-    })
-    moduleManager.loadStatic(groupModule)
-
-    // update the nodes code
-    node.data.code = ''
-
-    // select and apply the new group module
-    this.state.selected.module = groupModule
-    this.state.manager.node.updateNode(groupModule, node)
-
-    // unpause drawing 
-    nm.unpauseDraw()
-
-    return node
   }
 
   connectAll(fromId, toId, params) {

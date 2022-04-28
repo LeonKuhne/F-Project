@@ -132,4 +132,57 @@ class NodeManager {
     // keep track of the last selected node
     this.lastSelected = node
   }
+
+  parseRefactor(node) {
+    const existingModules = this.state.manager.module.getAllNames()
+    const chunksWithRefs = (new ParseJSModuleToChunks(node.data.code, existingModules)).run()
+
+    // no references
+    if (chunksWithRefs.length <= 1) return
+
+    const nm = this.state.nodel.manager
+    const moduleManager = this.state.manager.module
+    const name = node.data.name
+
+    // pause drawing
+    nm.pauseDraw()
+
+    // convert code chunks to runnable code blocks
+    const blocksWithRefs = ParseUtil.upgradeChunksToBlocks(node, chunksWithRefs)
+
+    // create/find module names for blocks and refs
+    const moduleNames = (new ParseJSBlocksWithReferencesToModules(
+      name, blocksWithRefs, (moduleOptions) => {
+        const module = new Module({
+          base: node.template,
+          params: node.data.params,
+          ...moduleOptions,
+        })
+        moduleManager.loadStatic(module)
+        return module.id
+      }
+    )).run()
+
+    // find modules
+    const modules = moduleNames.map(name => moduleManager.get(name))
+
+    // stitch modules together to form group
+    const groupModule = new Module({
+      name: name,
+      nodes: ParseUtil.modulesToMap(name, modules)
+    })
+    moduleManager.loadStatic(groupModule)
+
+    // update the nodes code
+    node.data.code = ''
+
+    // select and apply the new group module
+    this.state.selected.module = groupModule
+    this.state.manager.node.updateNode(groupModule, node)
+
+    // unpause drawing
+    nm.unpauseDraw()
+
+    return node
+  }
 }
