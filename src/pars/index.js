@@ -37,6 +37,7 @@ class ParseUtil {
   static modulesToMap(groupName, modules, connections = {}) {
     const head = {
       id: groupName,
+      moduleId: groupName,
       parents: [],
       children: {},
       offsetX: 0,
@@ -48,6 +49,8 @@ class ParseUtil {
     for (const module of modules) {
       maps[module.id] = {
         id: module.id,
+        moduleId: module.id,
+        parents: [],
         parents: [],
         children: {},
         offsetX: 0,

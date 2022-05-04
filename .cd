@@ -2,9 +2,7 @@
 
   [  TODO  ]
 
-
   param node
-    - map the param node to the second param of all other constructor nodes
     - for parse chunk to code, add an optional returns param; have the returns param added to the code refactoring
     - change code refactoring to happen upon module selection instead
     - remove param attribute from any references being created
