@@ -2,14 +2,10 @@
 
   [  TODO  ]
 
-  fix params 
+  finish import
     - remove param attribute from any references being created
     - pass in the nodes state using 'this' instead of 'x' and get rid of 'x' as a first param
     - make sure optional params work as expected, if not probably need to fix chunk to code to take in the proper/raw params list
-    - move parseRefactor from node-manager, or break it up and move as much of it as you can
-    - test everything with the js parser
-
-  finish
     - finish up and close the import branch
 
 --------------------------------------------------------------
