@@ -24,6 +24,10 @@ class ParseUtil {
     const blocksWithRefs = []
     const firstChunk = chunksWithRefs[0]
     const params = InspectJS.parseParams(firstChunk)
+    // if func returns, add returned value as param for the next func 
+    if (returns) {
+      params.required.push(returns)
+    }
     const allParams = params.required.concat(params.optional)
 
     for (let [idx, item] of Object.entries(chunksWithRefs)) {
@@ -54,7 +58,6 @@ class ParseUtil {
       maps[module.id] = {
         id: module.id,
         moduleId: module.id,
-        parents: [],
         parents: [],
         children: {},
         offsetX: 0,
