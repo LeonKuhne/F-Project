@@ -64,6 +64,9 @@ class ModuleEditor {
     this.getElem(module).classList.add('selected')
     console.info(`Selecting module ${module}`)
 
+    // refactor the module as needed
+    module = this.state.manager.module.checkRefactor(module) ?? module
+
     // select the module
     this.state.selected.module = module
 

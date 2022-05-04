@@ -158,15 +158,6 @@ class NodeEditor {
     } else {
       // load a node's code
       elems.codeContainer.hidden = false
-
-      // split the node by its code references to other nodes
-      const refactoredNode = this.state.manager.node.parseRefactor(node)
-      if (refactoredNode) {
-        this.state.selected.node = refactoredNode 
-        return
-      }
-
-      // parse normal
       elems.codeArea.value = node.data.code
       this.state.util.linter.lint()
     }

@@ -151,11 +151,78 @@ class ModuleManager {
     module.save()
   }
 
-  createParamModule(node) {
+  checkRefactor(module) {
+    if (!module.code) return
+
+    // find references
+    const existingModules = this.state.manager.module.getAllNames()
+    const chunksWithRefs = (new ParseJSModuleToChunks(module.code, existingModules)).run()
+
+    // parse references
+    if (chunksWithRefs.length > 1) {
+      // refactor the module by its references
+      return this.refactorModule(module, chunksWithRefs)
+    }
+  }
+
+  refactorModule(module, chunksWithRefs) {
+    const nm = this.state.nodel.manager
+    const name = module.name
+
+    // convert code chunks to runnable code blocks
+    const blocksWithRefs = ParseUtil.upgradeChunksToBlocks(
+      chunksWithRefs, InspectJS.getReturn(module.code)
+    )
+
+    // create/find module names for blocks and refs
+    let moduleNames = (new ParseJSBlocksWithReferencesToModules(
+      name, blocksWithRefs, (moduleOptions) => {
+        const newModule = new Module({
+          base: module.base,
+          params: InspectJS.parseParams(moduleOptions.code),
+          ...moduleOptions,
+        })
+        this.loadStatic(newModule)
+        return newModule.id
+      }
+    )).run()
+
+    // find the modules created from the code blocks
+    // NOTE: assumes that the new modules start with the old module name
+    // NOTE: must be done before you add the params
+    const newModules = moduleNames.filter(moduleName => moduleName .startsWith(name))
+
+    // create a param module and track it as a reference
+    const paramModuleId = this.createParamModule(module)
+    const allButParamModule = [...moduleNames]
+    moduleNames.unshift(paramModuleId)
+
+    // find modules
+    const modules = moduleNames.map(name => this.get(name))
+
+    // connect the param module to all of the other references
+    const map = ParseUtil.modulesToMap(name, modules, {
+      [paramModuleId]: allButParamModule,
+    })
+
+    // stitch modules together to form group
+    const groupModule = new Module({
+      name: name,
+      nodes: map,
+    })
+
+    // update the modules
+    groupModule.code = null
+    this.loadStatic(groupModule)
+
+    return groupModule
+  }
+
+  createParamModule(groupModule) {
     // remove prepended class parameters; function-parser/parseConstructor
     const params = {
-      required: node.data.params.required.splice(2),
-      optional: node.data.params.optional,
+      required: groupModule.params.required.splice(2),
+      optional: groupModule.params.optional,
     }
 
     // create param module
@@ -163,8 +230,8 @@ class ModuleManager {
 
     // create a head module that collects params
     const module = new Module({
-      name: `${node.data.name} params`,
-      base: node.template,
+      name: `${groupModule.name} params`,
+      base: groupModule.base,
       params: params,
       code: code,
     })  

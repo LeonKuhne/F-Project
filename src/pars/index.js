@@ -45,9 +45,10 @@ class ParseUtil {
   static modulesToMap(groupName, modules, connections = {}) {
     const [triggerIdx, paramIdx] = [0, 1]
 
+    const headModule = modules.shift()
     const head = {
-      id: groupName,
-      moduleId: groupName,
+      id: headModule.id,
+      moduleId: headModule.id,
       parents: [],
       children: {},
       offsetX: 0,
@@ -55,7 +56,9 @@ class ParseUtil {
     }
 
     // create maps for each module
-    let maps = {}
+    let maps = {
+      [headModule.id]: head
+    }
     for (const module of modules) {
       maps[module.id] = {
         id: module.id,
