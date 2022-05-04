@@ -80,15 +80,8 @@ class InspectJS {
   static getFunctionCall(line) {
     const match = line.match(/([a-zA-Z.]+)\((.*)\)/i)
     if (!match) return null
-
-    // add dot parameters
-    const params = match[2].split(',')
-    const methodParts = match[1].split('.')
-    params.push(methodParts.splice(0, methodParts.length-1))
-
     return {
       name: BuildJS.toNormalCase(match[1]),
-      params: params.join(', '),
     }
   }
 
