@@ -2,13 +2,14 @@
 a project to end all projects
 f u, f me, f every body
 
+takes object oriented project,
+changes it to functional,
+then optimizes for cuncurrency
+
 "oh shit" - me
 
 
 # Project Parser | v1.0
-this takes an object oriented project,
-changes it to functional,
-and then optimizes for cuncurrency
 
 this could be used when you want to...
 ...have a prototype improve performance
@@ -16,20 +17,18 @@ this could be used when you want to...
 ...use functionality from another project
 ...use other peoples code without their permission
 
+
 ## Todo
 ### PROJECT
-- feature: parse from javascript file
 - feature: export to javascript file
+- feature: import from javascript file
 ### NODE
-- fix: currently applying a group to a node doesn't change the root node
+- fix: (might already be fixed) currently applying a group to a node doesn't change the root node
 ### GENERAL
-- fix: saving a group containing a node with joining parents duplicates that node
+- fix: (might already be fixed) saving a group containing a node with joining parents duplicates that node
 - fix: buttons don't always click when clicked on, due to the gap, fix this to reduce missed clicks
 ### CODE
-- fix: adding result to the nodes data prevents it from being returnable (circular dependancy). suggestion: add a .clone function to nodes data that deepcopies without result (and other filtered out things)
-### EDITOR
-- extra: what if you made the node & module editors togglable by clicking on the header
-
+- fix: (might already be fixed) adding result to the nodes data prevents it from being returnable (circular dependancy). suggestion: add a .clone function to nodes data that deepcopies without result (and other filtered out things)
 
 
 ### Manual
@@ -68,6 +67,8 @@ this could be used when you want to...
 - extra: pan node view
 - extra: scroll to zoom
 - extra: offscreen node indicator (dot on edge)
+### EDITOR
+- extra: make the node & module editors togglable by clicking on the header
 ### CODE
 - extra: code auto test field
 - extra: code compile check & indicator
@@ -76,6 +77,8 @@ this could be used when you want to...
 - extra: optimize running nodes in parallel
 ### CSS
 - extra: fix group node element colors during interaction
+### PROJECT
+- extra: parse js loops into nodes that yield using generators
 
 
 ## Architecture
