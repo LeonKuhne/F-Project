@@ -30,11 +30,12 @@ class ParseJSFunctionToModule extends TextParser {
 
   // PARSERS
   //
-  
+ 
   parseClassFunction(code) {
     if (this.className) {
       // prepend the class name
       this.f.name = BuildJS.toNormalCase(`${this.className} ${this.f.name}`)
+
       // replace 'this' references with a class instance variable
       code = BuildJS.swapVar(code, 'this', this.className)
     }
@@ -52,9 +53,10 @@ class ParseJSFunctionToModule extends TextParser {
       // create class object
       code = BuildJS.initObject(code, this.className)
       
-      // add return
+      // have the constructor return instance of self
       code = BuildJS.addReturn(code, this.className)
     }
     return code
   }
+
 }

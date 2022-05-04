@@ -19,15 +19,19 @@ class ParseUtil {
     }, false)
   }
 
-  static upgradeChunksToBlocks(chunksWithRefs) {
+  static upgradeChunksToBlocks(chunksWithRefs, returns=null) {
     // swap chunks with code blocks
     const blocksWithRefs = []
-    const params = InspectJS.parseParams(chunksWithRefs[0])
+    const firstChunk = chunksWithRefs[0]
+    const params = InspectJS.parseParams(firstChunk)
     const allParams = params.required.concat(params.optional)
+
     for (let [idx, item] of Object.entries(chunksWithRefs)) {
       if (typeof item === 'string') {
         // convert to code block
-        item = (new ParseJSChunkToCode(item, allParams, Number(idx) === 0)).run()
+        item = (new ParseJSChunkToCode(
+          item, allParams, Number(idx) === 0, returns
+        )).run()
       }
       blocksWithRefs.push(item)
     }

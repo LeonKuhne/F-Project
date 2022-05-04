@@ -160,7 +160,9 @@ class NodeManager {
     nm.pauseDraw()
 
     // convert code chunks to runnable code blocks
-    const blocksWithRefs = ParseUtil.upgradeChunksToBlocks(chunksWithRefs)
+    const blocksWithRefs = ParseUtil.upgradeChunksToBlocks(
+      chunksWithRefs, InspectJS.getReturn(node.data.code)
+    )
 
     // create/find module names for blocks and refs
     let moduleNames = (new ParseJSBlocksWithReferencesToModules(
