@@ -169,7 +169,7 @@ class NodeManager {
       name, blocksWithRefs, (moduleOptions) => {
         const module = new Module({
           base: node.template,
-          params: node.data.params,
+          params: InspectJS.parseParams(moduleOptions.code),
           ...moduleOptions,
         })
         moduleManager.loadStatic(module)
@@ -185,6 +185,7 @@ class NodeManager {
 
     // create a param module and track it as a reference
     const paramModuleId = moduleManager.createParamModule(node)
+    const allButParamModule = [...moduleNames]
     moduleNames.unshift(paramModuleId)
 
     // find modules
@@ -192,7 +193,7 @@ class NodeManager {
 
     // connect the param node to all of the other references
     const map = ParseUtil.modulesToMap(name, modules, {
-      [paramModuleId]: newModules,
+      [paramModuleId]: allButParamModule,
     })
 
     console.debug('GENERATED GROUP MAP')

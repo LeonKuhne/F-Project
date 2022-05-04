@@ -43,6 +43,8 @@ class ParseUtil {
   }
 
   static modulesToMap(groupName, modules, connections = {}) {
+    const [triggerIdx, paramIdx] = [0, 1]
+
     const head = {
       id: groupName,
       moduleId: groupName,
@@ -67,7 +69,6 @@ class ParseUtil {
 
     // link trigger connections
     let last = head
-    const triggerIdx = 0
     for (const map of Object.values(maps)) {
       map.parents = [last.id]
       last.children[triggerIdx] = [map]
@@ -75,19 +76,21 @@ class ParseUtil {
     }
 
     // link additional parameter connections
-    const paramIdx = 1
     for (const [source, targets] of Object.entries(connections)) {
-      // initialize the children
-      const sourceChildren = maps[source].children
-      sourceChildren[paramIdx] = []
+      const sourceMap = maps[source]
+
+      // initialize the children if not already
+      if (!sourceMap.children[paramIdx]) {
+        sourceMap.children[paramIdx] = []
+      }
 
       for (const target of targets) {
         const targetMap = maps[target]
 
-        // link the sources child to the target
-        sourceChildren[paramIdx].push(targetMap)
+        // link the sources child to the target on parameter
+        sourceMap.children[paramIdx].push(targetMap)
         
-        // link the target parent to the child
+        // link the target parent to the child id
         targetMap.parents.push(source)
       }
     }

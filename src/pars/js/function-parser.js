@@ -8,6 +8,9 @@ class ParseJSFunctionToModule extends TextParser {
     super(f.code)
     this.f = f
     this.className = className
+
+    // add an extra param
+    this.f.params.required.unshift('_')
   }
 
   parseText(code) {
@@ -47,8 +50,8 @@ class ParseJSFunctionToModule extends TextParser {
    */
   parseConstructor(code) {
     if (this.f.name === 'constructor') {
-      // prepend class parameters
-      this.f.params.required.unshift('_', this.className)
+      // prepend class parameter
+      this.f.params.required.unshift(this.className)
 
       // create class object
       code = BuildJS.initObject(code, this.className)
