@@ -23,9 +23,6 @@ f u, f me, f every `body`
 \* codable: pure js code that takes an input and provides an output 
 
 ## Todo
-### PROJECT
-- feature: export to '.f' project file
-- feature: import from '.f' project file
 ### NODE
 - fix: currently applying a group to a node doesn't change the root node
 ### GENERAL
