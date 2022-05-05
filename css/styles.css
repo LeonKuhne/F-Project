@@ -78,12 +78,8 @@ textarea {
 .header {
   z-index: 11;
   text-align: center;
-<<<<<<< HEAD
-  writing-mode: vertical-lr;
-=======
   writing-mode: vertical-lr; /* for chrome users */
   writing-mode: sideways-lr; 
->>>>>>> f40cbd6 (fixed header for chrome)
   font-size: 2em;
   margin-right: var(--shadow-gap);
   box-shadow: var(--shadow-size) 0px 0px var(--highlight);

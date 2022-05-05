@@ -2,26 +2,29 @@
 a project to end all projects
 f u, f me, f every `body`
 
-takes object oriented project,
-changes it to functional,
-then optimizes for cuncurrency
-
 "oh shit" - me
 
 
-# Project Parser | v1.0
+### Usable | v1.0
+#### MISSION STATEMENT
+0. Take an idea
+1. Visually break it down
+2. Logically define parts
 
-this could be used when you want to...
-...have a prototype improve performance
-...start a new project from a previous one
-...use functionality from another project
-...use other peoples code without their permission
-
+#### SAMPLE PROCESS
+0. Take an idea, or part that isn't \*codable or completed
+1. Break it down into (3-7) \*logical parts, collapsed as a group
+2. Repeat steps 0-2 until all immediate parts are sufficently small
+3. Code the parts until the parts' group works as expected
+4. Collapse the parts' group
+5. Repeate steps 0-5 until everything is collapsed
+\* logical part: identified with practice (eg. low coupling, high cohesion)
+\* codable: pure js code that takes an input and provides an output 
 
 ## Todo
 ### PROJECT
-- feature: export to javascript file
-- feature: import from javascript file
+- feature: export to '.f' project file
+- feature: import from '.f' project file
 ### NODE
 - fix: (might already be fixed) currently applying a group to a node doesn't change the root node
 ### GENERAL
@@ -61,9 +64,22 @@ this could be used when you want to...
 - class functions take in the class object as the second parameter
 
 
+# Project Parser | v2.0
+this could be used when you want to...
+...have a prototype improve performance
+...start a new project from a previous one
+...use functionality from another project
+...use other peoples code without their permission
 
-## Todo | v2.0
+#### MISSION STATEMENT
+0. Take an object oriented project
+1. Change it to functional
+2. Optimize for cuncurrency
+
+
+## Todo
 ### NODE
+- extra: z axis; indicate depth by adding effects to nodes, let nodes be moved through z axes using keybind or button, also indicate the depth
 - extra: pan node view
 - extra: scroll to zoom
 - extra: offscreen node indicator (dot on edge)
@@ -78,6 +94,9 @@ this could be used when you want to...
 ### CSS
 - extra: fix group node element colors during interaction
 ### PROJECT
+- extra: import modules from js file
+- extra: (started) import project as nodes from js file
+- extra: export project or run path javascript file
 - extra: parse js loops into nodes that yield using generators
 
 
