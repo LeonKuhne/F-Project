@@ -23,9 +23,12 @@ f u, f me, f every `body`
 \* codable: pure js code that takes an input and provides an output 
 
 ## Todo
-### NODE
+### FINAL STRETCH
+- test: import project that uses saved modules without having saved modules
+- refactor: move map parsing to nodel (see todo)
+- refactor: clean up other todo's if practical
+- refactor: improve coupling/cohesioun of views & ctrls
 - fix: currently applying a group to a node doesn't change the root node
-### GENERAL
 - fix: children nodes don't update when group saves
 
 
