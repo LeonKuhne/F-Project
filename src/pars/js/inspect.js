@@ -66,10 +66,15 @@ class InspectJS {
     let optional = params.filter(param => param.includes('='))
 
     // parse out default values
-    optional = optional.map(param => param.split('=')[0])
+    const defaultKeys = optional.map(param => param.split('=')[0])
+    const defaultValues = optional.map(param => param.split('=')[1])
 
 
-    return {required, optional}
+    return {
+      required,
+      optional: defaultKeys,
+      defaults: defaultValues,
+    }
   }
 
   static getIndent(line) {

@@ -111,14 +111,16 @@ class NodeView {
     // setup connection labels
     nr.on('connection-label', (source, target, paramIdx) => {
       const requiredParams = target.data.params.required
+      // always use trigger as first param
+      const params = requiredParams.length ? requiredParams : [' ']
 
       // cast to number
       paramIdx = isNaN(Number(paramIdx)) ? 0 : Number(paramIdx)
 
-      if (paramIdx < requiredParams.length) {
-        return requiredParams[paramIdx]
+      if (paramIdx < params.length) {
+        return params[paramIdx]
       } else {
-        return target.data.params.optional[paramIdx - requiredParams.length]
+        return target.data.params.optional[paramIdx - params.length]
       }
     })
 
@@ -126,7 +128,8 @@ class NodeView {
     nl.on('click', (e) => {
       const [source, target] = e.nodes
       const params = target.data.params
-      let totalParams = params.required.length + params.optional.length
+      // always use trigger as first param
+      let totalParams = Math.max(params.required.length, 1) + params.optional.length
       let maxConnections = Math.max(totalParams, 1)
       let paramIdx = nm.getConnectionType(source.id, target.id)
   

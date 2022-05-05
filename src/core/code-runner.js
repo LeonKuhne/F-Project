@@ -38,19 +38,43 @@ class CodeRunner {
       this.params[node.id][paramIdx] = param
     }
 
-    // mask the node's body
-    node.data.input = Object.values({ ...this.params[node.id], 0: 'this' })
-
     // ensure required parameters exist
     if (!this.hasRequiredParams(this.params[node.id], requiredParamCount)) {
       console.debug(`Skipping node '${node.data.name}', missing params`)
       return []
     }
 
+    // break down and reassemble node params to support 'this' reference and default values
+    // add 'x' as a parameter for referencing 'this'
+    let params = ['x']
+    // always have a trigger param
+    const requiredParams = node.data.params.required
+    params = params.concat(requiredParams.length ? requiredParams : ['_'])
+    // assemble optional params with default values
+    let optionalParams = node.data.params.optional
+    let defaultParams = node.data.params.defaults
+    optionalParams = Object.entries(optionalParams).map(([idx, key]) => `${key}=${defaultParams[idx]}`)
+    params = params.concat(optionalParams)
+    // edit the params
+    const code = BuildJS.editParams(node.data.code, params)
+
+    // fill with null trigger
+    const triggerIdx = 1
+    if (!(triggerIdx in this.params[node.id])) {
+      this.params[node.id][triggerIdx] = null
+    }
+
+    // mask the node's body
+    node.data.input = Object.values({ ...this.params[node.id], 0: 'this' })
+
+    // arrange the parameter values to pass in
+    const args = [...Object.values(this.params[node.id])]
+
     // evaluate
     // NOTE: eval is a XSS vulnerability
-    const func = eval(node.data.code)
-    node.data.result = func(...Object.values(this.params[node.id]))
+    console.warn(`Calling ${code} with (${args})`)
+    const func = eval(code)
+    node.data.result = func(...args)
 
     // check for end, or undefined returned
     if (node.isLeaf() || node.data.result === undefined) {

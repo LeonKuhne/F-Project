@@ -21,6 +21,17 @@ class BuildJS {
     return code
   }
 
+  static editParams(code, paramList) {
+    code = BuildJS.removeHeader(code)
+    code = BuildJS.addHeader(code, paramList)
+    return code
+  }
+
+  static removeHeader(code) {
+    let lines = code.split('\n')
+    lines = lines.splice(1)
+    return lines.join('\n')
+  }
 
   static addHeader(code, params) {
     const paramStr = params.filter(p=>p).join(', ')

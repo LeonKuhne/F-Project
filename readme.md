@@ -10,6 +10,7 @@ f u, f me, f every `body`
 0. Take an idea
 1. Visually break it down
 2. Logically define parts
+3. Develop it as a proof of concept
 
 #### SAMPLE PROCESS
 0. Take an idea, or part that isn't \*codable or completed
@@ -26,12 +27,59 @@ f u, f me, f every `body`
 - feature: export to '.f' project file
 - feature: import from '.f' project file
 ### NODE
-- fix: (might already be fixed) currently applying a group to a node doesn't change the root node
+- fix: currently applying a group to a node doesn't change the root node
 ### GENERAL
-- fix: (might already be fixed) saving a group containing a node with joining parents duplicates that node
-- fix: buttons don't always click when clicked on, due to the gap, fix this to reduce missed clicks
+- fix: children nodes don't update when group saves
+
+
+# UI Enhancements | v2.0
+#### MISSION STATEMENT
+0. Take something that works
+1. Make the interface practical
+2. Make the experience lovable
+
+## Todo
+### EDITOR
+- extra: make the node & module editors togglable by clicking on the header
+### CSS
+- extra: fix group node element colors during interaction
+- extra: buttons don't always click when clicked on due to a gap; reduce missed clicks
+### NODE
+- extra: z axis depth; indicate depth by adding effects to nodes, let nodes be moved through z axes using keybind or button, also indicate the depth, change the nodes z-index as well
 ### CODE
-- fix: (might already be fixed) adding result to the nodes data prevents it from being returnable (circular dependancy). suggestion: add a .clone function to nodes data that deepcopies without result (and other filtered out things)
+- extra: code auto test field
+- extra: code compile check & indicator
+
+# Project Parser | v3.0
+this could be used when you want to...
+...have a prototype improve performance
+...start a new project from a previous one
+...use functionality from another project
+...use other peoples code without their permission
+
+#### MISSION STATEMENT
+0. Take this object oriented project
+1. Change it to functional
+2. Visually explain project logic
+2. Manually optimize for cuncurrency
+
+## Todo
+### RUN
+- extra: optimize running nodes in parallel
+### PROJECT
+- extra: (started) import modules from js file
+- extra: import project as nodes from js file
+- - parse js loops into nodes that yield using generators
+- extra: export project or run path javascript file
+
+# Extra (Maybe Never) | v4.0
+## Todo
+### NODE
+- extra: pan node view
+- extra: scroll to zoom
+- extra: offscreen node indicator (dot on edge)
+### CODE
+- extra: allow the spread operator for input params
 
 
 ### Manual
@@ -62,42 +110,6 @@ f u, f me, f every `body`
 - class references to 'this' are replaced with an class object instance
 - constructors create an object instance, update its attributes, and return the instance
 - class functions take in the class object as the second parameter
-
-
-# Project Parser | v2.0
-this could be used when you want to...
-...have a prototype improve performance
-...start a new project from a previous one
-...use functionality from another project
-...use other peoples code without their permission
-
-#### MISSION STATEMENT
-0. Take an object oriented project
-1. Change it to functional
-2. Optimize for cuncurrency
-
-
-## Todo
-### NODE
-- extra: z axis; indicate depth by adding effects to nodes, let nodes be moved through z axes using keybind or button, also indicate the depth
-- extra: pan node view
-- extra: scroll to zoom
-- extra: offscreen node indicator (dot on edge)
-### EDITOR
-- extra: make the node & module editors togglable by clicking on the header
-### CODE
-- extra: code auto test field
-- extra: code compile check & indicator
-- extra: allow the spread operator for input params
-### RUN
-- extra: optimize running nodes in parallel
-### CSS
-- extra: fix group node element colors during interaction
-### PROJECT
-- extra: import modules from js file
-- extra: (started) import project as nodes from js file
-- extra: export project or run path javascript file
-- extra: parse js loops into nodes that yield using generators
 
 
 ## Architecture
