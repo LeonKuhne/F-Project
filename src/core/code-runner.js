@@ -13,12 +13,11 @@ class CodeRunner {
   hasRequiredParams(params, requiredParamCount) {
     // find any missing params
     let missingParamIdx = []
-    for (let idx=0; idx<requiredParamCount; idx++) {
+    for (let idx=0; idx<=requiredParamCount; idx++) {
       if (!(idx in params)) {
         return false
       }
     }
-
     return true
   }
 
@@ -102,7 +101,6 @@ class CodeRunner {
         responses = [...responses, ...resList]
       }
     }
-
     return responses
   }
 
