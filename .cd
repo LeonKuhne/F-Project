@@ -1,9 +1,1 @@
--------------------------------------------------------------
-
-  [  TODO  ]
-
-  finish import
-    - make sure optional params work as expected, if not probably need to fix chunk to code to take in the proper/raw params list
-    - finish up and close the import branch
-
---------------------------------------------------------------
+echo "Moving on to exporting"
