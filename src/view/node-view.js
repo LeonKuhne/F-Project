@@ -115,9 +115,6 @@ class NodeView {
       // cast to number
       paramIdx = isNaN(Number(paramIdx)) ? 0 : Number(paramIdx)
 
-      // correct the index offset
-      paramIdx += 1
-
       if (paramIdx < requiredParams.length) {
         return requiredParams[paramIdx]
       } else {
@@ -130,7 +127,7 @@ class NodeView {
       const [source, target] = e.nodes
       const params = target.data.params
       let totalParams = params.required.length + params.optional.length
-      let maxConnections = Math.max(totalParams - 1, 1)
+      let maxConnections = Math.max(totalParams, 1)
       let paramIdx = nm.getConnectionType(source.id, target.id)
   
       // cast to number

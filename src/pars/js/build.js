@@ -57,7 +57,7 @@ class BuildJS {
   }
 
   static swapVar(text, name, replacement) {
-    return text.replace(new RegExp(`(?<![a-zA-Z])${name}(?=.)`, 'gi'), replacement)
+    return text.replace(new RegExp(`(?<![a-zA-Z])${name}(?=[. \n])`, 'gi'), replacement)
   }
 
   // adds a return to the second to last line

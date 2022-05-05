@@ -14,7 +14,7 @@ function main() {
   // aggregate state
   state = {
     selected: {
-      template: {name: 'basic', code: 'x => x', template: 'basic'},
+      template: {name: 'basic', code: '() => null', template: 'basic'},
       node: null,
     },
     nodel: {

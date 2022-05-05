@@ -149,33 +149,33 @@
 
       <!-- NODEL TEMPLATES -->
       <div id='basic' class='basic shadow-theme' select
-        code="(x) => {
+        code="() => {
   return null
 }">{name}</div>
 
       <div id='leaf' class='basic shadow-theme' 
-        code="(x) => {
+        code="() => {
   // do something
 }">{name}</div>
 
       <div id='memory' class='basic shadow-theme' 
-        code="(x, y) => {
+        code="(y) => {
   if (y) {
-    x.attr = y
+    this.attr = y
     return undefined
   } else {
-    return x.attr
+    return this.attr
   }
 }">{name}</div>
 
       <div id='attach' class='basic shadow-theme' 
-        code="(x, y) => ({...y, todo: null})">{name}</div>
+        code="(y) => ({...y, todo: null})">{name}</div>
 
       <div id='node' class='basic shadow-theme' 
-        code="(x) => ({...x})">{name}</div>
+        code="() => ({...this})">{name}</div>
 
       <div id='value' class='basic shadow-theme' 
-         code="x => null">{name}</div>
+         code="() => null">{name}</div>
 
       <div id='note' class='basic shadow-theme' 
         code="">{name}</div>

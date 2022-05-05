@@ -39,7 +39,7 @@ class CodeRunner {
     }
 
     // mask the node's body
-    node.data.input = Object.values({ ...this.params[node.id], 0: 'x' })
+    node.data.input = Object.values({ ...this.params[node.id], 0: 'this' })
 
     // ensure required parameters exist
     if (!this.hasRequiredParams(this.params[node.id], requiredParamCount)) {
