@@ -24,13 +24,12 @@ f u, f me, f every `body`
 
 ## Todo
 ### FINAL STRETCH
-- test: import project that uses saved modules without having saved modules
 - refactor: turn node.data.params in to a function that gets the lastest params from the code (or lazy loads it whenever the code is updated)
 - refactor: move map parsing to nodel (see todo)
 - refactor: clean up other todo's if practical
 - refactor: improve coupling/cohesioun of views & ctrls
 - fix: currently applying a group to a node doesn't change the root node
-- fix: children nodes don't update when group saves
+- fix: ALL children of a group till the ends should update when a group saves
 
 
 # UI Enhancements | v2.0
