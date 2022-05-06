@@ -25,6 +25,7 @@ f u, f me, f every `body`
 ## Todo
 ### FINAL STRETCH
 - test: import project that uses saved modules without having saved modules
+- refactor: turn node.data.params in to a function that gets the lastest params from the code (or lazy loads it whenever the code is updated)
 - refactor: move map parsing to nodel (see todo)
 - refactor: clean up other todo's if practical
 - refactor: improve coupling/cohesioun of views & ctrls
@@ -45,7 +46,7 @@ f u, f me, f every `body`
 - extra: fix group node element colors during interaction
 - extra: buttons don't always click when clicked on due to a gap; reduce missed clicks
 ### NODE
-- extra: z axis depth; indicate depth by adding effects to nodes, let nodes be moved through z axes using keybind or button, also indicate the depth, change the nodes z-index as well
+- extra: z axis depth; indicate depth using opacity and z-index on group nodes children, stacking on groups of groups. Have the z index change to that of the nodes selection
 ### CODE
 - extra: code auto test field
 - extra: code compile check & indicator
@@ -127,4 +128,18 @@ Arranged by levels of abstraction:
 
 ### Why not use MVC?
 I am. "Standards" are meant to be tested. Frameworks expect deviation; framework "features" is an oxymoron. F limiting myself to the [three tier architecture specs](https://www.ibm.com/cloud/learn/three-tier-architecture).
+
+
+### Understanding the Todo Lists
+I have multiple todo lists separated by major version number, with the more current todo lists being more accurate and the later ones needing work. Each list is seperated into features, with the following prioritization:
+- tests
+- refactorings
+- fixes
+- features
+
+> "When I need to add a new feature to a codebase, I look at the existing code and consider whether it's structured in such a way to make the new change straightforward. If it isn't, then I refactor the existing code to make this new addition easy. By refactoring first in this way, I usually find it's faster than if I hadn't carried out the refactoring first." - Martin Fowler
+
+#### Todo Rules
+- features are to be completed starting from the top
+- new items added to the todo list are to be positioned in this order and this order is to be maintained
 
