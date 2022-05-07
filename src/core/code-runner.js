@@ -71,7 +71,6 @@ class CodeRunner {
 
     // evaluate
     // NOTE: eval is a XSS vulnerability
-    console.warn(`Calling ${code} with (${args})`)
     const func = eval(code)
     node.data.result = func(...args)
 
