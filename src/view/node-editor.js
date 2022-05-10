@@ -63,7 +63,7 @@ class NodeEditor {
     }
 
     // run the code
-    elems.runButton.onclick = () => this.runCode(this.state.selected.node)
+    elems.runButton.onclick = async () => await this.runCode(this.state.selected.node)
 
     // save the code
     elems.saveButton.onclick = () => {
@@ -194,7 +194,7 @@ class NodeEditor {
   //
   // PROGRAM
 
-  runCode(node) {
+  async runCode(node) {
     if (!node) {
       console.error("No start node selected")
       return
@@ -203,7 +203,7 @@ class NodeEditor {
     // collect state
     const totalResultArea = this.state.elem.totalResultArea
     this.runner.reset()
-    const responses = this.runner.run(node)
+    const responses = await this.runner.run(node)
 
     // render 
     let responseText = ""

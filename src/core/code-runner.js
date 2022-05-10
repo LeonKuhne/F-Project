@@ -22,7 +22,7 @@ class CodeRunner {
   }
 
   // TODO: dispatch each node as its own thread (ie. promise)
-  run(node, paramIdx=null, param=null, runId=null) {
+  async run(node, paramIdx=null, param=null, runId=null) {
     // setup parameters
     const requiredParamCount = node.data.params.required.length
     if (!(node.id in this.params)) {
@@ -71,9 +71,8 @@ class CodeRunner {
 
     // evaluate
     // NOTE: eval is a XSS vulnerability
-    console.warn(`Calling ${code} with (${args})`)
     const func = eval(code)
-    node.data.result = func(...args)
+    node.data.result = await func(...args)
 
     // check for end, or undefined returned
     if (node.isLeaf() || node.data.result === undefined) {
@@ -97,21 +96,21 @@ class CodeRunner {
         paramIdx = isNaN(paramIdx) ? 1 : paramIdx + 1
 
         // run the child
-        const resList = this.run(child, paramIdx, node.data.result, runId)
+        const resList = await this.run(child, paramIdx, node.data.result, runId)
         responses = [...responses, ...resList]
       }
     }
     return responses
   }
 
-  runAll() {
+  async runAll() {
     // find the heads
     const heads = getHeads(this.nodes)
 
     // loop through the heads and execute on the state
     const finalStates = []
     for (const head of heads) {
-      const responses = this.run(head)
+      const responses = await this.run(head)
       finalStates.push(responses)
       this.reset()
     }
