@@ -32,6 +32,7 @@ f u, f me, f every `body`
 - fix: ALL children of a group till the ends should update when a group saves
 - fix: tab should indent at current index, not at end of file
 - fix: deleting a group deletes everything
+- fix: allow circular nodes in group
 
 
 # UI Enhancements | v2.0
@@ -46,11 +47,14 @@ f u, f me, f every `body`
 ### CSS
 - extra: fix group node element colors during interaction
 - extra: buttons don't always click when clicked on due to a gap; reduce missed clicks
+- extra: indicate head nodes with unique color
+- extra: indicate leaf nodes with a unique color
 ### NODE
 - extra: z axis depth; indicate depth using opacity and z-index on group nodes children, stacking on groups of groups. Have the z index change to that of the nodes selection
 ### CODE
 - extra: code auto test field
 - extra: code compile check & indicator
+- extra: add a 'run' button near the project that runs ALL of the head nodes, replacing the need for connecting an init/trigger node to every single gosh darn node
 
 # Project Parser | v3.0
 this could be used when you want to...
