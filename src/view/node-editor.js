@@ -125,7 +125,6 @@ class NodeEditor {
     const node = this.state.selected.node
     // update the node's code and params
     node.data.code = code
-    node.data.params = InspectJS.parseParams(code)
     // redraw
     this.state.nodel.manager.redraw()
   }

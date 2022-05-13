@@ -82,7 +82,6 @@ class ModuleManager {
         name: name,
         base: name,
         code: code,
-        params: InspectJS.parseParams(code),
       })
 
       // add module
@@ -179,7 +178,6 @@ class ModuleManager {
       name, blocksWithRefs, (moduleOptions) => {
         const newModule = new Module({
           base: module.base,
-          params: InspectJS.parseParams(moduleOptions.code),
           ...moduleOptions,
         })
         this.loadStatic(newModule)
@@ -189,8 +187,7 @@ class ModuleManager {
 
     // find the modules created from the code blocks
     // NOTE: assumes that the new modules start with the old module name
-    // NOTE: must be done before you add the params
-    const newModules = moduleNames.filter(moduleName => moduleName .startsWith(name))
+    const newModules = moduleNames.filter(moduleName => moduleName.startsWith(name))
 
     // create a param module and track it as a reference
     const paramModuleId = this.createParamModule(module)
@@ -219,20 +216,19 @@ class ModuleManager {
   }
 
   createParamModule(groupModule) {
-    // remove prepended class parameters; function-parser/parseConstructor
-    const params = {
-      required: groupModule.params.required.splice(2),
-      optional: groupModule.params.optional,
-    }
+    const groupParams = groupModule.params
 
     // create param module
-    const code = ParseUtil.mapParamsCode(params)
+    const code = ParseUtil.mapParamsCode({
+      ...groupParams, 
+      // remove prepended class parameters; function-parser/parseConstructor
+      required: groupParams.required.splice(2),
+    })
 
     // create a head module that collects params
     const module = new Module({
       name: `${groupModule.name} params`,
       base: groupModule.base,
-      params: params,
       code: code,
     })  
 

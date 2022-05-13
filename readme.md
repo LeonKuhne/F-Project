@@ -24,7 +24,6 @@ f u, f me, f every `body`
 
 ## Todo
 ### FINAL STRETCH
-- refactor: turn node.data.params in to a function that gets the lastest params from the code (or lazy loads it whenever the code is updated)
 - refactor: move map parsing to nodel (see todo)
 - refactor: clean up other todo's if practical
 - refactor: improve coupling/cohesioun of views & ctrls

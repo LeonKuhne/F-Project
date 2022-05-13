@@ -30,8 +30,21 @@ class Module {
     this.validate()
   }
 
+  // use the code to generate the parameters
+  // TODO: remove duplicate line in this.data();
+  get params() {
+    return this.code ? InspectJS.parseParams(this.code) : undefined
+  }
+
   data() {
-    return {...this, id: null}
+    const module = this
+    return {
+      ...this,
+      id: null,
+      get params() {
+        return this.code ? InspectJS.parseParams(this.code) : undefined
+      }
+    }
   }
 
   save() {
