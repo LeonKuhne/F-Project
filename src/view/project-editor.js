@@ -64,8 +64,7 @@ class ProjectEditor {
     })
   }
 
-  // NOTE: progress temporarilly halted on this feature
-  /* TODO
+  /* NOTE: progress temporarilly halted on this feature until it is needed
   loadModulesFromFile(file) {
     ParseJS.loadFunctions(file, options => {
       // determine which base template to use

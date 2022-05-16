@@ -38,7 +38,6 @@ class ModuleEditor {
     if (!module) {
       return null
     }
-    // TODO properly sanitize this to prevent XSS
     let id = module.id
     id = id.replaceAll(' ', '_')
     id = id.toLowerCase()

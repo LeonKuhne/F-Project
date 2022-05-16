@@ -33,10 +33,6 @@ class NodeView {
         dragging = e
         draggedOff = false 
       }
-
-      // update name field when clicked off input
-      // TODO awk; pls fix
-      this.state.editor.node.resetEditName()
     })
 
     // support dragging

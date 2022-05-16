@@ -157,6 +157,7 @@ class NodeEditor {
       this.state.util.linter.lint()
     }
 
+    this.editName(false)
     this.updateName()
     this.updateCollapsedButton(node)
     this.updateNodeResult(node)
@@ -259,15 +260,6 @@ class NodeEditor {
       const name = input.value
       input.hide()
       label.show()
-    }
-  }
-
-  resetEditName() {
-    // update name field when clicked off input
-    if (this.editingName) {
-      this.saveName()
-      this.updateName(this.state.elem.nameInput.value)
-      this.editName(false)
     }
   }
 

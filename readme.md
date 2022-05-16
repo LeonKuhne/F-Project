@@ -86,6 +86,7 @@ this could be used when you want to...
 - extra: offscreen node indicator (dot on edge)
 ### CODE
 - extra: allow the spread operator for input params
+- extra: properly sanitize code before running to prevent XSS
 
 
 ### Manual
