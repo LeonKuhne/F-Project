@@ -38,12 +38,8 @@ class NodeEditor {
       elems.codeOutput,
     )
 
-    // NOTE: I think anonymous callbacks are needed to use class state; ie 'this'
+    // create node manager, setup callbacks
     this.state.manager.node = new NodeManager(this.state, {
-      // TODO you could make the node manager emit events, 
-      // so that the parts could sub themselves.
-      // That said, youu should probably also be subbing to events
-      // in node manager instead of passing callbacks into the constructor.
       selectNode: (...args) => this.selectNode(...args),
       deselectNode: (...args) => this.deselectNode(...args),
       selectAnything: () => this.show(),
@@ -298,7 +294,8 @@ class NodeEditor {
     if (node.group.collapsed) {
       // name the group
       // TODO lol check this, it don't look right
-      this.state.nodel.manager.createGroup(node.id, name)
+      //this.state.nodel.manager.createGroup(node.id, name)
+      node.group.name = name
 
     } else {
       // name the node

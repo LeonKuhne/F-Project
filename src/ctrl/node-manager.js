@@ -26,7 +26,10 @@ class NodeManager {
   createGroup(module, x, y, head=null) {
     const nm = this.state.nodel.manager
     nm.pauseDraw()
-    const groupNodeId = nm.createFromMap(module.nodes, x, y, head)
+    const groupNodeId = nm.createFromMap(
+      module.nodes, x, y, head, 
+      (map, x, y) => this.headNodeFromMap(map, x, y)
+    )
     nm.createGroup(groupNodeId, module.name)
     nm.toggleGroup(groupNodeId, true)
     nm.unpauseDraw()

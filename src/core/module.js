@@ -3,7 +3,7 @@
 class Module {
   constructor(options = {
     id: null, name: null, base: null,
-    code: null, nodes: null, params: null,
+    code: null, nodes: null,
   }) {
     // update parameters
     this.update(options)
@@ -18,7 +18,9 @@ class Module {
   update(options) {
     // load all params
     for (const [key, val] of Object.entries(options)) {
-      this[key] = val
+      if (key !== 'params') {
+        this[key] = val
+      }
     }
 
     // use the name as ID or generate one
