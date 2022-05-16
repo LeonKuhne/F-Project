@@ -3,14 +3,12 @@
 **/
 
 class ItemParser extends Parser {
+  debugging = false
 
   constructor(items) {
     super()
     this.items = items
     this.idx = null
-
-    // TODO add a setter so it can be toggled during runtime
-    this.debugging = false 
   }
 
   parse() {
@@ -38,6 +36,10 @@ class ItemParser extends Parser {
     }
   }
 
+  static toggleDebugging(state = null) {
+    ItemParser.debugging = state !== null ? state : !ItemParser.debugging
+    return ItemParser.debugging
+  }
 
 
   // Methods to implement
