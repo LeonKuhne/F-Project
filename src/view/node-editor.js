@@ -291,14 +291,12 @@ class NodeEditor {
     const name = this.state.elem.nameInput.value
     const node = this.state.selected.node
 
+    // name the group
     if (node.group.collapsed) {
-      // name the group
-      // TODO lol check this, it don't look right
-      //this.state.nodel.manager.createGroup(node.id, name)
       node.group.name = name
 
+    // name the node
     } else {
-      // name the node
       node.data.name = name 
     }
   }

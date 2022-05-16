@@ -33,7 +33,6 @@ class Module {
   }
 
   // use the code to generate the parameters
-  // TODO: remove duplicate line in this.data();
   get params() {
     return this.code ? InspectJS.parseParams(this.code) : undefined
   }
