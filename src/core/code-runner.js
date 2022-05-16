@@ -21,7 +21,6 @@ class CodeRunner {
     return true
   }
 
-  // TODO: dispatch each node as its own thread (ie. promise)
   async run(node, paramIdx=null, param=null, runId=null) {
     const inputParams = node.data.params
 

@@ -24,9 +24,10 @@ f u, f me, f every `body`
 
 ## Todo
 ### FINAL STRETCH
-- refactor: move map parsing to nodel (see todo)
 - refactor: clean up other todo's if practical
 - refactor: improve coupling/cohesioun of views & ctrls
+- feature: async functions; while running, don't await for functions until their values need to be used
+- refactor: nodel create a map manager
 - fix: currently applying a group to a node doesn't change the root node
 - fix: ALL children of a group till the ends should update when a group saves
 - fix: tab should indent at current index, not at end of file
