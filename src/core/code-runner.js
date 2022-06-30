@@ -4,6 +4,7 @@ class CodeRunner {
   constructor(state) {
     this.nodes = state.nodel.manager.nodes
     this.reset()
+    this.delay = 0 
   }
 
   reset() {
@@ -69,6 +70,13 @@ class CodeRunner {
 
     // arrange the parameter values to pass in
     const args = [...Object.values(this.params[node.id])]
+
+    // add delay
+    if (this.delay) {
+      console.log("waiting on", node.name || node.id, "for", this.delay)
+      await new Promise(resolve => setTimeout(resolve, this.delay));
+      console.log("done with", node.name || node.id)
+    }
 
     // evaluate
     // NOTE: eval is a XSS vulnerability

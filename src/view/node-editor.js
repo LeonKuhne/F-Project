@@ -16,6 +16,7 @@ class NodeEditor {
       codeContainer: document.getElementById('code-container'),
       codeArea: document.getElementById('code'),
       codeOutput: document.getElementById('code-output'),
+      runDelay: document.getElementById('run-delay'),
       nodeResultContainer: document.getElementById('node-result-container'),
       nodeRunIdLabel: document.getElementById('node-run-id'),
       nodeInputArea: document.getElementById('node-input'),
@@ -107,6 +108,15 @@ class NodeEditor {
         this.updateCode(e.target.value)
         return false
       }
+    }
+
+    // update run delay
+    elems.runDelay.value = this.runner.delay
+    elems.runDelay.title = `${this.runner.delay}ms`
+    elems.runDelay.oninput = (e) => {
+      const delay = parseInt(e.target.value)
+      this.runner.delay = delay
+      elems.runDelay.title = `${delay}ms`
     }
     
     // listen for changes
