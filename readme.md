@@ -24,15 +24,15 @@ f u, f me, f every `body`
 
 ## Todo
 ### FINAL STRETCH
-- refactor: turn node.data.params in to a function that gets the lastest params from the code (or lazy loads it whenever the code is updated)
-- refactor: move map parsing to nodel (see todo)
 - refactor: clean up other todo's if practical
 - refactor: improve coupling/cohesioun of views & ctrls
+- refactor: nodel create a map manager
 - fix: currently applying a group to a node doesn't change the root node
 - fix: ALL children of a group till the ends should update when a group saves
 - fix: tab should indent at current index, not at end of file
 - fix: deleting a group deletes everything
 - fix: allow circular nodes in group
+- feature: async functions; while running, don't await for functions until their values need to be used
 
 
 # UI Enhancements | v2.0
@@ -86,6 +86,7 @@ this could be used when you want to...
 - extra: offscreen node indicator (dot on edge)
 ### CODE
 - extra: allow the spread operator for input params
+- extra: properly sanitize code before running to prevent XSS
 
 
 ### Manual

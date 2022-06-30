@@ -26,7 +26,10 @@ class NodeManager {
   createGroup(module, x, y, head=null) {
     const nm = this.state.nodel.manager
     nm.pauseDraw()
-    const groupNodeId = this.createFromMap(module.nodes, x, y, head)
+    const groupNodeId = nm.createFromMap(
+      module.nodes, x, y, head, 
+      (map, x, y) => this.headNodeFromMap(map, x, y)
+    )
     nm.createGroup(groupNodeId, module.name)
     nm.toggleGroup(groupNodeId, true)
     nm.unpauseDraw()
@@ -56,50 +59,6 @@ class NodeManager {
       node.data = module.data()
       nm.redraw()
     }
-  }
-
-  headNodeFromMap(map, x, y) {
-    const manager = this.state.manager.module
-    const module = manager.get(map.moduleId) || manager.getDefault()
-    x += map.offsetX
-    y += map.offsetY
-    // create the node
-    return { id: this.createNode(module, x, y), x, y, conn: [] }
-  }
-
-  // TODO include this as part of nodel instead
-  createFromMap(
-    map, x, y,
-    head=null, group=null, created={}, connection=null,
-  ) {
-    // find/create the next map head node
-    let node = head ?? created[map.id] ?? this.headNodeFromMap(map, x, y)
-
-    // create if new
-    if (!(map.id in created)) {
-      created[map.id] = node
-
-      // recursively create nodes in group
-      for (const [connectionType, children] of Object.entries(map.children)) {
-        for (const childMap of children) {
-          this.createFromMap(
-            childMap, node.x, node.y,
-            null, null, created, {
-            type: connectionType,
-            parentId: node.id,
-          })
-        }
-      }
-    }
-
-    // create connections 
-    const toKey = JSON.stringify
-    if (connection) {
-      this.state.nodel.manager.connectNodes(connection.parentId, node.id, connection.type)
-      node.conn.push(toKey(connection))
-    }
-
-    return node.id 
   }
 
   engage(node) {
@@ -137,5 +96,14 @@ class NodeManager {
 
     // keep track of the last selected node
     this.lastSelected = node
+  }
+
+  headNodeFromMap(map, x, y) {
+    const manager = this.state.manager.module
+    const module = manager.get(map.moduleId) || manager.getDefault()
+    x += map.offsetX
+    y += map.offsetY
+    // create the node
+    return { id: this.createNode(module, x, y), x, y, conn: [] }
   }
 }

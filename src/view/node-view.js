@@ -33,10 +33,6 @@ class NodeView {
         dragging = e
         draggedOff = false 
       }
-
-      // update name field when clicked off input
-      // TODO awk; pls fix
-      this.state.editor.node.resetEditName()
     })
 
     // support dragging
@@ -110,17 +106,18 @@ class NodeView {
 
     // setup connection labels
     nr.on('connection-label', (source, target, paramIdx) => {
-      const requiredParams = target.data.params.required
+      const params = target.data.params
+
       // always use trigger as first param
-      const params = requiredParams.length ? requiredParams : [' ']
+      let requiredParams = params.required.length ? params.required : [' ']
 
       // cast to number
       paramIdx = isNaN(Number(paramIdx)) ? 0 : Number(paramIdx)
 
-      if (paramIdx < params.length) {
-        return params[paramIdx]
+      if (paramIdx < requiredParams.length) {
+        return requiredParams[paramIdx]
       } else {
-        return target.data.params.optional[paramIdx - params.length]
+        return params.optional[paramIdx - requiredParams.length]
       }
     })
 

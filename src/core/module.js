@@ -3,7 +3,7 @@
 class Module {
   constructor(options = {
     id: null, name: null, base: null,
-    code: null, nodes: null, params: null,
+    code: null, nodes: null,
   }) {
     // update parameters
     this.update(options)
@@ -18,7 +18,9 @@ class Module {
   update(options) {
     // load all params
     for (const [key, val] of Object.entries(options)) {
-      this[key] = val
+      if (key !== 'params') {
+        this[key] = val
+      }
     }
 
     // use the name as ID or generate one
@@ -30,8 +32,20 @@ class Module {
     this.validate()
   }
 
+  // use the code to generate the parameters
+  get params() {
+    return this.code ? InspectJS.parseParams(this.code) : undefined
+  }
+
   data() {
-    return {...this, id: null}
+    const module = this
+    return {
+      ...this,
+      id: null,
+      get params() {
+        return this.code ? InspectJS.parseParams(this.code) : undefined
+      }
+    }
   }
 
   save() {

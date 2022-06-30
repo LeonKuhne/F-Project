@@ -38,12 +38,8 @@ class NodeEditor {
       elems.codeOutput,
     )
 
-    // NOTE: I think anonymous callbacks are needed to use class state; ie 'this'
+    // create node manager, setup callbacks
     this.state.manager.node = new NodeManager(this.state, {
-      // TODO you could make the node manager emit events, 
-      // so that the parts could sub themselves.
-      // That said, youu should probably also be subbing to events
-      // in node manager instead of passing callbacks into the constructor.
       selectNode: (...args) => this.selectNode(...args),
       deselectNode: (...args) => this.deselectNode(...args),
       selectAnything: () => this.show(),
@@ -125,7 +121,6 @@ class NodeEditor {
     const node = this.state.selected.node
     // update the node's code and params
     node.data.code = code
-    node.data.params = InspectJS.parseParams(code)
     // redraw
     this.state.nodel.manager.redraw()
   }
@@ -162,6 +157,7 @@ class NodeEditor {
       this.state.util.linter.lint()
     }
 
+    this.editName(false)
     this.updateName()
     this.updateCollapsedButton(node)
     this.updateNodeResult(node)
@@ -267,15 +263,6 @@ class NodeEditor {
     }
   }
 
-  resetEditName() {
-    // update name field when clicked off input
-    if (this.editingName) {
-      this.saveName()
-      this.updateName(this.state.elem.nameInput.value)
-      this.editName(false)
-    }
-  }
-
   updateName(name=null) {
     // use the selected node by default
     const node = this.state.selected.node
@@ -296,13 +283,12 @@ class NodeEditor {
     const name = this.state.elem.nameInput.value
     const node = this.state.selected.node
 
+    // name the group
     if (node.group.collapsed) {
-      // name the group
-      // TODO lol check this, it don't look right
-      this.state.nodel.manager.createGroup(node.id, name)
+      node.group.name = name
 
+    // name the node
     } else {
-      // name the node
       node.data.name = name 
     }
   }

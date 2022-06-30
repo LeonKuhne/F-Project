@@ -51,7 +51,7 @@
   height: calc(100% - 2 * var(--shadow-size));
 }
 #code-container, #code, #highlighting, #code-output {
-  height: 200px;
+  height: var(--code-height);
   width: 100%;
 }
 #code:hover:not(#code:focus) {

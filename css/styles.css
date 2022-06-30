@@ -18,7 +18,8 @@
   --code-color: #ffea00;
   --button-padding: 0.5em;
   --gap: 0px;
-  --font: 'Atari', monospace
+  --font: 'Atari', monospace;
+  --code-height: 500px;
 }
 
 body {

@@ -4,7 +4,7 @@ class UtilJS {
     // multiple ordered header functions to try
     const getters = [
       className ? InspectJS.getClassFunction : null,
-      // TODO
+      // TODO 
       //InspectJS.getFunction,
       //InspectJS.getAnonFunction,
     ]

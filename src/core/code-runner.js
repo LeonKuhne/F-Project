@@ -21,10 +21,11 @@ class CodeRunner {
     return true
   }
 
-  // TODO: dispatch each node as its own thread (ie. promise)
   async run(node, paramIdx=null, param=null, runId=null) {
+    const inputParams = node.data.params
+
     // setup parameters
-    const requiredParamCount = node.data.params.required.length
+    const requiredParamCount = inputParams.required.length
     if (!(node.id in this.params)) {
       // add the node data as the first param
       this.params[node.id] = {
@@ -47,11 +48,11 @@ class CodeRunner {
     // add 'x' as a parameter for referencing 'this'
     let params = ['x']
     // always have a trigger param
-    const requiredParams = node.data.params.required
+    const requiredParams = inputParams.required
     params = params.concat(requiredParams.length ? requiredParams : ['_'])
     // assemble optional params with default values
-    let optionalParams = node.data.params.optional
-    let defaultParams = node.data.params.defaults
+    let optionalParams = inputParams.optional
+    let defaultParams = inputParams.defaults
     optionalParams = Object.entries(optionalParams).map(([idx, key]) => `${key}=${defaultParams[idx]}`)
     params = params.concat(optionalParams)
     // edit the params
