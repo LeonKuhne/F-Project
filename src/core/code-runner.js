@@ -73,9 +73,12 @@ class CodeRunner {
 
     // add delay
     if (this.delay) {
-      console.log("waiting on", node.name || node.id, "for", this.delay)
-      await new Promise(resolve => setTimeout(resolve, this.delay));
-      console.log("done with", node.name || node.id)
+      const elem = document.getElementById(node.id)
+      
+      // indicate running
+      elem.classList.add("running")
+      await new Promise(resolve => setTimeout(resolve, this.delay))
+      elem.classList.remove("running")
     }
 
     // evaluate

@@ -163,3 +163,6 @@ textarea {
   color: var(--contrast);
 }
 
+.running {
+  background-color: var(--accent) !important;
+}
