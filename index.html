@@ -82,7 +82,6 @@
 
       <!-- SAVED MODULES -->
       <div class='component h-flex'>
-        <div class="header noflex">Modules</div>
         <div class='v-flex'>
 
           <!-- TEMPLATE FOR MODULES -->
@@ -102,11 +101,11 @@
             <div class="title">Saved</div>
           </div>
         </div>
+        <div class="header noflex">Modules</div>
       </div>
 
       <!-- NODE EDITOR -->
       <div id="editor" class="hideable h-flex component">
-        <div class="header noflex">Node</div>
         <div>
           <div class="name-container">
             <div id="name" class="title hideable">None</div>
@@ -124,8 +123,10 @@
             <button id="save" class="shadow-accent">save</button>
             <button id="delete" class="shadow-alert">delete</button>
           </div>
-          <div id="delay-module">
-            <input id="run-delay" type="range" min="0" max="5000" step="1" class='hideable' />
+          <div id="delay-module" class="h-flex autoflex">
+            <div id="delay-number" class="label">0.00s</div>
+            <input id="run-delay" type="range" min="0" max="5000" class='hideable' />
+            <button id="stop-run" class="shadow-alert">X</button>
           </div>
           <div id="node-result-container" class='hideable'>
             <div id="node-run-id" class='title'></div>
@@ -145,6 +146,7 @@
             </div>
           </div>
         </div>
+        <div class="header noflex">Node</div>
       </div>
     </div>
 

@@ -16,6 +16,7 @@ class NodeEditor {
       codeContainer: document.getElementById('code-container'),
       codeArea: document.getElementById('code'),
       codeOutput: document.getElementById('code-output'),
+      delayNumber: document.getElementById('delay-number'),
       runDelay: document.getElementById('run-delay'),
       nodeResultContainer: document.getElementById('node-result-container'),
       nodeRunIdLabel: document.getElementById('node-run-id'),
@@ -111,12 +112,21 @@ class NodeEditor {
     }
 
     // update run delay
-    elems.runDelay.value = this.runner.delay
-    elems.runDelay.title = `${this.runner.delay}ms`
+    elems.runDelay.value = 0
     elems.runDelay.oninput = (e) => {
-      const delay = parseInt(e.target.value)
-      this.runner.delay = delay
-      elems.runDelay.title = `${delay}ms`
+      const max = parseInt(elems.runDelay.getAttribute("max"))
+      let delay = elems.runDelay.value
+      // give delay slider an exponential curve
+      delay = ((delay/max) ** 2) * max
+      // reapply delay
+      this.runner.delay = parseInt(delay)
+      // handle pause
+      const isPaused = delay == max
+      this.runner.paused = isPaused
+      // indicate delay amount
+      const delayText = isPaused ? "paused" : `${(delay/1000).toFixed(2)}s`
+      elems.runDelay.title = delayText 
+      elems.delayNumber.innerText = delayText
     }
     
     // listen for changes

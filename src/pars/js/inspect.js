@@ -69,12 +69,28 @@ class InspectJS {
     const defaultKeys = optional.map(param => param.split('=')[0])
     const defaultValues = optional.map(param => param.split('=')[1])
 
-
     return {
       required,
       optional: defaultKeys,
       defaults: defaultValues,
     }
+  }
+
+  static getGuards(params) {
+    return Object.entries(params).map(([key, expected]) => {
+      const match = expected.split(': ')
+
+      // find guard
+      if (match.length > 1) {
+        let expected = match[1]
+        expected = expected.split('').splice(1, expected.length-2).join() // remove guard brackets
+        expected = eval(expected) // get value from string
+        return {idx: key, param: match[0], expected: expected}
+      }
+
+      // ignore non guards
+      return null
+    }).filter(guard => guard != null)
   }
 
   static getIndent(line) {

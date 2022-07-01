@@ -73,7 +73,7 @@ textarea {
 .title {
   text-align: center;
   font-size: 1.75em;
-  box-shadow: 0px var(--shadow-size) 0px var(--highlight);
+  box-shadow: var(--shadow-size) var(--shadow-size) 0px var(--highlight);
   margin-bottom: var(--shadow-gap);
 }
 .header {
@@ -82,7 +82,7 @@ textarea {
   writing-mode: vertical-lr; /* for chrome users */
   writing-mode: sideways-lr; 
   font-size: 2em;
-  margin-right: var(--shadow-gap);
+  margin-left: var(--shadow-gap);
   box-shadow: var(--shadow-size) 0px 0px var(--highlight);
 }
 .label {
@@ -105,6 +105,9 @@ textarea {
 .v-flex *, .h-flex * {
   flex: 1;
 }
+.v-flex.autoflex *, .h-flex.autoflex * {
+  flex: auto;
+}
 .noflex {
   flex: 0;
 }
@@ -114,11 +117,11 @@ textarea {
   position: absolute;
   z-index: 10;
   resize: horizontal;
-  overflow: auto;
   min-width: fit-content;
   background: #000a;
   margin-bottom: var(--shadow-gap);
   margin-right: var(--shadow-gap);
+  right: 0px;
 }
 .component {
   margin-top: calc(-1 * var(--shadow-size));
@@ -135,6 +138,7 @@ textarea {
 
 .selected {
   box-shadow: 0px 0px 40px var(--active) !important;
+  z-index: 1;
 }
 
 /* NODE VIEW */
