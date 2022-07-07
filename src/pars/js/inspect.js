@@ -78,14 +78,22 @@ class InspectJS {
 
   static getGuards(params) {
     return Object.entries(params).map(([key, expected]) => {
-      const match = expected.split(': ')
+      const match = expected.split(':')
 
       // find guard
       if (match.length > 1) {
         let expected = match[1]
-        expected = expected.split('').splice(1, expected.length-2).join() // remove guard brackets
+
+        // check negation
+        let negated = false
+        if (expected.startsWith('!')) {
+          expected.substring(1)
+          negated = true
+        }
+
+        //expected = expected.split('').splice(1, expected.length-2).join() // remove guard brackets
         expected = eval(expected) // get value from string
-        return {idx: key, param: match[0], expected: expected}
+        return {idx: parseInt(key), param: match[0], expected: expected, negated: negated}
       }
 
       // ignore non guards

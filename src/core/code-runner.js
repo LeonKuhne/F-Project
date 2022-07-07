@@ -15,7 +15,7 @@ class CodeRunner {
   hasRequiredParams(params, requiredParamCount) {
     // find any missing params
     for (let idx=0; idx<=requiredParamCount; idx++) {
-      if (!(idx in params)) {
+      if (!(idx in params) || params[idx] === undefined) {
         return false
       }
     }
@@ -23,19 +23,13 @@ class CodeRunner {
   }
 
   // remove guards grom input params and return them
-  parseOutGuards(providedParams, inputParams) {
+  parseOutGuards(providedParams, expectedParams) {
     // check each guard
-    const guards = InspectJS.getGuards(inputParams)
+    const guards = InspectJS.getGuards(expectedParams, 1)
 
     // remove guards from params
     guards.forEach((guard) => {
-      inputParams[guard.idx] = guard.param
-
-      // accept valid undefined guards as null
-      if (guard.expected == undefined && providedParams[guard.idx] == undefined) {
-        providedParams[guard.idx] = null;
-        guard.expected = null;
-      }
+      expectedParams[guard.idx] = guard.param
     })
 
     return guards
@@ -53,12 +47,23 @@ class CodeRunner {
     // remove guards and fix required params
     const guards = this.parseOutGuards(provided, required)
 
-    // check if any expected params aren't met
-    const blocked = guards.filter(guard => provided[guard.key] == required[guard.key])
+    // check if any guards don't pass
+    const blocked = guards.filter(guard => {
+      return !((provided[guard.idx+1] == guard.expected) == !guard.negated)
+    })
     if (blocked.length > 0) {
       console.log("guard blocked", blocked)
       return false
     }
+
+    // mark valid undefined params as null
+    Object.entries(provided).filter(([key, x]) => {
+      const match = guards.filter(guard => guard.idx+1 == parseInt(key))
+      if (x === undefined && match.length > 0) {
+        const guard = match[0]
+        provided[guard.idx+1] = null
+      }
+    })
 
     // check that required parameters exist
     if (!this.hasRequiredParams(provided, required.length)) {
@@ -68,8 +73,8 @@ class CodeRunner {
     return true
   }
 
-  async run(node, paramIdx=null, param=null, runId=null) {
-    // setup parameters
+  async run(node, paramIdx=null, param=undefined, runId=null) {
+    // on first visit
     if (!(node.id in this.params)) {
       // add the node data as the first param
       this.params[node.id] = {
@@ -140,8 +145,8 @@ class CodeRunner {
     // remove running indicator
     elem.classList.remove("running")
 
-    // check for end, or undefined returned
-    if (node.isLeaf() || node.data.result === undefined) {
+    // check for end
+    if (node.isLeaf()) {
       return node.data.result === undefined ? [] : [node.data.result]
     }
 
