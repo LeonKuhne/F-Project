@@ -2,7 +2,7 @@
 
 class CodeRunner {
   constructor(state) {
-    this.nodes = state.nodel.manager.nodes
+    this.manager = state.nodel.manager
     this.reset()
     this.delay = 0 
     this.paused = false 
@@ -95,6 +95,10 @@ class CodeRunner {
       return []
     }
 
+    // indicate running
+    const elem = document.getElementById(node.id)
+    elem.classList.add("running")
+
     // break down and reassemble node params to support 'this' reference and default values
     // add 'x' as a parameter for referencing 'this'
     let params = ['x']
@@ -122,10 +126,6 @@ class CodeRunner {
 
     // arrange the parameter values to pass in
     const args = [...Object.values(this.params[node.id])]
-
-    // indicate running
-    const elem = document.getElementById(node.id)
-    elem.classList.add("running")
 
     // handle pause 
     if (this.paused) {
@@ -156,37 +156,48 @@ class CodeRunner {
     }
     node.data.runId = runId
 
-
     // recursively run through children
     let responses = []
     for (const [connectionType, children] of Object.entries(node.children)) {
+      console.log(`running children ${children}`)
       for (const childId of children) {
-        const child = this.nodes[childId]
-        // use the result as a parameter
-        let paramIdx = Number(connectionType)
-        paramIdx = isNaN(paramIdx) ? 1 : paramIdx + 1
-
-        // run the child
-        const resList = await this.run(child, paramIdx, node.data.result, runId)
-        responses = [...responses, ...resList]
+        console.log(`running child ${childId}`)
+        const response = this.runNode(childId, connectionType, node.data.result, runId)
+        responses.push(response)
       }
     }
-    return responses
+
+    // await results
+    return await Promise.all(responses)
+  }
+
+  async runNode(nodeId, connectionType, value, runId) {
+    const node = this.manager.nodes[nodeId]
+    // use the result as a parameter
+    let paramIdx = Number(connectionType)
+    paramIdx = isNaN(paramIdx) ? 1 : paramIdx + 1
+
+    // run the child
+    return this.run(node, paramIdx, value, runId)
   }
 
   async runAll() {
-    // find the heads
-    const heads = getHeads(this.nodes)
+    const runId = uniqueId()
+    const heads = this.manager.getHeads()
+
+    // TODO: it gets slow after running looping networks due to stack trace
+    // SOL: use a while loop instead 'visiting' the next available nodes that are ready
+    // start with all of the nodes in the list, then pick those that are ready
 
     // loop through the heads and execute on the state
-    const finalStates = []
+    const responses = []
     for (const head of heads) {
-      const responses = await this.run(head)
-      finalStates.push(responses)
+      const response = this.run(head, 1, null, runId)
+      responses.push(response)
       this.reset()
     }
 
-    // display results
-    console.info(finalStates)
+    // await responses
+    return await Promise.all(responses)
   }
 }

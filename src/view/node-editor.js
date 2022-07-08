@@ -219,7 +219,7 @@ class NodeEditor {
     // collect state
     const totalResultArea = this.state.elem.totalResultArea
     this.runner.reset()
-    const responses = await this.runner.run(node, 1, null)
+    const responses = await this.runner.runAll()
 
     // render 
     let responseText = ""
