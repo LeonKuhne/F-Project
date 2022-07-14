@@ -105,7 +105,7 @@ class NodeEditor {
     // catch tab characters
     elems.codeArea.onkeydown = (e) => {
       if (e.key === 'Tab') {
-        e.target.value += '  '
+        e.target.value += '  ' // TODO insert at cursor location, not at end
         this.updateCode(e.target.value)
         return false
       }
@@ -141,6 +141,7 @@ class NodeEditor {
     const node = this.state.selected.node
     // update the node's code and params
     node.data.code = code
+    node.data.params = InspectJS.parseParams(code)
     // redraw
     this.state.nodel.manager.redraw()
   }
@@ -183,13 +184,6 @@ class NodeEditor {
     this.updateNodeResult(node)
     
     console.info(`Selecting ${node.id}`)
-  }
-
-  connectAll(fromId, toId, params) {
-    const totalParams = params.required.length + params.optional.length
-    for (let paramIdx=1; paramIdx<totalParams; paramIdx++) {
-      this.state.nodel.manager.toggleConnect(fromId, toId, paramIdx-1)
-    }
   }
 
   show() {

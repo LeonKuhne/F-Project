@@ -45,7 +45,6 @@ class InspectJS {
     let paramStr = code.split('\n')[0]
     let parts = null
     
-
     // remove everything before the opening parethesis
     parts = paramStr.split('(')
     parts = parts.splice(1, parts.length)

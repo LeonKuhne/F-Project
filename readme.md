@@ -9,11 +9,12 @@ f u, f me, f every `body`
 #### Rules
 - Returning `undefined` stops a node from propogating
 - Params can define guards, eg (cat:"jerry", dog:!null) => {}
+- Functions run async with real-time visual playback
 #### Q/A
-- Can you have a bunch o nodes share the same data?
-> yes, by using a second parameter passes in the shared data 
+- Can you have a bunch of nodes share the same data?
+> yes, by using an aditional parameter passes in the shared data 
 - Can you have a node that has optional destinations?
-> yes, using a concept call guards
+> yes, using guards
 #### Managing Nodes
 - Double click to create node
 - Drag to move node
@@ -53,6 +54,7 @@ f u, f me, f every `body`
 
 ## Todo
 ### FINAL STRETCH
+- fix: connection params don't update when imported
 - refactor: clean up other todo's if practical
 - refactor: improve coupling/cohesioun of views & ctrls
 - refactor: nodel create a map manager
@@ -61,7 +63,6 @@ f u, f me, f every `body`
 - fix: tab should indent at current index, not at end of file
 - fix: deleting a group deletes everything
 - fix: allow circular nodes in group
-- feature: async functions; while running, don't await for functions until their values need to be used
 
 
 # UI Enhancements | v2.0
