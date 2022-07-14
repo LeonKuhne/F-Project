@@ -54,15 +54,12 @@ f u, f me, f every `body`
 
 ## Todo
 ### FINAL STRETCH
-- fix: connection params don't update when imported
-- refactor: clean up other todo's if practical
-- refactor: improve coupling/cohesioun of views & ctrls
-- refactor: nodel create a map manager
 - fix: currently applying a group to a node doesn't change the root node
 - fix: ALL children of a group till the ends should update when a group saves
 - fix: tab should indent at current index, not at end of file
 - fix: deleting a group deletes everything
 - fix: allow circular nodes in group
+- fix: clean up other todo's if practical
 
 
 # UI Enhancements | v2.0
