@@ -5,6 +5,35 @@ f u, f me, f every `body`
 "oh shit" - me
 
 
+### Manual
+#### Rules
+- Returning `undefined` stops a node from propogating
+- Params can define guards, eg (cat:"jerry", dog:!null) => {}
+#### Q/A
+- Can you have a bunch o nodes share the same data?
+> yes, by using a second parameter passes in the shared data 
+- Can you have a node that has optional destinations?
+> yes, using a concept call guards
+#### Managing Nodes
+- Double click to create node
+- Drag to move node
+- Drag from one node to another to connect nodes
+- Click on a node to view the node editor
+- Click on a module to either apply it to the selected node, use it as a base when creating new nodes 
+#### Project
+- Click 'import' to load modules from an existing javascript file/project
+- Click 'export' to save the current project as a javascript file
+#### Node Editor
+- Click 'run' to execute the currently selected node as the root node 
+- Click 'save' to save the currently selected node in local storage
+- Click 'collapse'/'expand' to toggle the visibility of a group of nodes children, if no group exists its ends are the leaves
+#### Parsing Classes
+- class references to 'this' are replaced with an class object instance
+- constructors create an object instance, update its attributes, and return the instance
+- class functions take in the class object as the second parameter
+
+
+
 ### Usable | v1.0
 #### MISSION STATEMENT
 0. Take an idea
@@ -62,13 +91,11 @@ this could be used when you want to...
 ...start a new project from a previous one
 ...use functionality from another project
 ...use other peoples code without their permission
-
 #### MISSION STATEMENT
 0. Take this object oriented project
 1. Change it to functional
 2. Visually explain project logic
 2. Manually optimize for cuncurrency
-
 ## Todo
 ### RUN
 - extra: optimize running nodes in parallel
@@ -87,36 +114,6 @@ this could be used when you want to...
 ### CODE
 - extra: allow the spread operator for input params
 - extra: properly sanitize code before running to prevent XSS
-
-
-### Manual
-
-#### Q/A
-- Can you have a bunch o nodes share the same data?
-> yes, by using a second parameter passes in the shared data 
-- Can you have a node that has optional destinations?
-> you can only have "optional destinations" in collapsed node groups
-
-#### Managing Nodes
-- Double click to create node
-- Drag to move node
-- Drag from one node to another to connect nodes
-- Click on a node to view the node editor
-- Click on a module to either apply it to the selected node, use it as a base when creating new nodes 
-
-#### Project
-- Click 'import' to load modules from an existing javascript file/project
-- Click 'export' to save the current project as a javascript file
-
-#### Node Editor
-- Click 'run' to execute the currently selected node as the root node 
-- Click 'save' to save the currently selected node in local storage
-- Click 'collapse'/'expand' to toggle the visibility of a group of nodes children, if no group exists its ends are the leaves
-
-#### Parsing Classes
-- class references to 'this' are replaced with an class object instance
-- constructors create an object instance, update its attributes, and return the instance
-- class functions take in the class object as the second parameter
 
 
 ## Architecture

@@ -23,7 +23,7 @@ class CodeRunner {
   }
 
   // remove guards grom input params and return them
-  parseOutGuards(providedParams, expectedParams) {
+  parseOutGuards(expectedParams) {
     // check each guard
     const guards = InspectJS.getGuards(expectedParams, 1)
 
@@ -45,7 +45,7 @@ class CodeRunner {
 
   isReady(provided, required) {
     // remove guards and fix required params
-    const guards = this.parseOutGuards(provided, required)
+    const guards = this.parseOutGuards(required)
 
     // check if any guards don't pass
     const blocked = guards.filter(guard => {
@@ -55,15 +55,6 @@ class CodeRunner {
       console.log("guard blocked", blocked)
       return false
     }
-
-    // mark valid undefined params as null
-    Object.entries(provided).filter(([key, x]) => {
-      const match = guards.filter(guard => guard.idx+1 == parseInt(key))
-      if (x === undefined && match.length > 0) {
-        const guard = match[0]
-        provided[guard.idx+1] = null
-      }
-    })
 
     // check that required parameters exist
     if (!this.hasRequiredParams(provided, required.length)) {
@@ -87,7 +78,7 @@ class CodeRunner {
 
     const providedParams = this.params[node.id]
     const inputParams = node.data.params
-    const requiredParams = inputParams.required
+    const requiredParams = [...inputParams.required]
 
     // ensure ready
     if (!this.isReady(providedParams, requiredParams)) {
@@ -107,7 +98,7 @@ class CodeRunner {
     params = params.concat(requiredParams.length ? requiredParams : ['_'])
 
     // assemble optional params with default values
-    let optionalParams = inputParams.optional
+    let optionalParams = [...inputParams.optional]
     let defaultParams = inputParams.defaults
     optionalParams = Object.entries(optionalParams).map(([idx, key]) => `${key}=${defaultParams[idx]}`)
     params = params.concat(optionalParams)
@@ -146,9 +137,10 @@ class CodeRunner {
     elem.classList.remove("running")
 
     // check for end
+    /*
     if (node.isLeaf()) {
       return node.data.result === undefined ? [] : [node.data.result]
-    }
+    }*/
 
     // update and save the run id
     if (!runId) {

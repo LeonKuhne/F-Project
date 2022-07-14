@@ -82,18 +82,17 @@ class InspectJS {
 
       // find guard
       if (match.length > 1) {
-        let expected = match[1]
-
+        let expected = match[1].trim()
         // check negation
         let negated = false
         if (expected.startsWith('!')) {
-          expected.substring(1)
+          expected = expected.substring(1)
           negated = true
         }
 
         //expected = expected.split('').splice(1, expected.length-2).join() // remove guard brackets
         expected = eval(expected) // get value from string
-        return {idx: parseInt(key), param: match[0], expected: expected, negated: negated}
+        return {idx: parseInt(key), param: match[0].trim(), expected: expected, negated: negated}
       }
 
       // ignore non guards
