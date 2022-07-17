@@ -2,7 +2,7 @@
 a project to end all projects
 f u, f me, f every `body`
 
-"oh shit" - me
+LISP Style JavaScript In-Browser IDE
 
 
 ### Usable | v1.0
