@@ -2,8 +2,10 @@
 
 class CodeRunner {
   constructor(state) {
-    this.nodes = state.nodel.manager.nodes
+    this.manager = state.nodel.manager
     this.reset()
+    this.delay = 0 
+    this.paused = false 
   }
 
   reset() {
@@ -12,20 +14,58 @@ class CodeRunner {
 
   hasRequiredParams(params, requiredParamCount) {
     // find any missing params
-    let missingParamIdx = []
     for (let idx=0; idx<=requiredParamCount; idx++) {
-      if (!(idx in params)) {
+      if (!(idx in params) || params[idx] === undefined) {
         return false
       }
     }
     return true
   }
 
-  async run(node, paramIdx=null, param=null, runId=null) {
-    const inputParams = node.data.params
+  // remove guards grom input params and return them
+  parseOutGuards(expectedParams) {
+    // check each guard
+    const guards = InspectJS.getGuards(expectedParams, 1)
 
-    // setup parameters
-    const requiredParamCount = inputParams.required.length
+    // remove guards from params
+    guards.forEach((guard) => {
+      expectedParams[guard.idx] = guard.param
+    })
+
+    return guards
+  }
+
+  async waitForUnpause() {
+    await new Promise(resolve => setInterval(() => {
+      if (!this.paused) {
+        resolve()
+      }
+    }, 100))
+  }
+
+  isReady(provided, required) {
+    // remove guards and fix required params
+    const guards = this.parseOutGuards(required)
+
+    // check if any guards don't pass
+    const blocked = guards.filter(guard => {
+      return !((provided[guard.idx+1] == guard.expected) == !guard.negated)
+    })
+    if (blocked.length > 0) {
+      console.log("guard blocked", blocked)
+      return false
+    }
+
+    // check that required parameters exist
+    if (!this.hasRequiredParams(provided, required.length)) {
+      return false
+    }
+
+    return true
+  }
+
+  async run(node, paramIdx=null, param=undefined, runId=null) {
+    // on first visit
     if (!(node.id in this.params)) {
       // add the node data as the first param
       this.params[node.id] = {
@@ -34,27 +74,35 @@ class CodeRunner {
     }
 
     // add the provided parameter
-    if (paramIdx && param !== undefined) {
-      this.params[node.id][paramIdx] = param
-    }
+    this.params[node.id][paramIdx] = param
 
-    // ensure required parameters exist
-    if (!this.hasRequiredParams(this.params[node.id], requiredParamCount)) {
+    const providedParams = this.params[node.id]
+    const inputParams = node.data.params
+    const requiredParams = [...inputParams.required]
+
+    // ensure ready
+    if (!this.isReady(providedParams, requiredParams)) {
       console.debug(`Skipping node '${node.data.name}', missing params`)
       return []
     }
 
+    // indicate running
+    const elem = document.getElementById(node.id)
+    elem.classList.add("running")
+
     // break down and reassemble node params to support 'this' reference and default values
     // add 'x' as a parameter for referencing 'this'
     let params = ['x']
+
     // always have a trigger param
-    const requiredParams = inputParams.required
     params = params.concat(requiredParams.length ? requiredParams : ['_'])
+
     // assemble optional params with default values
-    let optionalParams = inputParams.optional
+    let optionalParams = [...inputParams.optional]
     let defaultParams = inputParams.defaults
     optionalParams = Object.entries(optionalParams).map(([idx, key]) => `${key}=${defaultParams[idx]}`)
     params = params.concat(optionalParams)
+
     // edit the params
     const code = BuildJS.editParams(node.data.code, params)
 
@@ -70,15 +118,29 @@ class CodeRunner {
     // arrange the parameter values to pass in
     const args = [...Object.values(this.params[node.id])]
 
+    // handle pause 
+    if (this.paused) {
+      await waitForUnpause()
+    }
+
+    // add delay
+    if (this.delay) {
+      await new Promise(resolve => setTimeout(resolve, this.delay))
+    }
+
     // evaluate
     // NOTE: eval is a XSS vulnerability
     const func = eval(code)
     node.data.result = await func(...args)
 
-    // check for end, or undefined returned
-    if (node.isLeaf() || node.data.result === undefined) {
+    // remove running indicator
+    elem.classList.remove("running")
+
+    // check for end
+    /*
+    if (node.isLeaf()) {
       return node.data.result === undefined ? [] : [node.data.result]
-    }
+    }*/
 
     // update and save the run id
     if (!runId) {
@@ -86,37 +148,48 @@ class CodeRunner {
     }
     node.data.runId = runId
 
-
     // recursively run through children
     let responses = []
     for (const [connectionType, children] of Object.entries(node.children)) {
+      console.log(`running children ${children}`)
       for (const childId of children) {
-        const child = this.nodes[childId]
-        // use the result as a parameter
-        let paramIdx = Number(connectionType)
-        paramIdx = isNaN(paramIdx) ? 1 : paramIdx + 1
-
-        // run the child
-        const resList = await this.run(child, paramIdx, node.data.result, runId)
-        responses = [...responses, ...resList]
+        console.log(`running child ${childId}`)
+        const response = this.runNode(childId, connectionType, node.data.result, runId)
+        responses.push(response)
       }
     }
-    return responses
+
+    // await results
+    return await Promise.all(responses)
+  }
+
+  async runNode(nodeId, connectionType, value, runId) {
+    const node = this.manager.nodes[nodeId]
+    // use the result as a parameter
+    let paramIdx = Number(connectionType)
+    paramIdx = isNaN(paramIdx) ? 1 : paramIdx + 1
+
+    // run the child
+    return this.run(node, paramIdx, value, runId)
   }
 
   async runAll() {
-    // find the heads
-    const heads = getHeads(this.nodes)
+    const runId = uniqueId()
+    const heads = this.manager.getHeads()
+
+    // TODO: it gets slow after running looping networks due to stack trace
+    // SOL: use a while loop instead 'visiting' the next available nodes that are ready
+    // start with all of the nodes in the list, then pick those that are ready
 
     // loop through the heads and execute on the state
-    const finalStates = []
+    const responses = []
     for (const head of heads) {
-      const responses = await this.run(head)
-      finalStates.push(responses)
+      const response = this.run(head, 1, null, runId)
+      responses.push(response)
       this.reset()
     }
 
-    // display results
-    console.info(finalStates)
+    // await responses
+    return await Promise.all(responses)
   }
 }

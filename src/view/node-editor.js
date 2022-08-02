@@ -16,6 +16,8 @@ class NodeEditor {
       codeContainer: document.getElementById('code-container'),
       codeArea: document.getElementById('code'),
       codeOutput: document.getElementById('code-output'),
+      delayNumber: document.getElementById('delay-number'),
+      runDelay: document.getElementById('run-delay'),
       nodeResultContainer: document.getElementById('node-result-container'),
       nodeRunIdLabel: document.getElementById('node-run-id'),
       nodeInputArea: document.getElementById('node-input'),
@@ -103,10 +105,28 @@ class NodeEditor {
     // catch tab characters
     elems.codeArea.onkeydown = (e) => {
       if (e.key === 'Tab') {
-        e.target.value += '  '
+        e.target.value += '  ' // TODO insert at cursor location, not at end
         this.updateCode(e.target.value)
         return false
       }
+    }
+
+    // update run delay
+    elems.runDelay.value = 0
+    elems.runDelay.oninput = (e) => {
+      const max = parseInt(elems.runDelay.getAttribute("max"))
+      let delay = elems.runDelay.value
+      // give delay slider an exponential curve
+      delay = ((delay/max) ** 2) * max
+      // reapply delay
+      this.runner.delay = parseInt(delay)
+      // handle pause
+      const isPaused = delay == max
+      this.runner.paused = isPaused
+      // indicate delay amount
+      const delayText = isPaused ? "paused" : `${(delay/1000).toFixed(2)}s`
+      elems.runDelay.title = delayText 
+      elems.delayNumber.innerText = delayText
     }
     
     // listen for changes
@@ -121,6 +141,7 @@ class NodeEditor {
     const node = this.state.selected.node
     // update the node's code and params
     node.data.code = code
+    node.data.params = InspectJS.parseParams(code)
     // redraw
     this.state.nodel.manager.redraw()
   }
@@ -165,13 +186,6 @@ class NodeEditor {
     console.info(`Selecting ${node.id}`)
   }
 
-  connectAll(fromId, toId, params) {
-    const totalParams = params.required.length + params.optional.length
-    for (let paramIdx=1; paramIdx<totalParams; paramIdx++) {
-      this.state.nodel.manager.toggleConnect(fromId, toId, paramIdx-1)
-    }
-  }
-
   show() {
     // show the editor
     editor.show('flex')
@@ -199,7 +213,7 @@ class NodeEditor {
     // collect state
     const totalResultArea = this.state.elem.totalResultArea
     this.runner.reset()
-    const responses = await this.runner.run(node)
+    const responses = await this.runner.runAll()
 
     // render 
     let responseText = ""

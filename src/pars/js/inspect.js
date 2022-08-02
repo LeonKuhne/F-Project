@@ -45,7 +45,6 @@ class InspectJS {
     let paramStr = code.split('\n')[0]
     let parts = null
     
-
     // remove everything before the opening parethesis
     parts = paramStr.split('(')
     parts = parts.splice(1, parts.length)
@@ -69,12 +68,35 @@ class InspectJS {
     const defaultKeys = optional.map(param => param.split('=')[0])
     const defaultValues = optional.map(param => param.split('=')[1])
 
-
     return {
       required,
       optional: defaultKeys,
       defaults: defaultValues,
     }
+  }
+
+  static getGuards(params) {
+    return Object.entries(params).map(([key, expected]) => {
+      const match = expected.split(':')
+
+      // find guard
+      if (match.length > 1) {
+        let expected = match[1].trim()
+        // check negation
+        let negated = false
+        if (expected.startsWith('!')) {
+          expected = expected.substring(1)
+          negated = true
+        }
+
+        //expected = expected.split('').splice(1, expected.length-2).join() // remove guard brackets
+        expected = eval(expected) // get value from string
+        return {idx: parseInt(key), param: match[0].trim(), expected: expected, negated: negated}
+      }
+
+      // ignore non guards
+      return null
+    }).filter(guard => guard != null)
   }
 
   static getIndent(line) {
