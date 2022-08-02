@@ -1,1 +1,2 @@
-echo "exporting"
+echo "add 'global' nodes that only show connections when highlighted"
+echo "fix support for async functions to allow delay"

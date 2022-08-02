@@ -88,7 +88,9 @@ class CodeRunner {
 
     // indicate running
     const elem = document.getElementById(node.id)
-    elem.classList.add("running")
+    if (elem) {
+      elem.classList.add("running")
+    }
 
     // break down and reassemble node params to support 'this' reference and default values
     // add 'x' as a parameter for referencing 'this'
@@ -133,8 +135,13 @@ class CodeRunner {
     const func = eval(code)
     node.data.result = await func(...args)
 
+    // reset all node params to allow re-run
+    delete this.params[node.id]
+
     // remove running indicator
-    elem.classList.remove("running")
+    if (elem) {
+      elem.classList.remove("running")
+    }
 
     // check for end
     /*
