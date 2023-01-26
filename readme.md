@@ -1,7 +1,6 @@
-### f v0.1 | Visual Scripting IDE with codable componets and groups, for prototyping.
+### Visual Scripting IDE with codable componets and groups, for prototyping.
 
-
-# About
+# f v0.2
 
 ## Features
 - write bit-sized component code
