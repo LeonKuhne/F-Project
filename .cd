@@ -1,2 +1,0 @@
-echo "add 'global' nodes which have results that inject themselves as parameters by creating hidden connections"
-echo "implement sleep, somehow"

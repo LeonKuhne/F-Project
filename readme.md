@@ -1,9 +1,21 @@
 # f | v0.1
-a project to end all projects
-f u, f me, f every `body`
+Visual Scripting IDE with codable componets and groups, for prototyping.
 
-LISP Style JavaScript In-Browser IDE
 
+## About
+
+### Features
+- write bit-sized component code
+- visually connect components
+- start anywhere
+- group components
+- view component logs
+- cache results
+- save componets
+- save projects
+- parse js into components
+- [WIP] parse js project 
+- [WIP] share components
 
 ### Manual
 #### Rules
@@ -33,7 +45,49 @@ LISP Style JavaScript In-Browser IDE
 - constructors create an object instance, update its attributes, and return the instance
 - class functions take in the class object as the second parameter
 
+### Influence
+#### F is for Fortran
+Caches like the old .f version of Fortran with unique memory access.
+#### Data Processing
+Flows like LISP, LINQ, and RXJS.
+#### Visual Scripting
+Patching like Patcher in FL and Unity.
+#### Usability Heuristics
+Usable like...
+- Visibility of system status - see how it runs
+- Match between system and the real world - a state diagram
+- User control and freedom - arrange parts how you want
+- Error prevention - test only parts of the code
+- Consistency and standards - share existing function
+- Recognition over recall - Recognize flow patterns
+- Flexibility and efficiency of use - reusable groups
+- Error handling - indicate and explore failed state
+- Help and documentation - add notes to nodes
 
+
+## Documentation
+
+### Architecture
+Arranged by levels of abstraction:
+> view > ctrl > core
+- Add features an needed by projects
+- Parse this project with itself then visually clean it up; recursion is key
+#### VIEW
+- builds 'state'
+- html elements 'graphics' logic
+#### CTRL
+- modifies 'state'
+- high level 'business' logic
+#### CORE
+- no 'state'
+- low level 'procedural' logic
+
+### Contributing
+1. Test
+2. Refactor
+3. Fix (straightforward)
+4. Features (straightforward)
+5. Plan Refactorings: make fixes/features straightforward
 
 ### Usable | v1.0
 #### MISSION STATEMENT
@@ -53,7 +107,11 @@ LISP Style JavaScript In-Browser IDE
 \* codable: pure js code that takes an input and provides an output 
 
 ## Todo
-### FINAL STRETCH
+### NODE
+- add: 'global' nodes that auto-inject via parameter names and hide connections
+### CODE
+- support: callbacks ie implement a sleep node with setTimeout
+### CLEANUP
 - fix: currently applying a group to a node doesn't change the root node
 - fix: ALL children of a group till the ends should update when a group saves
 - fix: tab should indent at current index, not at end of file
@@ -83,6 +141,7 @@ LISP Style JavaScript In-Browser IDE
 - extra: code compile check & indicator
 - extra: add a 'run' button near the project that runs ALL of the head nodes, replacing the need for connecting an init/trigger node to every single gosh darn node
 
+
 # Project Parser | v3.0
 this could be used when you want to...
 ...have a prototype improve performance
@@ -103,7 +162,8 @@ this could be used when you want to...
 - - parse js loops into nodes that yield using generators
 - extra: export project or run path javascript file
 
-# Extra (Maybe Never) | v4.0
+
+# Maybe Never | v4.0
 ## Todo
 ### NODE
 - extra: pan node view
@@ -112,35 +172,3 @@ this could be used when you want to...
 ### CODE
 - extra: allow the spread operator for input params
 - extra: properly sanitize code before running to prevent XSS
-
-
-## Architecture
-Arranged by levels of abstraction:
-> view > ctrl > core
-### VIEW
-- builds 'state'
-- html elements 'graphics' logic
-### CTRL
-- modifies 'state'
-- high level 'business' logic
-### CORE
-- no 'state'
-- low level 'procedural' logic
-
-### Why not use MVC?
-I am. "Standards" are meant to be tested. Frameworks expect deviation; framework "features" is an oxymoron. F limiting myself to the [three tier architecture specs](https://www.ibm.com/cloud/learn/three-tier-architecture).
-
-
-### Understanding the Todo Lists
-I have multiple todo lists separated by major version number, with the more current todo lists being more accurate and the later ones needing work. Each list is seperated into features, with the following prioritization:
-- tests
-- refactorings
-- fixes
-- features
-
-> "When I need to add a new feature to a codebase, I look at the existing code and consider whether it's structured in such a way to make the new change straightforward. If it isn't, then I refactor the existing code to make this new addition easy. By refactoring first in this way, I usually find it's faster than if I hadn't carried out the refactoring first." - Martin Fowler
-
-#### Todo Rules
-- features are to be completed starting from the top
-- new items added to the todo list are to be positioned in this order and this order is to be maintained
-
