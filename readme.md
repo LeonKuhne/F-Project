@@ -106,12 +106,12 @@ Arranged by levels of abstraction:
 \* logical part: identified with practice (eg. low coupling, high cohesion)
 \* codable: pure js code that takes an input and provides an output 
 
-## Todo
-### NODE
+#### Todo
+##### NODE
 - add: 'global' nodes that auto-inject via parameter names and hide connections
-### CODE
+##### CODE
 - support: callbacks ie implement a sleep node with setTimeout
-### CLEANUP
+##### CLEANUP
 - fix: currently applying a group to a node doesn't change the root node
 - fix: ALL children of a group till the ends should update when a group saves
 - fix: tab should indent at current index, not at end of file
@@ -120,29 +120,29 @@ Arranged by levels of abstraction:
 - fix: clean up other todo's if practical
 
 
-# UI Enhancements | v2.0
+### UI Enhancements | v2.0
 #### MISSION STATEMENT
 0. Take something that works
 1. Make the interface practical
 2. Make the experience lovable
 
-## Todo
-### EDITOR
+#### Todo
+##### EDITOR
 - extra: make the node & module editors togglable by clicking on the header
-### CSS
+##### CSS
 - extra: fix group node element colors during interaction
 - extra: buttons don't always click when clicked on due to a gap; reduce missed clicks
 - extra: indicate head nodes with unique color
 - extra: indicate leaf nodes with a unique color
-### NODE
+##### NODE
 - extra: z axis depth; indicate depth using opacity and z-index on group nodes children, stacking on groups of groups. Have the z index change to that of the nodes selection
-### CODE
+##### CODE
 - extra: code auto test field
 - extra: code compile check & indicator
 - extra: add a 'run' button near the project that runs ALL of the head nodes, replacing the need for connecting an init/trigger node to every single gosh darn node
 
 
-# Project Parser | v3.0
+### Project Parser | v3.0
 this could be used when you want to...
 ...have a prototype improve performance
 ...start a new project from a previous one
@@ -153,22 +153,22 @@ this could be used when you want to...
 1. Change it to functional
 2. Visually explain project logic
 2. Manually optimize for cuncurrency
-## Todo
-### RUN
+#### Todo
+##### RUN
 - extra: optimize running nodes in parallel
-### PROJECT
+##### PROJECT
 - extra: (started) import modules from js file
 - extra: import project as nodes from js file
 - - parse js loops into nodes that yield using generators
 - extra: export project or run path javascript file
 
 
-# Maybe Never | v4.0
-## Todo
-### NODE
+### Maybe Never | v4.0
+#### Todo
+##### NODE
 - extra: pan node view
 - extra: scroll to zoom
 - extra: offscreen node indicator (dot on edge)
-### CODE
+##### CODE
 - extra: allow the spread operator for input params
 - extra: properly sanitize code before running to prevent XSS

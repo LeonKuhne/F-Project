@@ -2,6 +2,16 @@
 @import url('http://fonts.cdnfonts.com/css/atari');
 
 :root {
+  /* personal
+  --theme: #00cfff;
+  --alternate: #0056d9;
+  --active: #0f0;
+  --accent: #f90;
+  --contrast: #000;
+  --highlight: #ff008f;
+  --lowlight: #3a0048;
+  --alert: #f00;
+  */
   --theme: #00cfff;
   --alternate: #0056d9;
   --active: #0f0;
