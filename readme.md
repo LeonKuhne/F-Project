@@ -1,4 +1,4 @@
-### Visual Scripting IDE with codable componets and groups, for prototyping.
+### Visual Scripting IDE with codable components and groups
 
 # f v0.2
 
