@@ -13,6 +13,7 @@
 - save componets
 - save projects
 - parse js into components
+- connection guards
 - [WIP] parse js project 
 - [WIP] share components
 
