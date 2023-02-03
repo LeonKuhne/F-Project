@@ -1,7 +1,7 @@
 ### Visual Scripting IDE Website with Codable Components and Groups
 
-
-# f v0.2
+# f v0.9
+> [live](https://f.leonk.dev)
 
 ## Features
 - write bit-sized component code
