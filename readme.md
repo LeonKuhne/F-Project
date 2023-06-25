@@ -2,6 +2,16 @@
 > [live](https://f.leonk.dev)
 ### Visual Scripting IDE Website with Codable Components and Groups
 
+# Overview 
+Code structure isn't easy to manipulate without reading code or using external tools. F changes that by letting developers connect how functions flow, enabling for better code structure transparency and faster code structure manipulation. Simply drag and drop components to create complex programs without even looking at code. Components are individually tested, and can be combined and collapsed to form groups (currently finicky).
+
+# Incomplete
+It gets way way better. Im integrating it with text generation so functions can be auto-generated using a table of acceptable input and output data with the help of a chat bot. I suppose then all you need is to decompose a list of requirements into a flow of functions to orchestrate a project. This changes the developers responsibilities from programmer to engineer. We can make componets/groups shareable allowing for reusing of common tasks like injecting middleware, while maintaining ownership and allowing for easy modifiability. F programming anyway. And on top of that, im not satisfied with 2D navigation of the code structure space, I'd like a 3rd dimension that can be scrolled through that brings nodes into view using transparency. I'd also like passing and zooming to be a thing for better structure manipulation.
+
+I created this project to aid my development speed and learnability of prototypes, which I have many of.
+
+I was heavily inspired piping frameworks like rxjs and linq, circuits simulators, Unity's visual scripting Bolt, and the ECS implementation Bevy.
+
 ## Features
 - write bit-sized component code
 - visually connect components
