@@ -12,6 +12,7 @@ export class NodeView {
     // ACTIONS
 
     // collapse the node group
+    const nr = this.state.nodel.render
     const nl = this.state.nodel.listener
     const nm = this.state.nodel.manager
     // create node/group from selected module

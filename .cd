@@ -9,7 +9,7 @@ function run() {
 }
 
 function update() {
-  rm -rf lib
-  mkdir lib
+  rm -rf lib && mkdir lib
   wget "https://nodel.leonk.dev/nodel.min.mjs" -O lib/nodel.min.mjs
+  wget https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js -O lib/highlight.min.js
 }

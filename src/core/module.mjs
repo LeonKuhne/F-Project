@@ -52,7 +52,7 @@ export class Module {
   save() {
     localStorage.setItem(this.id, JSON.stringify(this))
     Module.updateTemplates(templateIds => {
-      if (templateIds.includes(this.id)) return null
+      if (templateIds.includes(this.id)) return
       return [...templateIds, this.id]
     })
   }
@@ -60,7 +60,7 @@ export class Module {
     localStorage.removeItem(this.id)
     Module.updateTemplates(templateIds => {
       const index = templateIds.indexOf(this.id)
-      if (index === -1) return null
+      if (index === -1) return
       templateIds.splice(index, 1)
       return templateIds
     })
@@ -69,7 +69,7 @@ export class Module {
   static updateTemplates(callback) {
     let templateIds = JSON.parse(localStorage.getItem('templates')) || []
     templateIds = callback(templateIds)
-    if (templateIds === null) return
+    if (templateIds === undefined) return
     localStorage.setItem('templates', JSON.stringify(templateIds))
   }
 

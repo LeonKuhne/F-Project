@@ -1,6 +1,9 @@
 import { Module } from '../core/module.mjs'
 import { ModuleList } from '../core/module-list.mjs'
 import { InspectJS } from '../pars/js/inspect.mjs'
+import { ParseJSModuleToChunks } from '../pars/js/reference-parser.mjs'
+import { ParseUtil } from '../pars/index.mjs'
+import { ParseJSBlocksWithReferencesToModules } from '../pars/js/module-parser.mjs'
 
 export class ModuleManager {
   constructor(state, callbacks = {

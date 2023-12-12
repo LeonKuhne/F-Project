@@ -2,7 +2,6 @@ import {ProjectEditor} from './view/project-editor.mjs'
 import {ModuleEditor} from './view/module-editor.mjs'
 import {NodeEditor} from './view/node-editor.mjs'
 import {NodeView} from './view/node-view.mjs'
-import {Tutorial} from './tutorial.mjs'
 import {setupHideables} from './view/hideable.mjs'
 import Nodel from '../lib/nodel.min.mjs'
 
@@ -47,9 +46,6 @@ function main() {
   state.editor.module = new ModuleEditor(state)
   state.editor.node = new NodeEditor(state)
   state.view.node = new NodeView(state)
-
-  // start tutorial
-  new Tutorial(state).start()
 }
 
 window.onload = main

@@ -1,4 +1,8 @@
 import { CodeRunner } from '../core/code-runner.mjs'
+import { InspectJS } from '../pars/js/inspect.mjs'
+import { Linter } from '../core/linter.mjs'
+import { NodeManager } from '../ctrl/node-manager.mjs'
+import { Helper } from '../core/helper.mjs'
 
 export class NodeEditor {
   constructor(state) {
@@ -188,11 +192,11 @@ export class NodeEditor {
 
   show() {
     // show the editor
-    editor.show('flex')
+    this.state.editor.show('flex')
   }
 
   hide() {
-    const elem = state.elem
+    const elem = this.state.elem
 
     // hide editor and reset editor elements
     elem.editor.hide()

@@ -1,4 +1,4 @@
-import hljs from 'highlight.js/lib/highlight';
+import * as hljs from '../../lib/highlight.min.js'
 
 export class Linter {
   constructor(inputElem, outputElem) {
