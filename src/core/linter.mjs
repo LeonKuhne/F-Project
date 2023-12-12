@@ -1,6 +1,6 @@
-'use strict';
+import hljs from 'highlight.js/lib/highlight';
 
-class Linter {
+export class Linter {
   constructor(inputElem, outputElem) {
     this.inputElem = inputElem
     this.outputElem = outputElem

@@ -1,6 +1,6 @@
-'use strict';
+import { CodeRunner } from '../core/code-runner.mjs'
 
-class NodeEditor {
+export class NodeEditor {
   constructor(state) {
     this.state = state
     this.state.editor.node = this

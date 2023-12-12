@@ -1,6 +1,8 @@
-'use strict';
+import { Module } from '../core/module.mjs'
+import { ModuleList } from '../core/module-list.mjs'
+import { InspectJS } from '../pars/js/inspect.mjs'
 
-class ModuleManager {
+export class ModuleManager {
   constructor(state, callbacks = {
     addStaticModule: (template, setSelected) => {},
     addSavedModule: (template, setSelected) => {},
@@ -90,15 +92,14 @@ class ModuleManager {
   }
   loadSavedModules() {
     // load templates
-    let templates = Object.values(localStorage)
-    // uncompress templates
-    templates = templates.map(dataStr => JSON.parse(dataStr))
-    // parse into Modules 
-    let modules = templates.map(json => new Module(json))
-    // sort by name
-    modules = modules.sort((a, b) => a.name > b.name)
-    // update state
-    modules.map(module => this.loadSaved(module))
+    Module.updateTemplates(templateIds => {
+      templateIds
+        .map(id => localStorage.getItem(id))   // fetch objects
+        .map(dataStr => JSON.parse(dataStr))   // parse into JSON
+        .map(json => new Module(json))         // parse into Modules
+        .sort((a, b) => a.name > b.name)       // sort by name
+        .forEach(module => this.loadSaved(module)) // update state
+    })
   }
   save(node) {
     if (node.group.collapsed) {

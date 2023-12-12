@@ -1,6 +1,7 @@
-'use strict';
+import { BuildJS } from '../pars/js/build.mjs'
+import { InspectJS } from '../pars/js/inspect.mjs'
 
-class CodeRunner {
+export class CodeRunner {
   constructor(state) {
     this.manager = state.nodel.manager
     this.reset()

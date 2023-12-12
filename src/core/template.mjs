@@ -1,7 +1,4 @@
-'use strict';
-
-
-class Template {
+export class Template {
 
   static hideTemplates() {
     const elems = document.getElementsByClassName('template')

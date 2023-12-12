@@ -1,4 +1,4 @@
-function setupHideables() {
+export function setupHideables() {
   for (const hideElem of document.getElementsByClassName('hideable')) {
     // setup elem
     hideElem.hide = () => {

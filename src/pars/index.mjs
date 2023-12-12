@@ -1,14 +1,9 @@
-/*
- * Not sure why I called it index.js.
- *
- * Here you shall find methods that
- * may be useful for parsing any language.
- *
- * Good luck!
-**/
+import { ParseJSChunkToCode } from './js/chunk-parser.mjs'
+import { InspectJS } from './js/inspect.mjs'
 
+// Methods that for parsing any language.
 
-class ParseUtil {
+export class ParseUtil {
 
   // parse an uploaded file to a text string
   static readFile(file, callback) {

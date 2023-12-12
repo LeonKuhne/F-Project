@@ -1,3 +1,6 @@
+import { ParseUtil } from '../index.mjs'
+import { ParseJSFileToFunctions } from './file-parser.mjs'
+import { ParseJSFunctionToModule } from './function-parser.mjs'
 
 /**
  * The entry file for the JS parser.
@@ -7,7 +10,7 @@
 **/
 
 
-class ParseJS {
+export class ParseJS {
 
   /*
    * Construct 'options' which are a parameter of the Module class

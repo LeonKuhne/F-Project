@@ -1,1 +1,15 @@
+#!/bin/bash
+
 title "F Project"
+
+help .cd | indent
+
+function run() {
+  serve
+}
+
+function update() {
+  rm -rf lib
+  mkdir lib
+  wget "https://nodel.leonk.dev/nodel.min.mjs" -O lib/nodel.min.mjs
+}

@@ -5,7 +5,7 @@
  * Software engineering is the philosophy of code.
 **/
 
-class BuildJS {
+export class BuildJS {
 
   static toNormalCase(str) {
     // change from 'thisCasing' to 'this casing'

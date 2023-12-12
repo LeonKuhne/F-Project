@@ -1,6 +1,4 @@
-'use strict';
-
-class NodeView {
+export class NodeView {
   constructor(state) {
     this.state = state
     const nodelElem = this.state.elem.nodel

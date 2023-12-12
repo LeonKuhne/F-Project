@@ -1,3 +1,5 @@
+import { BuildJS } from './build.mjs'
+
 /**
  * Essentially Getters
  *
@@ -5,7 +7,7 @@
  * matching, and other simple read operations.
 **/
 
-class InspectJS {
+export class InspectJS {
 
   static getClass(line) {
     // get the class name

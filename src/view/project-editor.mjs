@@ -1,6 +1,6 @@
-'use strict';
+import { ParseUtil } from '../pars/index.mjs'
 
-class ProjectEditor {
+export class ProjectEditor {
   constructor(state) {
     this.state = state
 

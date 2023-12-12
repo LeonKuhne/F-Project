@@ -1,4 +1,7 @@
-class ParseJSModuleToChunks extends ItemParser {
+import { ItemParser } from '../item-parser.mjs'
+import { InspectJS } from './inspect.mjs'
+
+export class ParseJSModuleToChunks extends ItemParser {
 
   constructor(code, existingReferences=[]) {
     super(code.split('\n'))

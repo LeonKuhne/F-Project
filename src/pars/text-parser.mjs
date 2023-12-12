@@ -1,8 +1,10 @@
+import { Parser } from './parser.mjs'
+
 /**
  * Base class for text parsers.
 **/
 
-class TextParser extends Parser{
+export class TextParser extends Parser {
 
   constructor(text) {
     super()

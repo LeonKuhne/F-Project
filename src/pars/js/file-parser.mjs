@@ -1,10 +1,12 @@
+import { ItemParser } from '../item-parser.mjs'
+
 /**
  * Parse a file into functions.
  *
  * Any parse function can return true to stop parsing.
 **/
 
-class ParseJSFileToFunctions extends ItemParser {
+export class ParseJSFileToFunctions extends ItemParser {
 
   constructor(code) {
     super(code.split('\n'))

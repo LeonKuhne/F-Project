@@ -1,4 +1,8 @@
-class ParseJSChunkToCode extends TextParser {
+import { TextParser } from '../text-parser.mjs'
+import { BuildJS } from './build.mjs'
+import { InspectJS } from './inspect.mjs'
+
+export class ParseJSChunkToCode extends TextParser {
 
   constructor(code, allParams, isFirst=false, returns=null) {
     super(code)

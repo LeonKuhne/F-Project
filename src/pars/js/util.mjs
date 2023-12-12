@@ -1,4 +1,7 @@
-class UtilJS {
+import { BuildJS } from './build.js'
+import { InspectJS } from './inspect.js'
+
+export class UtilJS {
 
   static getAnyFunction(line, className=null) {
     // multiple ordered header functions to try

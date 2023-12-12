@@ -1,6 +1,4 @@
-'use strict';
-
-class NodeManager {
+export class NodeManager {
   constructor(
     state,
     callbacks = {

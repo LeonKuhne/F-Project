@@ -1,6 +1,7 @@
-'use strict';
+import { uniqueId } from './helper.mjs'
+import { InspectJS } from '../pars/js/inspect.mjs'
 
-class Module {
+export class Module {
   constructor(options = {
     id: null, name: null, base: null,
     code: null, nodes: null,
@@ -50,9 +51,26 @@ class Module {
 
   save() {
     localStorage.setItem(this.id, JSON.stringify(this))
+    Module.updateTemplates(templateIds => {
+      if (templateIds.includes(this.id)) return null
+      return [...templateIds, this.id]
+    })
   }
   unsave() {
     localStorage.removeItem(this.id)
+    Module.updateTemplates(templateIds => {
+      const index = templateIds.indexOf(this.id)
+      if (index === -1) return null
+      templateIds.splice(index, 1)
+      return templateIds
+    })
+  }
+
+  static updateTemplates(callback) {
+    let templateIds = JSON.parse(localStorage.getItem('templates')) || []
+    templateIds = callback(templateIds)
+    if (templateIds === null) return
+    localStorage.setItem('templates', JSON.stringify(templateIds))
   }
 
   validate() {

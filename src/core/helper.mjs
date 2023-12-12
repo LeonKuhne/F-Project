@@ -1,8 +1,5 @@
-'use strict';
-
 /* a generic helper class for now, until it grows */
-
-class Helper {
+export class Helper {
 
   // stolen from: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Cyclic_object_value
   static replaceCircularReference() {
@@ -17,4 +14,8 @@ class Helper {
       return value;
     };
   }
+}
+
+export function uniqueId() {
+  return String(Math.random().toString(16).slice(2))
 }

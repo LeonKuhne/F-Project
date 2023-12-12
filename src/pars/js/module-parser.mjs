@@ -1,4 +1,6 @@
-class ParseJSBlocksWithReferencesToModules extends ItemParser {
+import { ItemParser } from '../item-parser.mjs'
+
+export class ParseJSBlocksWithReferencesToModules extends ItemParser {
 
   constructor(baseName, blocksWithRefs, add=()=>{}) {
     super(blocksWithRefs)

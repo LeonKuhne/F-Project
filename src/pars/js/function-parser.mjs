@@ -1,8 +1,11 @@
+import { TextParser } from '../text-parser.mjs'
+import { BuildJS } from './build.mjs'
+
 /** 
  * Construct 'options' which are a parameter of the Module class
 **/
 
-class ParseJSFunctionToModule extends TextParser {
+export class ParseJSFunctionToModule extends TextParser {
 
   constructor(f, className) {
     super(f.code)

@@ -1,15 +1,21 @@
-'use strict';
+import {ProjectEditor} from './view/project-editor.mjs'
+import {ModuleEditor} from './view/module-editor.mjs'
+import {NodeEditor} from './view/node-editor.mjs'
+import {NodeView} from './view/node-view.mjs'
+import {Tutorial} from './tutorial.mjs'
+import {setupHideables} from './view/hideable.mjs'
+import Nodel from '../lib/nodel.min.mjs'
 
-var nr, nm, nl
 var state
 
 function main() {
   // create hideables
   setupHideables()
 
-  nr = new NodelRender()
-  nm = new NodelManager(nr)
-  nl = new NodelListener(nm, nr)
+  // setup nodel framework
+  const nr = new Nodel.Renderer()
+  const nm = new Nodel.Manager(nr)
+  const nl = new Nodel.Listener(nr, nm)
 
   // aggregate state
   state = {
@@ -26,6 +32,7 @@ function main() {
     // html elements by custom key
     elem: {
       nodel: document.getElementById('nodel'),
+      help: document.getElementById("help")
     },
 
     // views and controllers by custom key
@@ -40,6 +47,10 @@ function main() {
   state.editor.module = new ModuleEditor(state)
   state.editor.node = new NodeEditor(state)
   state.view.node = new NodeView(state)
+
+  // start tutorial
+  new Tutorial(state).start()
 }
 
 window.onload = main
+window.state = state

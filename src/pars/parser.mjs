@@ -2,7 +2,7 @@
  * Base class for parsers.
 **/
 
-class Parser {
+export class Parser {
 
   constructor() {}
 

@@ -1,6 +1,7 @@
-'use strict';
+import { ModuleManager } from '../ctrl/module-manager.mjs'
+import { Template } from '../core/template.mjs'
 
-class ModuleEditor {
+export class ModuleEditor {
   constructor(state) {
     this.state = state
 

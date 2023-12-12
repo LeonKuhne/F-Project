@@ -1,6 +1,4 @@
-'use strict';
-
-class ModuleList {
+export class ModuleList {
   constructor() {
     this.modules = {}
   }

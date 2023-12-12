@@ -1,8 +1,10 @@
+import { Parser } from "./parser.mjs"
+
 /**
  * Base class for item parsers.
 **/
 
-class ItemParser extends Parser {
+export class ItemParser extends Parser {
   debugging = false
 
   constructor(items) {
